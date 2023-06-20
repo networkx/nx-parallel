@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nx_parallel"
+authors = [
+    {name = "Mridul Seth", email = "mail@mriduls.com"},
+]
+description = "An experimental parallel backend for NetworkX"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["networkx", "algorithms", "parallel"]
+license = {text = "BSD-3-Clause"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "networkx",
+    "joblib"
+]
+version = '0.0.1'
+
+[project.entry-points."networkx.plugins"]
+parallel = "nx_parallel.interface:Dispatcher"
