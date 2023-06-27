@@ -1,7 +1,7 @@
-NX-Parallel
+nx_parallel
 -----------
 
-A NetworkX backend plugin which uses dask for parallelization.
+A NetworkX backend plugin which uses joblib and multiprocessing for parallelization.
 
 ``` python
 In [1]: import networkx as nx; import nx_parallel
@@ -24,3 +24,15 @@ Out[4]:
  9: 0.0}
 
 ```
+
+Currently the following functions have parallelized implementations:
+  - centrality
+    - betweenness_centrality
+  - isolates
+    - number_of_isolates
+
+
+### TODO: add graphic showing speedup of nx_parallel vs. networkx
+
+
+

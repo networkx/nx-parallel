@@ -1,15 +1,25 @@
-from .centrality import betweenness_centrality
+from .algorithms.centrality.betweenness import betweenness_centrality
+from .algorithms.isolate import number_of_isolates, isolates, is_isolate
+
 
 __all__ = ["Dispatcher"]
 
 
 class Dispatcher:
+    # =============================
+    # Centrality
     betweenness_centrality = betweenness_centrality
+
+    # Isolates
+    number_of_isolates = number_of_isolates
+    isolates = isolates
+    is_isolate = is_isolate
+    # =============================
 
     @staticmethod
     def convert_from_nx(incoming_graph, weight=None, *, name=None):
         import networkx as nx
-        from .graph import ParallelGraph
+        from .classes.graph import ParallelGraph
 
         if isinstance(incoming_graph, nx.Graph):
             return ParallelGraph(incoming_graph)
@@ -17,9 +27,10 @@ class Dispatcher:
 
     @staticmethod
     def convert_to_nx(obj, *, name=None):
-        from .graph import ParallelGraph
+        from .classes.graph import ParallelGraph
+        import networkx as nx
 
-        if isinstance(obj, Graph):
+        if isinstance(obj, nx.Graph):
             obj = obj.to_networkx()
         return obj
 
