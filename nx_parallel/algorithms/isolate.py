@@ -1,83 +1,30 @@
-from joblib import Parallel, delayed
+from joblib import Parallel, cpu_count, delayed
+import networkx as nx
+from nx_parallel.algorithms.utils.chunk import chunks
+from nx_parallel.classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
 
 __all__ = ["number_of_isolates"]
 
+"""Helper to interface between graph types"""
+def _convert(G):
+    if isinstance(G, ParallelMultiDiGraph):
+        I = ParallelMultiDiGraph.to_networkx(G)
+    if isinstance(G, ParallelMultiGraph):
+        I = ParallelMultiGraph.to_networkx(G)
+    if isinstance(G, ParallelDiGraph):
+        I = ParallelDiGraph.to_networkx(G)
+    if isinstance(G, ParallelGraph):
+        I = ParallelGraph.to_networkx(G)
+    return I
+
+"""Identical to networkx implementation"""
 def is_isolate(G, n):
-    """Determines whether a node is an isolate.
+    return nx.is_isolate(_convert(G), n)
 
-    An *isolate* is a node with no neighbors (that is, with degree
-    zero). For directed graphs, this means no in-neighbors and no
-    out-neighbors.
-
-    Parameters
-    ----------
-    G : NetworkX graph
-
-    n : node
-        A node in `G`.
-
-    Returns
-    -------
-    is_isolate : bool
-       True if and only if `n` has no neighbors.
-
-    Examples
-    --------
-    >>> G = nx.Graph()
-    >>> G.add_edge(1, 2)
-    >>> G.add_node(3)
-    >>> nx.is_isolate(G, 2)
-    False
-    >>> nx.is_isolate(G, 3)
-    True
-    """
-    return G.degree(n) == 0
-
+"""Identical to networkx implementation"""
 def isolates(G):
-    """Iterator over isolates in the graph.
-
-    An *isolate* is a node with no neighbors (that is, with degree
-    zero). For directed graphs, this means no in-neighbors and no
-    out-neighbors.
-
-    Parameters
-    ----------
-    G : NetworkX graph
-
-    Returns
-    -------
-    iterator
-        An iterator over the isolates of `G`.
-
-    Examples
-    --------
-    To get a list of all isolates of a graph, use the :class:`list`
-    constructor::
-
-        >>> G = nx.Graph()
-        >>> G.add_edge(1, 2)
-        >>> G.add_node(3)
-        >>> list(nx.isolates(G))
-        [3]
-
-    To remove all isolates in the graph, first create a list of the
-    isolates, then use :meth:`Graph.remove_nodes_from`::
-
-        >>> G.remove_nodes_from(list(nx.isolates(G)))
-        >>> list(G)
-        [1, 2]
-
-    For digraphs, isolates have zero in-degree and zero out_degre::
-
-        >>> G = nx.DiGraph([(0, 1), (1, 2)])
-        >>> G.add_node(3)
-        >>> list(nx.isolates(G))
-        [3]
-
-    """
-    return (n for n, d in G.degree() if d == 0)
-
-
+    return nx.isolates(_convert(G))
+    
 def number_of_isolates(G):
     """Returns the number of isolates in the graph. Parallel implementation.
 
@@ -95,11 +42,11 @@ def number_of_isolates(G):
         The number of degree zero nodes in the graph `G`.
 
     """
-    num_isolates = Parallel(n_jobs=-1, backend="threading")(
-        delayed(lambda x: 1)(v) for v in isolates(G)
-    )
-    return sum(num_isolates)
-
+    isolates_list = list(isolates(G))
+    num_chunks = max(len(isolates_list) // cpu_count(), 1)
+    isolate_chunks = chunks(isolates_list, num_chunks)
+    results = Parallel(n_jobs=-1)(delayed(len)(chunk) for chunk in isolate_chunks)
+    return sum(results)
 
 
 

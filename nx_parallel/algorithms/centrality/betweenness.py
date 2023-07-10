@@ -1,15 +1,26 @@
-from joblib import Parallel, delayed
-import multiprocessing
-import itertools
+from joblib import Parallel, delayed, cpu_count
 from networkx import betweenness_centrality_subset
+from nx_parallel.classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
+from nx_parallel.algorithms.utils.chunk import chunks
 
 __all__ = ["betweenness_centrality"]
 
+"""Helper to interface between graph types"""
+def _convert(G):
+    if isinstance(G, ParallelMultiDiGraph):
+        I = ParallelMultiDiGraph.to_networkx(G)
+    if isinstance(G, ParallelMultiGraph):
+        I = ParallelMultiGraph.to_networkx(G)
+    if isinstance(G, ParallelDiGraph):
+        I = ParallelDiGraph.to_networkx(G)
+    if isinstance(G, ParallelGraph):
+        I = ParallelGraph.to_networkx(G)
+    return I
 
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):
-    """Compute the shortest-path betweenness centrality for nodes. Parallel implementation.
+    r"""Compute the shortest-path betweenness centrality for nodes. Parallel implementation.
 
     Betweenness centrality of a node $v$ is the sum of the
     fraction of all-pairs shortest paths that pass through $v$
@@ -82,14 +93,14 @@ def betweenness_centrality(
        Available at: https://networkx.org/documentation/stable/auto_examples/algorithms/plot_parallel_betweenness.html
        Accessed on June 26, 2023.
     """
-    # TODO: Work on passing all tests for betweenness_centrality
-    total_cores = multiprocessing.cpu_count()
-    num_nodes = len(G)
-    num_chunks = max(num_nodes // total_cores, 1)
-    node_chunks = list(_chunks(G.nodes(), num_chunks))
+    #TODO: Work on passing all tests for betweenness_centrality
+    I = _convert(G)
+    total_cores = cpu_count()
+    num_chunks = max(len(G) // total_cores, 1)
+    node_chunks = list(chunks(G.nodes, num_chunks))
     bt_sc = Parallel(n_jobs=total_cores, backend="loky")(
         delayed(betweenness_centrality_subset)(
-            G,
+            I,
             nodes,
             list(G),
             normalized,
@@ -103,17 +114,8 @@ def betweenness_centrality(
     for bt in bt_sc[1:]:
         for n in bt:
             bt_c[n] += bt[n]
-
     return bt_c
 
-# helpers for betweenness centrality
 
-def _chunks(l, n): # divide vertices into chunks of specified size
-    l_c = iter(l)
-    while True:
-        x = tuple(itertools.islice(l_c, n))
-        if not x:
-            return
-        yield x
 
 
