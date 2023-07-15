@@ -54,7 +54,7 @@ class TestBetweennessCentrality:
     def test_P3(self):
         """Betweenness centrality: P3"""
         G = nx.path_graph(3)
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b_answer = {0: 0.0, 1: 1.0, 2: 0.0}
         b = nx.betweenness_centrality(H, weight=None, normalized=False)
         for n in sorted(G):
@@ -63,7 +63,7 @@ class TestBetweennessCentrality:
     def test_sample_from_P3(self):
         """Betweenness centrality: P3 sample"""
         G = nx.path_graph(3)
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b_answer = {0: 0.0, 1: 1.0, 2: 0.0}
         b = nx.betweenness_centrality(H, k=3, weight=None, normalized=False, seed=1)
         for n in sorted(G):
@@ -78,7 +78,7 @@ class TestBetweennessCentrality:
     def test_P3_endpoints(self):
         """Betweenness centrality: P3 endpoints"""
         G = nx.path_graph(3)
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b_answer = {0: 2.0, 1: 3.0, 2: 2.0}
         b = nx.betweenness_centrality(H, weight=None, normalized=False, endpoints=True)
         for n in sorted(G):
@@ -326,7 +326,7 @@ class TestWeightedBetweennessCentrality:
     def test_P3(self):
         """Weighted betweenness centrality: P3"""
         G = nx.path_graph(3)
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b_answer = {0: 0.0, 1: 1.0, 2: 0.0}
         b = nx.betweenness_centrality(H, weight="weight", normalized=False)
         for n in sorted(G):
@@ -498,7 +498,7 @@ class TestWeightedBetweennessCentrality:
         """Weighted betweenness centrality: Ladder graph"""
         G = nx.Graph()  # ladder_graph(3)
         G.add_edges_from([(0, 1), (0, 2), (1, 3), (2, 3), (2, 4), (4, 5), (3, 5)])
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b_answer = {0: 1.667, 1: 1.667, 2: 6.667, 3: 6.667, 4: 1.667, 5: 1.667}
         for b in b_answer:
             b_answer[b] /= 2

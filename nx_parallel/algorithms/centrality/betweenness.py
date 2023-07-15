@@ -1,8 +1,15 @@
 from joblib import Parallel, delayed, cpu_count
-from networkx import betweenness_centrality_subset
 from nx_parallel.classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
 from nx_parallel.algorithms.utils.chunk import chunks
-
+import networkx as nx
+from networkx.utils import py_random_state
+from networkx.algorithms.centrality.betweenness import (
+    _rescale, 
+    _single_source_shortest_path_basic, 
+    _single_source_dijkstra_path_basic, 
+    _accumulate_endpoints, 
+    _accumulate_basic
+)
 __all__ = ["betweenness_centrality"]
 
 """Helper to interface between graph types"""
@@ -17,6 +24,7 @@ def _convert(G):
         I = ParallelGraph.to_networkx(G)
     return I
 
+@py_random_state(5)
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):
@@ -92,29 +100,60 @@ def betweenness_centrality(
        Parallel Betweenness Centrality. NetworkX documentation.
        Available at: https://networkx.org/documentation/stable/auto_examples/algorithms/plot_parallel_betweenness.html
        Accessed on June 26, 2023.
-    """
-    #TODO: Work on passing all tests for betweenness_centrality
+    """    
     I = _convert(G)
+    if k is None:
+        nodes = G.nodes
+    else:
+        nodes = seed.sample(list(G.nodes), k)
     total_cores = cpu_count()
-    num_chunks = max(len(G) // total_cores, 1)
-    node_chunks = list(chunks(G.nodes, num_chunks))
-    bt_sc = Parallel(n_jobs=total_cores, backend="loky")(
-        delayed(betweenness_centrality_subset)(
+    num_chunks = max(len(nodes) // total_cores, 1)
+    node_chunks = list(chunks(nodes, num_chunks))
+    bt_cs = Parallel(n_jobs=total_cores)(
+        delayed(betweenness_centrality_node_subset)(
             I,
-            nodes,
-            list(G),
-            normalized,
+            chunk,
             weight,
+            endpoints,
         )
-        for nodes in node_chunks
+        for chunk in node_chunks
     )
 
     #Reducing partial solution
-    bt_c = bt_sc[0]
-    for bt in bt_sc[1:]:
+    bt_c = bt_cs[0]
+    for bt in bt_cs[1:]:
         for n in bt:
             bt_c[n] += bt[n]
-    return bt_c
+
+    betweenness = _rescale(
+        bt_c,
+        len(G),
+        normalized=normalized,
+        directed=I.is_directed(),
+        k=k,
+        endpoints=endpoints,
+    )
+    return betweenness
+
+
+
+def betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
+    betweenness = dict.fromkeys(G, 0.0)
+    for s in nodes:
+        # single source shortest paths
+        if weight is None:  # use BFS
+            S, P, sigma, _ = _single_source_shortest_path_basic(G, s)
+        else:  # use Dijkstra's algorithm
+            S, P, sigma, _ = _single_source_dijkstra_path_basic(G, s, weight)
+        # accumulation
+        if endpoints:
+            betweenness, delta = _accumulate_endpoints(betweenness, S, P, sigma, s)
+        else:
+            betweenness, delta = _accumulate_basic(betweenness, S, P, sigma, s)
+    return betweenness
+
+
+
 
 
 

@@ -21,7 +21,7 @@ class ParallelDiGraph(DiGraph):
     def to_networkx(self):
         return DiGraph(self)
     
-class ParallelMultiGraph(Graph):
+class ParallelMultiGraph(MultiGraph):
     __networkx_plugin__ = "parallel"
 
     def __init__(self, incoming_graph_data=None, **attr):
@@ -31,7 +31,7 @@ class ParallelMultiGraph(Graph):
         return MultiGraph(self)
     
 
-class ParallelMultiDiGraph(Graph):
+class ParallelMultiDiGraph(MultiDiGraph):
     __networkx_plugin__ = "parallel"
 
     def __init__(self, incoming_graph_data=None, **attr):
