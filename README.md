@@ -2,29 +2,25 @@
 
 -----------
 
-A NetworkX backend plugin which uses joblib to parallelize graph algorithms.
+A NetworkX backend plugin that uses joblib to parallelize graph algorithms.
 
 ```python
-In [1]: from nx_parallel.interface import Dispatcher; import networkx as nx
+In [1]: import networkx as nx; import nx_parallel
 
-In [2]: G = nx.barabasi_albert_graph(1000, 3)
+In [2]: G = nx.erdos_renyi_graph(10, 0.5)
 
-In [3]: d = Dispatcher(nx.betweenness_centrality_subset, backend="dask", processes=4)
+In [3]: H = nx_parallel.ParallelGraph(G)
 
-In [4]: d(G)
-
+In [4]: nx.betweenness_centrality(H)
 Out[4]: 
-{0: 0.1508184529907842,
- 1: 0.03628616072632174,
- 2: 0.045887560129767795,
- 3: 0.0027030059589488193,
- 4: 0.17721016416484828,
- 5: 0.0557746078502213,
- 6: 0.057699260659049456,
- 7: 0.03968336805767747,
- 8: 0.12732070789945013,
- 9: 0.05646396458772636,
- ...
- 998: 0.0005573444446765637,
- 999: 0.0002854699717699087}
+{0: 0.0,
+ 1: 0.0,
+ 2: 0.0,
+ 3: 0.0,
+ 4: 0.0,
+ 5: 0.0,
+ 6: 0.0,
+ 7: 0.0,
+ 8: 0.0,
+ 9: 0.0}
 ```

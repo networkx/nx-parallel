@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "nx_parallel"
 authors = [
-    {name = "Derek Pisner", email = "dpysalexander@gmail.com"},
     {name = "Mridul Seth", email = "mail@mriduls.com"},
+    {name = "Derek Pisner", email = "dpysalexander@gmail.com"},
 ]
 description = "An experimental parallel backend for NetworkX"
 readme = "README.md"

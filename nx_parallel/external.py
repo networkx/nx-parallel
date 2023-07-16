@@ -1,0 +1,88 @@
+import joblib
+from nx_parallel.misc import optional_package
+from typing import Optional
+
+SUPPORTED_BACKENDS = [
+    "multiprocessing",
+    "dask",
+    "ray",
+    "loky",
+    "threading",
+    "ipyparallel",
+]
+
+class Backend:
+    """A context manager for specifying the backend to use for parallelization.
+
+    Attributes
+    ----------
+    backend : str
+        The backend to use. Choose from 'multiprocessing', 'dask', 'ray', 'loky',
+        'threading', or 'ipyparallel'.
+    processes : int
+        The number of processes to use. If None, the number of processes will be set to
+        the number of CPUs on the machine.
+
+    Raises
+    ------
+    `ImportError`
+        If joblib, or any of the optional backends are not installed.
+    `ValueError`
+        If an invalid backend is specified, or if the number of elements in the provided
+        iterable is not equal to the number of parameters in the provided function.
+    """
+
+    def __init__(
+        self,
+        backend: str = "multiprocessing",
+        processes: Optional[int] = None,
+        **kwargs,
+    ):
+        self.backend = backend
+        if processes is None:
+            from os import cpu_count
+
+            self.processes = cpu_count()
+        else:
+            self.processes = processes
+
+        if self.backend not in SUPPORTED_BACKENDS:
+            raise ValueError(
+                f"Invalid backend specified. Choose from {SUPPORTED_BACKENDS}."
+            )
+
+        # Business logic restricted to this block
+        if self.backend == "dask":
+            dask, has_dask, _ = optional_package("dask")
+            distributed, has_distributed, _ = optional_package("distributed")
+            if not has_dask or not has_distributed:
+                raise ImportError(
+                    "dask[distributed] is not installed. Install dask using 'pip"
+                    " install dask distributed'."
+                )
+            from joblib._dask import DaskDistributedBackend
+
+            client = distributed.Client(**kwargs)
+            joblib.register_parallel_backend(
+                "dask", lambda: DaskDistributedBackend(client=client)
+            )
+        elif self.backend == "ray":
+            ray, has_ray, _ = optional_package("ray")
+            if not has_ray:
+                raise ImportError(
+                    "ray is not installed. Install ray using 'pip install ray'."
+                )
+            rb = ray.util.joblib.ray_backend.RayBackend(**kwargs)
+            joblib.register_parallel_backend("ray", lambda: rb)
+        elif self.backend == "ipyparallel":
+            ipyparallel, has_ipyparallel, _ = optional_package("ipyparallel")
+            if not has_ipyparallel:
+                raise ImportError(
+                    "ipyparallel is not installed. Install ipyparallel using 'pip "
+                    "install ipyparallel'."
+                )
+            bview = ipyparallel.Client(**kwargs).load_balanced_view()
+            joblib.register_parallel_backend(
+                "ipyparallel",
+                lambda: ipyparallel.joblib.IPythonParallelBackend(view=bview),
+            )
