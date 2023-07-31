@@ -12,18 +12,6 @@ from networkx.algorithms.centrality.betweenness import (
 )
 __all__ = ["betweenness_centrality"]
 
-"""Helper to interface between graph types"""
-def _convert(G):
-    if isinstance(G, ParallelMultiDiGraph):
-        I = ParallelMultiDiGraph.to_networkx(G)
-    if isinstance(G, ParallelMultiGraph):
-        I = ParallelMultiGraph.to_networkx(G)
-    if isinstance(G, ParallelDiGraph):
-        I = ParallelDiGraph.to_networkx(G)
-    if isinstance(G, ParallelGraph):
-        I = ParallelGraph.to_networkx(G)
-    return I
-
 @py_random_state(5)
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
@@ -101,7 +89,6 @@ def betweenness_centrality(
        Available at: https://networkx.org/documentation/stable/auto_examples/algorithms/plot_parallel_betweenness.html
        Accessed on June 26, 2023.
     """    
-    I = _convert(G)
     if k is None:
         nodes = G.nodes
     else:
@@ -111,7 +98,7 @@ def betweenness_centrality(
     node_chunks = list(chunks(nodes, num_chunks))
     bt_cs = Parallel(n_jobs=total_cores)(
         delayed(betweenness_centrality_node_subset)(
-            I,
+            G,
             chunk,
             weight,
             endpoints,
@@ -129,7 +116,7 @@ def betweenness_centrality(
         bt_c,
         len(G),
         normalized=normalized,
-        directed=I.is_directed(),
+        directed=G.is_directed(),
         k=k,
         endpoints=endpoints,
     )
