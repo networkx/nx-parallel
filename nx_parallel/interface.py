@@ -13,6 +13,8 @@ from .algorithms.tournament import (
     score_sequence,
     tournament_matrix,
 )
+from .algorithms.efficiency_measures import efficiency, local_efficiency, global_efficiency
+
 
 __all__ = ["Dispatcher"]
 
@@ -50,8 +52,12 @@ class Dispatcher:
     tournament_is_strongly_connected = tournament_is_strongly_connected
     
     # Centrality
-    #TODO: make pass tests (pass some more by adding digraph, etc like GRAPHBLAS)
     betweenness_centrality = betweenness_centrality
+
+    #Efficiency
+    efficiency = efficiency
+    local_efficiency = local_efficiency
+    global_efficiency = global_efficiency
 
     # =============================
     def __getattr__(self, item):
