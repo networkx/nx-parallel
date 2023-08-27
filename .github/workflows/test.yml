@@ -37,4 +37,5 @@ jobs:
           echo "Done with installing"
       - name: PyTest
         run: |
-          NETWORKX_GRAPH_CONVERT=parallel pytest ..
+          NETWORKX_GRAPH_CONVERT=parallel pytest --pyargs networkx
+          PYTHONPATH=$PYTHONPATH:..  pytest .
