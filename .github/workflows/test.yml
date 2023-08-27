@@ -40,7 +40,9 @@ jobs:
           echo "Done with installing"
       - name: PyTest
         run: |
-          NETWORKX_GRAPH_CONVERT=parallel pytest --pyargs networkx
+          #NETWORKX_GRAPH_CONVERT=parallel pytest --pyargs networkx
+          pytest --collect-only
+          pytest
           # try just using tests via networkx.
           # or make OS specific environment variables changes like:
           # PYTHONPATH=$PYTHONPATH:..  pytest .
