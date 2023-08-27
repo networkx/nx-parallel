@@ -1,3 +1,3 @@
 from .algorithms import *
-from .classes.graph import *
+from .classes import *
 from .interface import *
