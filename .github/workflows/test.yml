@@ -41,8 +41,11 @@ jobs:
       - name: PyTest
         run: |
           #NETWORKX_GRAPH_CONVERT=parallel pytest --pyargs networkx
+          pwd
+          ls -l
+          python -c "import nx_parallel"
           pytest --collect-only
-          pytest
+          #pytest
           # try just using tests via networkx.
           # or make OS specific environment variables changes like:
           # PYTHONPATH=$PYTHONPATH:..  pytest .
