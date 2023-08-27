@@ -33,9 +33,16 @@ jobs:
           conda install -c conda-forge joblib scipy pandas pytest-cov pytest-randomly
             # matplotlib lxml pygraphviz pydot sympy  # Extra networkx deps we don't need yet
           pip install git+https://github.com/networkx/networkx.git@main --no-deps
-          pip install -e . --no-deps
+          pwd
+          pip install -e .. --no-deps
+          python -c "import nx_parallel"
           echo "Done with installing"
       - name: PyTest
         run: |
           NETWORKX_GRAPH_CONVERT=parallel pytest --pyargs networkx
-          PYTHONPATH=$PYTHONPATH:..  pytest .
+          # try just using tests via networkx.
+          # or make OS specific environment variables changes like:
+          # PYTHONPATH=$PYTHONPATH:..  pytest .
+          # and:
+          # Add-Content $env:PYTHONPATH
+          # "D:a/nx_parallel"
