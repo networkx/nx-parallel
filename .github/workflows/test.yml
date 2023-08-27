@@ -32,11 +32,11 @@ jobs:
         run: |
           conda install -c conda-forge joblib scipy pandas pytest-cov pytest-randomly
             # matplotlib lxml pygraphviz pydot sympy  # Extra networkx deps we don't need yet
-          pip install git+https://github.com/networkx/networkx.git@main --no-deps
+          python -m pip install git+https://github.com/networkx/networkx.git@main
           pwd
           ls -l
-          pip install -e . --no-deps
-          python -c "import nx_parallel"
+          python -m pip install .
+          python -c "import nx_parallel;print(dir(nx_parallel))"
           echo "Done with installing"
       - name: PyTest
         run: |
