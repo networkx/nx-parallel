@@ -37,5 +37,5 @@ jobs:
           echo "Done with installing"
       - name: PyTest
         run: |
-          cd ~/nx_parallel
+          cd ~/work/nx_parallel
           NETWORKX_graph_convert=parallel pytest nx_parallel
