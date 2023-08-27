@@ -5,6 +5,7 @@ import time
 import seaborn as sns
 import pandas as pd
 
+#Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
 number_of_nodes_list = [10, 50, 100, 300, 500]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
@@ -13,8 +14,12 @@ for i in range(0, len(pList)):
     p = pList[i]
     for j in range(0, len(number_of_nodes_list)):
         num = number_of_nodes_list[j]
+
+        # create original and parallel graphs
         G = nx.fast_gnp_random_graph(num, 0.5, directed=False)
         H = nx_parallel.ParallelGraph(G)
+
+        # time both versions and update heatmapDF
         t1 = time.time()
         c = currFun(H)
         t2 = time.time()
