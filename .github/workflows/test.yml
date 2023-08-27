@@ -34,7 +34,8 @@ jobs:
             # matplotlib lxml pygraphviz pydot sympy  # Extra networkx deps we don't need yet
           pip install git+https://github.com/networkx/networkx.git@main --no-deps
           pwd
-          pip install -e .. --no-deps
+          ls -l
+          pip install -e . --no-deps
           python -c "import nx_parallel"
           echo "Done with installing"
       - name: PyTest
