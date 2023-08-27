@@ -44,7 +44,7 @@ jobs:
           pwd
           ls -l
           python -c "import nx_parallel;print(dir(nx_parallel))"
-          pytest --collect-only --pyargs nx_parallel
+          python -m pytest --collect-only --pyargs nx_parallel
           #pytest --pyargs nx_parallel
           # try just using tests via networkx.
           # or make OS specific environment variables changes like:
