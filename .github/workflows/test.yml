@@ -12,7 +12,7 @@ jobs:
       run:
         shell: bash -l {0}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
         python-version: ["3.10", "3.11"]
@@ -43,9 +43,9 @@ jobs:
           #NETWORKX_GRAPH_CONVERT=parallel pytest --pyargs networkx
           pwd
           ls -l
-          python -c "import nx_parallel"
+          python -c "import nx_parallel;print(dir(nx_parallel))"
           pytest --collect-only --pyargs nx_parallel
-          #pytest
+          #pytest --pyargs nx_parallel
           # try just using tests via networkx.
           # or make OS specific environment variables changes like:
           # PYTHONPATH=$PYTHONPATH:..  pytest .
