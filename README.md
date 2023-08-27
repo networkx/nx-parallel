@@ -28,11 +28,14 @@ Out[4]:
 Currently the following functions have parallelized implementations:
   - centrality
     - betweenness_centrality
-  - isolates
-    - number_of_isolates
+  - tournament
+    - is_reachable
+  - closeness_vitality
+  - efficiency_measures
+    - local_efficiency
 
+![alt text](timing/heatmap_all_functions.png)
 
-### TODO: add graphic showing speedup of nx_parallel vs. networkx
-
+See the ```/timing``` folder for more heatmaps and code for heatmap generation!
 
 

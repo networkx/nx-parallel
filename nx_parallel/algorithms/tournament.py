@@ -10,30 +10,17 @@ __all__ = [
     "tournament_is_strongly_connected",
 ]
 
-"""Helper to interface between graph types"""
-def _convert(G):
-    if isinstance(G, ParallelMultiDiGraph):
-        I = ParallelMultiDiGraph.to_networkx(G)
-    if isinstance(G, ParallelMultiGraph):
-        I = ParallelMultiGraph.to_networkx(G)
-    if isinstance(G, ParallelDiGraph):
-        I = ParallelDiGraph.to_networkx(G)
-    if isinstance(G, ParallelGraph):
-        I = ParallelGraph.to_networkx(G)
-    return I
-
 """Identical to networkx implementation"""
 def index_satisfying(iterable, condition):
     return nx.algorithms.tournament.index_satisfying(iterable, condition)
 
 """Identical to networkx implementation"""
 def is_tournament(G):
-    return nx.algorithms.tournament.is_tournament(_convert(G))
-
+    return nx.algorithms.tournament.is_tournament(G.originalGraph)
 
 """Identical to networkx implementation"""
 def hamiltonian_path(G):
-    return nx.algorithms.tournament.hamiltonian_path(_convert(G))
+    return nx.algorithms.tournament.hamiltonian_path(G.originalGraph)
 
 """Identical to networkx implementation"""
 def random_tournament(n, seed=None):
@@ -41,11 +28,11 @@ def random_tournament(n, seed=None):
 
 """Identical to networkx implementation"""
 def score_sequence(G):
-    return nx.algorithms.tournament.score_sequence(_convert(G))
+    return nx.algorithms.tournament.score_sequence(G.originalGraph)
 
 """Identical to networkx implementation"""
 def tournament_matrix(G):
-    return nx.algorithms.tournament.tournament_matrix(_convert(G))
+    return nx.algorithms.tournament.tournament_matrix(G.originalGraph)
 
 
 def is_reachable(G, s, t):
@@ -106,7 +93,7 @@ def is_reachable(G, s, t):
     def two_neighborhood_subset(G, chunk):
         reList = set()
         for v in chunk:
-            reList.update({x for x in G if x == v or x in G[v] or any(is_path(I, [v, z, x]) for z in G)})
+            reList.update({x for x in G if x == v or x in G[v] or any(is_path(G.originalGraph, [v, z, x]) for z in G)})
         return reList
     
     """Identical to networkx helper implementation"""
@@ -117,7 +104,6 @@ def is_reachable(G, s, t):
     def check_closure_subset(chunk):
             return all(not (is_closed(G, S) and s in S and t not in S) for S in chunk)
 
-    I = _convert(G)
     num_chunks = max(len(G) // cpu_count(), 1)
 
     #send chunk of vertices to each process (calculating neighborhoods)

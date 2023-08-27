@@ -62,21 +62,13 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
            <http://books.google.com/books?id=TTNhSm7HYrIC>
 
     """
-    if isinstance(G, ParallelMultiDiGraph):
-        I = ParallelMultiDiGraph.to_networkx(G)
-    if isinstance(G, ParallelMultiGraph):
-        I = ParallelMultiGraph.to_networkx(G)
-    if isinstance(G, ParallelDiGraph):
-        I = ParallelDiGraph.to_networkx(G)
-    if isinstance(G, ParallelGraph):
-        I = ParallelGraph.to_networkx(G)
     if wiener_index is None:
-        wiener_index = nx.wiener_index(I, weight=weight)
+        wiener_index = nx.wiener_index(G.originalGraph, weight=weight)
     if node is not None:
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
-    vitality = partial(closeness_vitality, I, weight=weight, wiener_index=wiener_index)
+    vitality = partial(closeness_vitality, G.originalGraph, weight=weight, wiener_index=wiener_index)
     result = Parallel(n_jobs=-1)(
-        delayed(lambda v: (v, vitality(v)))(v) for v in I
+        delayed(lambda v: (v, vitality(v)))(v) for v in G.originalGraph
     )
     return dict(result)
