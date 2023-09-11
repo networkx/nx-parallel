@@ -5,7 +5,7 @@ import time
 import seaborn as sns
 import pandas as pd
 
-#Code to create README heatmap for all functions in function_list
+# Code to create README heatmap for all functions in function_list
 heatmapDF = pd.DataFrame()
 function_list = [nx.betweenness_centrality, nx.closeness_vitality, nx.local_efficiency]
 number_of_nodes_list = [10, 20, 50, 300, 600]
@@ -23,16 +23,16 @@ for i in range(0, len(function_list)):
         t1 = time.time()
         c = currFun(H)
         t2 = time.time()
-        parallelTime = t2-t1
+        parallelTime = t2 - t1
         t1 = time.time()
         c = currFun(G)
         t2 = time.time()
-        stdTime = t2-t1
-        timesFaster = stdTime/parallelTime
+        stdTime = t2 - t1
+        timesFaster = stdTime / parallelTime
         heatmapDF.at[j, i] = timesFaster
         print("Finished " + str(currFun))
 
-#Code to create for row of heatmap specifically for tournaments, as they cannot be generated the same way 
+# Code to create for row of heatmap specifically for tournaments
 for j in range(0, len(number_of_nodes_list)):
     num = number_of_nodes_list[j]
     G = nx.tournament.random_tournament(num)
@@ -40,20 +40,27 @@ for j in range(0, len(number_of_nodes_list)):
     t1 = time.time()
     c = nx.tournament.is_reachable(H, 1, num)
     t2 = time.time()
-    parallelTime = t2-t1
+    parallelTime = t2 - t1
     t1 = time.time()
     c = nx.tournament.is_reachable(G, 1, num)
     t2 = time.time()
-    stdTime = t2-t1
-    timesFaster = stdTime/parallelTime
+    stdTime = t2 - t1
+    timesFaster = stdTime / parallelTime
     heatmapDF.at[j, 3] = timesFaster
 
 # plotting the heatmap with numbers and a green color scheme
 plt.figure(figsize=(20, 4))
-hm = sns.heatmap(data=heatmapDF.T, annot=True, cmap='Greens', cbar=True)
+hm = sns.heatmap(data=heatmapDF.T, annot=True, cmap="Greens", cbar=True)
 
 # Remove the tick labels on both axes
-hm.set_yticklabels(["betweenness_centrality", "closeness_vitality", "local_efficiency", "tournament is_reachable"])
+hm.set_yticklabels(
+    [
+        "betweenness_centrality",
+        "closeness_vitality",
+        "local_efficiency",
+        "tournament is_reachable",
+    ]
+)
 
 # Adding x-axis labels
 hm.set_xticklabels(number_of_nodes_list)

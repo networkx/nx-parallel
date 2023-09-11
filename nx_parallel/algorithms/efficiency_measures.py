@@ -1,23 +1,30 @@
 """Provides functions for computing the efficiency of nodes and graphs."""
 from joblib import Parallel, cpu_count, delayed
 from nx_parallel.algorithms.utils.chunk import chunks
-from nx_parallel.classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
+from nx_parallel.classes.graph import (
+    ParallelGraph,
+    ParallelDiGraph,
+    ParallelMultiDiGraph,
+    ParallelMultiGraph,
+)
 import networkx as nx
 from networkx.utils import not_implemented_for
 
 __all__ = ["local_efficiency"]
 
 """Helper to interface between graph types"""
+
+
 def _convert(G):
     if isinstance(G, ParallelMultiDiGraph):
-        I = ParallelMultiDiGraph.to_networkx(G)
+        return ParallelMultiDiGraph.to_networkx(G)
     if isinstance(G, ParallelMultiGraph):
-        I = ParallelMultiGraph.to_networkx(G)
+        return ParallelMultiGraph.to_networkx(G)
     if isinstance(G, ParallelDiGraph):
-        I = ParallelDiGraph.to_networkx(G)
+        return ParallelDiGraph.to_networkx(G)
     if isinstance(G, ParallelGraph):
-        I = ParallelGraph.to_networkx(G)
-    return I
+        return ParallelGraph.to_networkx(G)
+
 
 @not_implemented_for("directed")
 def efficiency(G, u, v):
@@ -77,7 +84,7 @@ def local_efficiency(G):
         delayed(local_efficiency_node_subset)(G, chunk) for chunk in node_chunks
     )
     return sum(efficiencies) / len(G)
-    
+
 
 def local_efficiency_node_subset(G, nodes):
     return sum(global_efficiency(G.subgraph(G[v])) for v in nodes)

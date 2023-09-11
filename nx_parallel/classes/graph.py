@@ -1,6 +1,11 @@
 from networkx import Graph, DiGraph, MultiDiGraph, MultiGraph
 
-__all__ = ["ParallelGraph", "ParallelDiGraph", "ParallelMultiDiGraph", "ParallelMultiGraph"]
+__all__ = [
+    "ParallelGraph",
+    "ParallelDiGraph",
+    "ParallelMultiDiGraph",
+    "ParallelMultiGraph",
+]
 
 
 class ParallelGraph(Graph):
@@ -12,7 +17,8 @@ class ParallelGraph(Graph):
 
     def to_networkx(self):
         return Graph(self)
-    
+
+
 class ParallelDiGraph(DiGraph):
     __networkx_plugin__ = "parallel"
 
@@ -22,7 +28,8 @@ class ParallelDiGraph(DiGraph):
 
     def to_networkx(self):
         return DiGraph(self)
-    
+
+
 class ParallelMultiGraph(MultiGraph):
     __networkx_plugin__ = "parallel"
 
@@ -32,7 +39,7 @@ class ParallelMultiGraph(MultiGraph):
 
     def to_networkx(self):
         return MultiGraph(self)
-    
+
 
 class ParallelMultiDiGraph(MultiDiGraph):
     __networkx_plugin__ = "parallel"

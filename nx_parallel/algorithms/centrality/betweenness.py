@@ -1,22 +1,22 @@
 from joblib import Parallel, delayed, cpu_count
-from nx_parallel.classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
 from nx_parallel.algorithms.utils.chunk import chunks
-import networkx as nx
 from networkx.utils import py_random_state
 from networkx.algorithms.centrality.betweenness import (
-    _rescale, 
-    _single_source_shortest_path_basic, 
-    _single_source_dijkstra_path_basic, 
-    _accumulate_endpoints, 
-    _accumulate_basic
+    _rescale,
+    _single_source_shortest_path_basic,
+    _single_source_dijkstra_path_basic,
+    _accumulate_endpoints,
+    _accumulate_basic,
 )
+
 __all__ = ["betweenness_centrality"]
+
 
 @py_random_state(5)
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):
-    r"""Compute the shortest-path betweenness centrality for nodes. Parallel implementation.
+    r"""Parallel Compute shortest-path betweenness centrality for nodes
 
     Betweenness centrality of a node $v$ is the sum of the
     fraction of all-pairs shortest paths that pass through $v$
@@ -67,28 +67,10 @@ def betweenness_centrality(
 
     Notes
     -----
-    This algorithm is a parallelized version of betwenness centrality in NetworkX. Nodes are divided into
-    chunks based on the number of available processors, and otherwise all calculations are similar
-
-    References
-    ----------
-    .. [1] Ulrik Brandes:
-       A Faster Algorithm for Betweenness Centrality.
-       Journal of Mathematical Sociology 25(2):163-177, 2001.
-       https://doi.org/10.1080/0022250X.2001.9990249
-    .. [2] Linton C. Freeman:
-       A set of measures of centrality based on betweenness.
-       Sociometry 40: 35–41, 1977
-       https://doi.org/10.2307/3033543
-    .. [3] Linton C. Freeman:
-       A set of measures of centrality based on betweenness.
-       Sociometry 40: 35–41, 1977
-       https://doi.org/10.2307/3033543
-    .. [4] NetworkX Development Team:
-       Parallel Betweenness Centrality. NetworkX documentation.
-       Available at: https://networkx.org/documentation/stable/auto_examples/algorithms/plot_parallel_betweenness.html
-       Accessed on June 26, 2023.
-    """    
+    This algorithm is a parallelized version of betwenness centrality in NetworkX.
+    Nodes are divided into chunks based on the number of available processors,
+    and otherwise all calculations are similar.
+    """
     if k is None:
         nodes = G.nodes
     else:
@@ -106,7 +88,7 @@ def betweenness_centrality(
         for chunk in node_chunks
     )
 
-    #Reducing partial solution
+    # Reducing partial solution
     bt_c = bt_cs[0]
     for bt in bt_cs[1:]:
         for n in bt:
@@ -123,7 +105,6 @@ def betweenness_centrality(
     return betweenness
 
 
-
 def betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
     betweenness = dict.fromkeys(G, 0.0)
     for s in nodes:
@@ -138,10 +119,3 @@ def betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
         else:
             betweenness, delta = _accumulate_basic(betweenness, S, P, sigma, s)
     return betweenness
-
-
-
-
-
-
-

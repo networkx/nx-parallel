@@ -1,18 +1,23 @@
 from joblib import Parallel, cpu_count, delayed
 import networkx as nx
 from nx_parallel.algorithms.utils.chunk import chunks
-from nx_parallel.classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
 
 __all__ = ["number_of_isolates"]
 
 """Identical to networkx implementation"""
+
+
 def is_isolate(G, n):
     return nx.is_isolate(G.originalGraph, n)
 
+
 """Identical to networkx implementation"""
+
+
 def isolates(G):
     return nx.isolates(G.originalGraph)
-    
+
+
 def number_of_isolates(G):
     """Returns the number of isolates in the graph. Parallel implementation.
 
@@ -35,6 +40,3 @@ def number_of_isolates(G):
     isolate_chunks = chunks(isolates_list, num_chunks)
     results = Parallel(n_jobs=-1)(delayed(len)(chunk) for chunk in isolate_chunks)
     return sum(results)
-
-
-

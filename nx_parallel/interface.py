@@ -1,6 +1,11 @@
 import networkx as nx
-from networkx import DiGraph, Graph, MultiDiGraph, MultiGraph, PlanarEmbedding
-from .classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
+from networkx import DiGraph, Graph, MultiDiGraph, MultiGraph
+from .classes.graph import (
+    ParallelGraph,
+    ParallelDiGraph,
+    ParallelMultiDiGraph,
+    ParallelMultiGraph,
+)
 from .algorithms.centrality.betweenness import betweenness_centrality
 from .algorithms.isolate import number_of_isolates, isolates, is_isolate
 from .algorithms.vitality import closeness_vitality
@@ -13,7 +18,11 @@ from .algorithms.tournament import (
     score_sequence,
     tournament_matrix,
 )
-from .algorithms.efficiency_measures import efficiency, local_efficiency, global_efficiency
+from .algorithms.efficiency_measures import (
+    efficiency,
+    local_efficiency,
+    global_efficiency,
+)
 
 
 __all__ = ["Dispatcher"]
@@ -39,10 +48,10 @@ class Dispatcher:
     isolates = isolates
     is_isolate = is_isolate
 
-    #Vitality
+    # Vitality
     closeness_vitality = closeness_vitality
 
-    #Tournament
+    # Tournament
     is_tournament = is_tournament
     hamiltonian_path = hamiltonian_path
     random_tournament = random_tournament
@@ -50,11 +59,11 @@ class Dispatcher:
     tournament_matrix = tournament_matrix
     is_reachable = is_reachable
     tournament_is_strongly_connected = tournament_is_strongly_connected
-    
+
     # Centrality
     betweenness_centrality = betweenness_centrality
 
-    #Efficiency
+    # Efficiency
     efficiency = efficiency
     local_efficiency = local_efficiency
     global_efficiency = global_efficiency
@@ -169,8 +178,4 @@ class Dispatcher:
 
     @staticmethod
     def convert_to_nx(obj, *, name=None):
-       return obj
-
- 
-
-
+        return obj
