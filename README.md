@@ -1,9 +1,10 @@
-NX-Parallel
+# NXParallel
+
 -----------
 
-A NetworkX backend plugin which uses dask for parallelization.
+A NetworkX backend plugin that uses joblib to parallelize graph algorithms.
 
-``` python
+```python
 In [1]: import networkx as nx; import nx_parallel
 
 In [2]: G = nx.erdos_renyi_graph(10, 0.5)
@@ -22,5 +23,4 @@ Out[4]:
  7: 0.0,
  8: 0.0,
  9: 0.0}
-
 ```

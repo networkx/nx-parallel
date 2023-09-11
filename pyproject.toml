@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "nx-parallel"
 authors = [
     {name = "Mridul Seth", email = "mail@mriduls.com"},
+    {name = "Derek Pisner", email = "dpysalexander@gmail.com"},
 ]
 description = "An experimental parallel backend for NetworkX"
 readme = "README.md"
@@ -16,8 +17,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "networkx",
-    "joblib"
+    "networkx>=2.8.8",
+    "joblib>=1.3.1"
 ]
 version = '0.0.1'
 
