@@ -1,3 +1,3 @@
-from .centrality import *
-from .graph import *
+from .algorithms import *
+from .classes import *
 from .interface import *

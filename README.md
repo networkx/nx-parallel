@@ -1,7 +1,7 @@
-NX-Parallel
+nx_parallel
 -----------
 
-A NetworkX backend plugin which uses dask for parallelization.
+A NetworkX backend plugin which uses joblib and multiprocessing for parallelization.
 
 ``` python
 In [1]: import networkx as nx; import nx_parallel
@@ -24,3 +24,18 @@ Out[4]:
  9: 0.0}
 
 ```
+
+Currently the following functions have parallelized implementations:
+  - centrality
+    - betweenness_centrality
+  - tournament
+    - is_reachable
+  - closeness_vitality
+  - efficiency_measures
+    - local_efficiency
+
+![alt text](timing/heatmap_all_functions.png)
+
+See the ```/timing``` folder for more heatmaps and code for heatmap generation!
+
+
