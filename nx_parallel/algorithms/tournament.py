@@ -1,5 +1,4 @@
 from joblib import Parallel, cpu_count, delayed
-import networkx as nx
 from nx_parallel.algorithms.utils.chunk import chunks
 from networkx.algorithms.simple_paths import is_simple_path as is_path
 
@@ -7,47 +6,6 @@ __all__ = [
     "is_reachable",
     "tournament_is_strongly_connected",
 ]
-
-"""Identical to networkx implementation"""
-
-
-def index_satisfying(iterable, condition):
-    return nx.algorithms.tournament.index_satisfying(iterable, condition)
-
-
-"""Identical to networkx implementation"""
-
-
-def is_tournament(G):
-    return nx.algorithms.tournament.is_tournament(G.originalGraph)
-
-
-"""Identical to networkx implementation"""
-
-
-def hamiltonian_path(G):
-    return nx.algorithms.tournament.hamiltonian_path(G.originalGraph)
-
-
-"""Identical to networkx implementation"""
-
-
-def random_tournament(n, seed=None):
-    return nx.algorithms.tournament.random_tournament(n, seed)
-
-
-"""Identical to networkx implementation"""
-
-
-def score_sequence(G):
-    return nx.algorithms.tournament.score_sequence(G.originalGraph)
-
-
-"""Identical to networkx implementation"""
-
-
-def tournament_matrix(G):
-    return nx.algorithms.tournament.tournament_matrix(G.originalGraph)
 
 
 def is_reachable(G, s, t):
@@ -103,9 +61,12 @@ def is_reachable(G, s, t):
            *Electronic Colloquium on Computational Complexity*. 2001.
            <http://eccc.hpi-web.de/report/2001/092/>
     """
+    G = G.graph_object
+    return _is_reachable(G, s, t)
 
-    """Subset version of two_neighborhood"""
 
+def _is_reachable(G, s, t):
+    # Subset version of two_neighborhood"""
     def two_neighborhood_subset(G, chunk):
         reList = set()
         for v in chunk:
@@ -113,20 +74,16 @@ def is_reachable(G, s, t):
                 {
                     x
                     for x in G
-                    if x == v
-                    or x in G[v]
-                    or any(is_path(G.originalGraph, [v, z, x]) for z in G)
+                    if x == v or x in G[v] or any(is_path(G, [v, z, x]) for z in G)
                 }
             )
         return reList
 
-    """Identical to networkx helper implementation"""
-
+    # Identical to networkx helper implementation"""
     def is_closed(G, nodes):
         return all(v in G[u] for u in set(G) - nodes for v in nodes)
 
-    """helper to check closure conditions for chunk (iterable) of neighborhoods"""
-
+    # helper to check closure conditions for chunk (iterable) of neighborhoods"""
     def check_closure_subset(chunk):
         return all(not (is_closed(G, S) and s in S and t not in S) for S in chunk)
 
@@ -134,12 +91,14 @@ def is_reachable(G, s, t):
 
     # send chunk of vertices to each process (calculating neighborhoods)
     node_chunks = list(chunks(G.nodes, num_chunks))
+    #    neighborhoods = [two_neighborhood_subset(G, chunk) for chunk in node_chunks]
     neighborhoods = Parallel(n_jobs=-1)(
         delayed(two_neighborhood_subset)(G, chunk) for chunk in node_chunks
     )
 
     # send chunk of neighborhoods to each process (checking closure conditions)
     neighborhood_chunks = list(chunks(neighborhoods, num_chunks))
+    #    results = [check_closure_subset(chunk) for chunk in neighborhood_chunks]
     results = Parallel(n_jobs=-1, backend="loky")(
         delayed(check_closure_subset)(chunk) for chunk in neighborhood_chunks
     )
@@ -194,17 +153,19 @@ def tournament_is_strongly_connected(G):
            <http://eccc.hpi-web.de/report/2001/092/>
 
     """
+    G = G.graph_object
 
-    """Subset version of is_reachable"""
+    # Subset version of is_reachable
 
     def is_reachable_subset(G, chunk):
         re = set()
         for v in chunk:
-            re.update(is_reachable(G, u, v) for u in G)
+            re.update(_is_reachable(G, u, v) for u in G)
         return all(re)
 
     num_chunks = max(len(G) // cpu_count(), 1)
     node_chunks = list(chunks(G.nodes, num_chunks))
+    #    results = [is_reachable_subset(G, chunk) for chunk in node_chunks]
     results = Parallel(n_jobs=-1)(
         delayed(is_reachable_subset)(G, chunk) for chunk in node_chunks
     )

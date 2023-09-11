@@ -4,19 +4,6 @@ from nx_parallel.algorithms.utils.chunk import chunks
 
 __all__ = ["number_of_isolates"]
 
-"""Identical to networkx implementation"""
-
-
-def is_isolate(G, n):
-    return nx.is_isolate(G.originalGraph, n)
-
-
-"""Identical to networkx implementation"""
-
-
-def isolates(G):
-    return nx.isolates(G.originalGraph)
-
 
 def number_of_isolates(G):
     """Returns the number of isolates in the graph. Parallel implementation.
@@ -35,7 +22,7 @@ def number_of_isolates(G):
         The number of degree zero nodes in the graph `G`.
 
     """
-    isolates_list = list(isolates(G))
+    isolates_list = list(nx.isolates.__wrapped__(G.graph_object))
     num_chunks = max(len(isolates_list) // cpu_count(), 1)
     isolate_chunks = chunks(isolates_list, num_chunks)
     results = Parallel(n_jobs=-1)(delayed(len)(chunk) for chunk in isolate_chunks)

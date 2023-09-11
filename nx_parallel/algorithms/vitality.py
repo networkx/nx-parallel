@@ -1,9 +1,10 @@
 from functools import partial
 from joblib import Parallel, delayed
 import networkx as nx
-from nx_parallel.classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
+
 
 __all__ = ["closeness_vitality"]
+
 
 def closeness_vitality(G, node=None, weight=None, wiener_index=None):
     """Returns the closeness vitality for nodes in the graph. Parallel implementation.
@@ -62,13 +63,18 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
            <http://books.google.com/books?id=TTNhSm7HYrIC>
 
     """
+    G = G.graph_object
+    return _closeness_vitality(G, node, weight, wiener_index)
+
+
+def _closeness_vitality(G, node, weight, wiener_index):
     if wiener_index is None:
-        wiener_index = nx.wiener_index(G.originalGraph, weight=weight)
+        wiener_index = nx.wiener_index(G, weight=weight)
+
     if node is not None:
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
-    vitality = partial(closeness_vitality, G.originalGraph, weight=weight, wiener_index=wiener_index)
-    result = Parallel(n_jobs=-1)(
-        delayed(lambda v: (v, vitality(v)))(v) for v in G.originalGraph
-    )
+
+    vitality = partial(_closeness_vitality, G, weight=weight, wiener_index=wiener_index)
+    result = Parallel(n_jobs=-1)(delayed(lambda v: (v, vitality(v)))(v) for v in G)
     return dict(result)

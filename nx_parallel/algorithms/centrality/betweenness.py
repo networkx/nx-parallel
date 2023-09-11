@@ -1,5 +1,4 @@
 from joblib import Parallel, delayed, cpu_count
-from nx_parallel.algorithms.utils.chunk import chunks
 from networkx.utils import py_random_state
 from networkx.algorithms.centrality.betweenness import (
     _rescale,
@@ -8,6 +7,8 @@ from networkx.algorithms.centrality.betweenness import (
     _accumulate_endpoints,
     _accumulate_basic,
 )
+
+from nx_parallel.algorithms.utils.chunk import chunks
 
 __all__ = ["betweenness_centrality"]
 
@@ -71,15 +72,19 @@ def betweenness_centrality(
     Nodes are divided into chunks based on the number of available processors,
     and otherwise all calculations are similar.
     """
+    G = G.graph_object
+
     if k is None:
         nodes = G.nodes
     else:
         nodes = seed.sample(list(G.nodes), k)
+
     total_cores = cpu_count()
     num_chunks = max(len(nodes) // total_cores, 1)
     node_chunks = list(chunks(nodes, num_chunks))
+
     bt_cs = Parallel(n_jobs=total_cores)(
-        delayed(betweenness_centrality_node_subset)(
+        delayed(_betweenness_centrality_node_subset)(
             G,
             chunk,
             weight,
@@ -105,7 +110,7 @@ def betweenness_centrality(
     return betweenness
 
 
-def betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
+def _betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
     betweenness = dict.fromkeys(G, 0.0)
     for s in nodes:
         # single source shortest paths
