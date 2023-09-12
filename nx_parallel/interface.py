@@ -21,6 +21,12 @@ class ParallelGraph:
     def __init__(self, graph_object):
         self.graph_object = graph_object
 
+    def is_multigraph(self):
+        return self.graph_object.is_multigraph()
+
+    def is_directed(self):
+        return self.graph_object.is_directed()
+
 
 class Dispatcher:
     # =============================
@@ -60,6 +66,8 @@ class Dispatcher:
         name=None,
         graph_name=None,
     ):
+        if isinstance(graph, ParallelGraph):
+            return graph
         return ParallelGraph(graph)
 
     @staticmethod

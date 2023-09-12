@@ -63,11 +63,9 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
            <http://books.google.com/books?id=TTNhSm7HYrIC>
 
     """
-    G = G.graph_object
-    return _closeness_vitality(G, node, weight, wiener_index)
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
-
-def _closeness_vitality(G, node, weight, wiener_index):
     if wiener_index is None:
         wiener_index = nx.wiener_index(G, weight=weight)
 
@@ -75,6 +73,6 @@ def _closeness_vitality(G, node, weight, wiener_index):
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
 
-    vitality = partial(_closeness_vitality, G, weight=weight, wiener_index=wiener_index)
+    vitality = partial(closeness_vitality, G, weight=weight, wiener_index=wiener_index)
     result = Parallel(n_jobs=-1)(delayed(lambda v: (v, vitality(v)))(v) for v in G)
     return dict(result)

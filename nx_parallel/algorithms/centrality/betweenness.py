@@ -72,7 +72,8 @@ def betweenness_centrality(
     Nodes are divided into chunks based on the number of available processors,
     and otherwise all calculations are similar.
     """
-    G = G.graph_object
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
     if k is None:
         nodes = G.nodes

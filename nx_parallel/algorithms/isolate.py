@@ -22,7 +22,9 @@ def number_of_isolates(G):
         The number of degree zero nodes in the graph `G`.
 
     """
-    isolates_list = list(nx.isolates.__wrapped__(G.graph_object))
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+    isolates_list = list(nx.isolates(G))
     num_chunks = max(len(isolates_list) // cpu_count(), 1)
     isolate_chunks = chunks(isolates_list, num_chunks)
     results = Parallel(n_jobs=-1)(delayed(len)(chunk) for chunk in isolate_chunks)

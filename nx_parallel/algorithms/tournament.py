@@ -61,12 +61,9 @@ def is_reachable(G, s, t):
            *Electronic Colloquium on Computational Complexity*. 2001.
            <http://eccc.hpi-web.de/report/2001/092/>
     """
-    G = G.graph_object
-    return _is_reachable(G, s, t)
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
-
-def _is_reachable(G, s, t):
-    # Subset version of two_neighborhood"""
     def two_neighborhood_subset(G, chunk):
         reList = set()
         for v in chunk:
@@ -79,19 +76,17 @@ def _is_reachable(G, s, t):
             )
         return reList
 
-    # Identical to networkx helper implementation"""
     def is_closed(G, nodes):
         return all(v in G[u] for u in set(G) - nodes for v in nodes)
 
-    # helper to check closure conditions for chunk (iterable) of neighborhoods"""
     def check_closure_subset(chunk):
-        return all(not (is_closed(G, S) and s in S and t not in S) for S in chunk)
-
-    num_chunks = max(len(G) // cpu_count(), 1)
+        return not any((s in S and t not in S and is_closed(G, S)) for S in chunk)
 
     # send chunk of vertices to each process (calculating neighborhoods)
+    num_chunks = max(len(G) // cpu_count(), 1)
     node_chunks = list(chunks(G.nodes, num_chunks))
-    #    neighborhoods = [two_neighborhood_subset(G, chunk) for chunk in node_chunks]
+
+    # neighborhoods = [two_neighborhood_subset(G, chunk) for chunk in node_chunks]
     neighborhoods = Parallel(n_jobs=-1)(
         delayed(two_neighborhood_subset)(G, chunk) for chunk in node_chunks
     )
@@ -153,14 +148,15 @@ def tournament_is_strongly_connected(G):
            <http://eccc.hpi-web.de/report/2001/092/>
 
     """
-    G = G.graph_object
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
     # Subset version of is_reachable
 
     def is_reachable_subset(G, chunk):
         re = set()
         for v in chunk:
-            re.update(_is_reachable(G, u, v) for u in G)
+            re.update(is_reachable(G, u, v) for u in G)
         return all(re)
 
     num_chunks = max(len(G) // cpu_count(), 1)
