@@ -1,13 +1,13 @@
 from functools import partial
+
 from joblib import Parallel, delayed
 import networkx as nx
-
 
 __all__ = ["closeness_vitality"]
 
 
 def closeness_vitality(G, node=None, weight=None, wiener_index=None):
-    """Returns the closeness vitality for nodes in the graph. Parallel implementation.
+    """Returns the closeness vitality for nodes in `G`. Parallel implementation.
 
     The *closeness vitality* of a node, defined in Section 3.6.2 of [1],
     is the change in the sum of distances between all node pairs when

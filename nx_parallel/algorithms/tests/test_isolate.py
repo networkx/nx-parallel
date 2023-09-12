@@ -1,6 +1,8 @@
 """Unit tests for the :mod:`networkx.algorithms.isolates` module. Modified for nx_parallel backend"""
 
-import networkx as nx; import nx_parallel
+import networkx as nx
+
+import nx_parallel
 
 
 def test_is_isolate():

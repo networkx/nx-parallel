@@ -1,5 +1,6 @@
-from joblib import Parallel, cpu_count, delayed
 import networkx as nx
+from joblib import Parallel, cpu_count, delayed
+
 from nx_parallel.algorithms.utils.chunk import chunks
 
 __all__ = ["number_of_isolates"]

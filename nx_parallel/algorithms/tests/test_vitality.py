@@ -1,6 +1,7 @@
 """Modified unit tests ifor backend from :mod:`networkx.algorithms.vitality`"""
 
 import networkx as nx
+
 import nx_parallel
 
 

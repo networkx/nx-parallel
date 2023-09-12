@@ -1,16 +1,15 @@
 import networkx as nx
 
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
+from nx_parallel.algorithms.efficiency_measures import (
+    local_efficiency,
+)
 from nx_parallel.algorithms.isolate import number_of_isolates
-from nx_parallel.algorithms.vitality import closeness_vitality
 from nx_parallel.algorithms.tournament import (
     is_reachable,
     tournament_is_strongly_connected,
 )
-from nx_parallel.algorithms.efficiency_measures import (
-    local_efficiency,
-)
-
+from nx_parallel.algorithms.vitality import closeness_vitality
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 

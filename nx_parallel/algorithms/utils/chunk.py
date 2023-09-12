@@ -1,6 +1,8 @@
 import itertools
 
 """Divides an iterable into chunks of size n"""
+
+
 def chunks(l, n):
     l_c = iter(l)
     while True:

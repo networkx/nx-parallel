@@ -1,6 +1,8 @@
 """Unit tests for the :mod:`networkx.algorithms.efficiency` module."""
 
-import networkx as nx; import nx_parallel
+import networkx as nx
+
+import nx_parallel
 
 
 class TestEfficiency:
@@ -15,7 +17,6 @@ class TestEfficiency:
         # G3 is the triangle graph with one additional edge
         self.G3 = nx.lollipop_graph(3, 1)
         self.H3 = nx_parallel.ParallelGraph(self.G3)
-
 
     def test_efficiency_disconnected_nodes(self):
         """

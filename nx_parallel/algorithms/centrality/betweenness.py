@@ -1,12 +1,12 @@
-from joblib import Parallel, delayed, cpu_count
-from networkx.utils import py_random_state
+from joblib import Parallel, cpu_count, delayed
 from networkx.algorithms.centrality.betweenness import (
-    _rescale,
-    _single_source_shortest_path_basic,
-    _single_source_dijkstra_path_basic,
-    _accumulate_endpoints,
     _accumulate_basic,
+    _accumulate_endpoints,
+    _rescale,
+    _single_source_dijkstra_path_basic,
+    _single_source_shortest_path_basic,
 )
+from networkx.utils import py_random_state
 
 from nx_parallel.algorithms.utils.chunk import chunks
 

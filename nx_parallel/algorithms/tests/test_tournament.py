@@ -2,9 +2,7 @@
 from itertools import combinations
 
 import pytest
-
-from networkx import DiGraph; import nx_parallel
-
+from networkx import DiGraph
 from networkx.algorithms.tournament import (
     hamiltonian_path,
     index_satisfying,
@@ -15,6 +13,8 @@ from networkx.algorithms.tournament import (
     score_sequence,
     tournament_matrix,
 )
+
+import nx_parallel
 
 
 def test_condition_not_satisfied():

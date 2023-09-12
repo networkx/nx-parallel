@@ -1,6 +1,7 @@
 from joblib import Parallel, cpu_count, delayed
-from nx_parallel.algorithms.utils.chunk import chunks
 from networkx.algorithms.simple_paths import is_simple_path as is_path
+
+from nx_parallel.algorithms.utils.chunk import chunks
 
 __all__ = [
     "is_reachable",

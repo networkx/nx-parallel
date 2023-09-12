@@ -1,6 +1,7 @@
+import networkx as nx
 import pytest
 
-import networkx as nx; import nx_parallel
+import nx_parallel
 
 
 def weighted_G():
