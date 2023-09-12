@@ -47,11 +47,6 @@ class Dispatcher:
     local_efficiency = local_efficiency
 
     # =============================
-    def __getattr__(self, item):
-        try:
-            return nx.utils.backends._registered_algorithms[item].__wrapped__
-        except KeyError:
-            raise AttributeError(item) from None
 
     @staticmethod
     def convert_from_nx(

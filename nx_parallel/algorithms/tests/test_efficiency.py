@@ -18,33 +18,11 @@ class TestEfficiency:
         self.G3 = nx.lollipop_graph(3, 1)
         self.H3 = nx_parallel.ParallelGraph(self.G3)
 
-    def test_efficiency_disconnected_nodes(self):
-        """
-        When nodes are disconnected, efficiency is 0
-        """
-        assert nx.efficiency(self.H1, 1, 2) == 0
-
     def test_local_efficiency_disconnected_graph(self):
         """
         In a disconnected graph the efficiency is 0
         """
         assert nx.local_efficiency(self.H1) == 0
-
-    def test_efficiency(self):
-        assert nx.efficiency(self.H2, 0, 1) == 1
-        assert nx.efficiency(self.H2, 0, 2) == 1 / 2
-
-    def test_global_efficiency(self):
-        assert nx.global_efficiency(self.H2) == 5 / 6
-
-    def test_global_efficiency_complete_graph(self):
-        """
-        Tests that the average global efficiency of the complete graph is one.
-        """
-        for n in range(2, 10):
-            G = nx.complete_graph(n)
-            H = nx_parallel.ParallelGraph(G)
-            assert nx.global_efficiency(H) == 1
 
     def test_local_efficiency_complete_graph(self):
         """

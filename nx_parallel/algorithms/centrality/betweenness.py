@@ -13,7 +13,6 @@ from nx_parallel.algorithms.utils.chunk import chunks
 __all__ = ["betweenness_centrality"]
 
 
-@py_random_state(5)
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):

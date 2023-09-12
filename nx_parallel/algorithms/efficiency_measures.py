@@ -1,6 +1,6 @@
 """Provides functions for computing the efficiency of nodes and graphs."""
-import networkx as nx
 from joblib import Parallel, cpu_count, delayed
+import networkx as nx
 
 from nx_parallel.algorithms.utils import chunks
 
@@ -49,14 +49,13 @@ def local_efficiency(G):
            *Physical Review Letters* 87.19 (2001): 198701.
            <https://doi.org/10.1103/PhysRevLett.87.198701>
     """
-    G = G.graph_object
-    return _local_efficiency(G)
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
-
-def _local_efficiency(G):
     total_cores = cpu_count()
     num_chunks = max(len(G.nodes) // total_cores, 1)
     node_chunks = list(chunks(G.nodes, num_chunks))
+
     efficiencies = Parallel(n_jobs=total_cores)(
         delayed(_local_efficiency_node_subset)(G, chunk) for chunk in node_chunks
     )
