@@ -91,6 +91,7 @@ def is_reachable(G, s, t):
     # send chunk of vertices to each process (calculating neighborhoods)
     num_chunks = max(len(G) // cpu_count(), 1)
     node_chunks = list(chunks(G.nodes, num_chunks))
+    print("num_chunks: ", num_chunks)
 
     # neighborhoods = [two_neighborhood_subset(G, chunk) for chunk in node_chunks]
     neighborhoods = Parallel(n_jobs=-1)(
@@ -99,6 +100,7 @@ def is_reachable(G, s, t):
 
     # send chunk of neighborhoods to each process (checking closure conditions)
     neighborhood_chunks = list(chunks(neighborhoods, num_chunks))
+    print("neighborhood_chunks: ", neighborhood_chunks)
     #    results = [check_closure_subset(chunk) for chunk in neighborhood_chunks]
     results = Parallel(n_jobs=-1, backend="loky")(
         delayed(check_closure_subset)(chunk) for chunk in neighborhood_chunks

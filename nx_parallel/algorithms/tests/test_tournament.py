@@ -49,5 +49,9 @@ def test_doc_examples_outside_doc_string():
     assert nx.tournament.is_tournament(G)
     assert nx.tournament.is_reachable(H, 1, 3)
     assert nx.tournament.is_reachable(G, 1, 3, backend="parallel")
+    assert not nx.tournament.is_reachable(G, 3, 2)
     assert not nx.tournament.is_reachable(H, 3, 2)
     assert not nx.tournament.is_reachable(G, 3, 2, backend="parallel")
+    print(G.edges)
+    print(H.graph_object.edges)
+    assert False
