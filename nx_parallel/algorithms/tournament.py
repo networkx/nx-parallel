@@ -44,6 +44,9 @@ def is_reachable(G, s, t):
     True
     >>> nx.tournament.is_reachable(G, 1, 3, backend="parallel")
     True
+    >>> import nx_parallel as nxp
+    >>> nx.tournament.is_reachable(nxp.ParallelGraph(G), 3, 2)
+    False
     >>> nx.tournament.is_reachable(G, 3, 2, backend="parallel")
     False
 
@@ -129,6 +132,9 @@ def tournament_is_strongly_connected(G):
     >>> G = nx.DiGraph([(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)])
     >>> nx.tournament.is_tournament(G)
     True
+    >>> import nx_parallel as nxp
+    >>> nx.tournament.is_strongly_connected(nxp.ParallelGraph(G))
+    False
     >>> nx.tournament.is_strongly_connected(G, backend="parallel")
     False
     >>> G.remove_edge(0, 3)
