@@ -40,9 +40,9 @@ def is_reachable(G, s, t):
     --------
     >>> import networkx as nx
     >>> G = nx.DiGraph([(1, 0), (1, 3), (1, 2), (2, 3), (2, 0), (3, 0)])
-    >>> nx.tournament.is_reachable(G, 1, 3)
+    >>> nx.tournament.is_reachable(G, 1, 3, backend="parallel")
     True
-    >>> nx.tournament.is_reachable(G, 3, 2)
+    >>> nx.tournament.is_reachable(G, 3, 2, backend="parallel")
     False
 
     Notes
@@ -125,10 +125,10 @@ def tournament_is_strongly_connected(G):
     --------
     >>> import networkx as nx
     >>> G = nx.DiGraph([(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3), (3, 0)])
-    >>> nx.tournament.is_strongly_connected(G)
+    >>> nx.tournament.is_strongly_connected(G, backend="parallel")
     True
     >>> G.remove_edge(1, 3)
-    >>> nx.tournament.is_strongly_connected(G)
+    >>> nx.tournament.is_strongly_connected(G, backend="parallel")
     False
 
     Notes
