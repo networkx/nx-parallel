@@ -86,7 +86,7 @@ def is_reachable(G, s, t):
         return all(v in G[u] for u in set(G) - nodes for v in nodes)
 
     def check_closure_subset(chunk):
-        return not any((s in S and t not in S and is_closed(G, S)) for S in chunk)
+        return all(not (s in S and t not in S and is_closed(G, S)) for S in chunk)
 
     # send chunk of vertices to each process (calculating neighborhoods)
     num_chunks = max(len(G) // cpu_count(), 1)
@@ -105,6 +105,8 @@ def is_reachable(G, s, t):
     results = Parallel(n_jobs=-1, backend="loky")(
         delayed(check_closure_subset)(chunk) for chunk in neighborhood_chunks
     )
+    results = list(results)
+    print("results: ", results)
     return all(results)
 
 
