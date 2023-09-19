@@ -1,8 +1,8 @@
 """Provides functions for computing the efficiency of nodes and graphs."""
-from joblib import Parallel, cpu_count, delayed
 import networkx as nx
+from joblib import Parallel, delayed
 
-from nx_parallel.algorithms.utils import chunks
+import nx_parallel as nxp
 
 __all__ = ["local_efficiency"]
 
@@ -52,9 +52,9 @@ def local_efficiency(G):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    total_cores = cpu_count()
-    num_chunks = max(len(G.nodes) // total_cores, 1)
-    node_chunks = list(chunks(G.nodes, num_chunks))
+    total_cores = nxp.cpu_count()
+    num_in_chunk = max(len(G.nodes) // total_cores, 1)
+    node_chunks = list(nxp.chunks(G.nodes, num_in_chunk))
 
     efficiencies = Parallel(n_jobs=total_cores)(
         delayed(_local_efficiency_node_subset)(G, chunk) for chunk in node_chunks

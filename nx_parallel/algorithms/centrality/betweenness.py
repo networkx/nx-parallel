@@ -1,4 +1,4 @@
-from joblib import Parallel, cpu_count, delayed
+from joblib import Parallel, delayed
 from networkx.algorithms.centrality.betweenness import (
     _accumulate_basic,
     _accumulate_endpoints,
@@ -8,11 +8,12 @@ from networkx.algorithms.centrality.betweenness import (
 )
 from networkx.utils import py_random_state
 
-from nx_parallel.algorithms.utils.chunk import chunks
+import nx_parallel as nxp
 
 __all__ = ["betweenness_centrality"]
 
 
+@py_random_state(5)
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):
@@ -79,9 +80,9 @@ def betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    total_cores = cpu_count()
-    num_chunks = max(len(nodes) // total_cores, 1)
-    node_chunks = list(chunks(nodes, num_chunks))
+    total_cores = nxp.cpu_count()
+    num_in_chunk = max(len(nodes) // total_cores, 1)
+    node_chunks = nxp.chunks(nodes, num_in_chunk)
 
     bt_cs = Parallel(n_jobs=total_cores)(
         delayed(_betweenness_centrality_node_subset)(

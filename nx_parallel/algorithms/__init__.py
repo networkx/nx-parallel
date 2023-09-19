@@ -1,6 +1,5 @@
 # subpackages
 from .centrality import *
-from .utils import *
 
 # modules
 from .efficiency_measures import *
