@@ -1,58 +1,16 @@
-from joblib import Parallel, cpu_count, delayed
 import networkx as nx
-from nx_parallel.algorithms.utils.chunk import chunks
-from networkx.algorithms.simple_paths import is_simple_path as is_path
+from joblib import Parallel, delayed
+
+import nx_parallel as nxp
 
 __all__ = [
     "is_reachable",
     "tournament_is_strongly_connected",
 ]
 
-"""Identical to networkx implementation"""
-
-
-def index_satisfying(iterable, condition):
-    return nx.algorithms.tournament.index_satisfying(iterable, condition)
-
-
-"""Identical to networkx implementation"""
-
-
-def is_tournament(G):
-    return nx.algorithms.tournament.is_tournament(G.originalGraph)
-
-
-"""Identical to networkx implementation"""
-
-
-def hamiltonian_path(G):
-    return nx.algorithms.tournament.hamiltonian_path(G.originalGraph)
-
-
-"""Identical to networkx implementation"""
-
-
-def random_tournament(n, seed=None):
-    return nx.algorithms.tournament.random_tournament(n, seed)
-
-
-"""Identical to networkx implementation"""
-
-
-def score_sequence(G):
-    return nx.algorithms.tournament.score_sequence(G.originalGraph)
-
-
-"""Identical to networkx implementation"""
-
-
-def tournament_matrix(G):
-    return nx.algorithms.tournament.tournament_matrix(G.originalGraph)
-
 
 def is_reachable(G, s, t):
-    """Decides whether there is a path from `s` to `t` in the
-    tournament.
+    """Decides whether there is a path from `s` to `t` in the tournament
 
     This function is more theoretically efficient than the reachability
     checks than the shortest path algorithms in
@@ -79,11 +37,16 @@ def is_reachable(G, s, t):
 
     Examples
     --------
-    >>> from networkx.algorithms import tournament
+    >>> import networkx as nx
     >>> G = nx.DiGraph([(1, 0), (1, 3), (1, 2), (2, 3), (2, 0), (3, 0)])
-    >>> tournament.is_reachable(G, 1, 3)
+    >>> nx.tournament.is_tournament(G)
     True
-    >>> tournament.is_reachable(G, 3, 2)
+    >>> nx.tournament.is_reachable(G, 1, 3, backend="parallel")
+    True
+    >>> import nx_parallel as nxp
+    >>> nx.tournament.is_reachable(nxp.ParallelGraph(G), 3, 2)
+    False
+    >>> nx.tournament.is_reachable(G, 3, 2, backend="parallel")
     False
 
     Notes
@@ -103,45 +66,37 @@ def is_reachable(G, s, t):
            *Electronic Colloquium on Computational Complexity*. 2001.
            <http://eccc.hpi-web.de/report/2001/092/>
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
-    """Subset version of two_neighborhood"""
+    G_adj = G._adj
+    setG = set(G)
 
-    def two_neighborhood_subset(G, chunk):
-        reList = set()
+    def two_nbrhood_subset(G, chunk):
+        result = []
         for v in chunk:
-            reList.update(
-                {
-                    x
-                    for x in G
-                    if x == v
-                    or x in G[v]
-                    or any(is_path(G.originalGraph, [v, z, x]) for z in G)
-                }
-            )
-        return reList
-
-    """Identical to networkx helper implementation"""
+            v_nbrs = G_adj[v].keys()
+            result.append(v_nbrs | {x for nbr in v_nbrs for x in G_adj[nbr]})
+        return result
 
     def is_closed(G, nodes):
-        return all(v in G[u] for u in set(G) - nodes for v in nodes)
-
-    """helper to check closure conditions for chunk (iterable) of neighborhoods"""
+        return all(v in G_adj[u] for u in setG - nodes for v in nodes)
 
     def check_closure_subset(chunk):
-        return all(not (is_closed(G, S) and s in S and t not in S) for S in chunk)
-
-    num_chunks = max(len(G) // cpu_count(), 1)
+        return all(not (s in S and t not in S and is_closed(G, S)) for S in chunk)
 
     # send chunk of vertices to each process (calculating neighborhoods)
-    node_chunks = list(chunks(G.nodes, num_chunks))
+    num_in_chunk = max(len(G) // nxp.cpu_count(), 1)
+
+    # neighborhoods = [two_neighborhood_subset(G, chunk) for chunk in node_chunks]
     neighborhoods = Parallel(n_jobs=-1)(
-        delayed(two_neighborhood_subset)(G, chunk) for chunk in node_chunks
+        delayed(two_nbrhood_subset)(G, chunk) for chunk in nxp.chunks(G, num_in_chunk)
     )
 
     # send chunk of neighborhoods to each process (checking closure conditions)
-    neighborhood_chunks = list(chunks(neighborhoods, num_chunks))
+    nbrhoods = (nhood for nh_chunk in neighborhoods for nhood in nh_chunk)
     results = Parallel(n_jobs=-1, backend="loky")(
-        delayed(check_closure_subset)(chunk) for chunk in neighborhood_chunks
+        delayed(check_closure_subset)(ch) for ch in nxp.chunks(nbrhoods, num_in_chunk)
     )
     return all(results)
 
@@ -168,13 +123,21 @@ def tournament_is_strongly_connected(G):
 
     Examples
     --------
-    >>> from networkx.algorithms import tournament
-    >>> G = nx.DiGraph([(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3), (3, 0)])
-    >>> tournament.is_strongly_connected(G)
+    >>> import networkx as nx
+    >>> G = nx.DiGraph([(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)])
+    >>> nx.tournament.is_tournament(G)
     True
-    >>> G.remove_edge(1, 3)
-    >>> tournament.is_strongly_connected(G)
+    >>> import nx_parallel as nxp
+    >>> nx.tournament.is_strongly_connected(nxp.ParallelGraph(G))
     False
+    >>> nx.tournament.is_strongly_connected(G, backend="parallel")
+    False
+    >>> G.remove_edge(0, 3)
+    >>> G.add_edge(3, 0)
+    >>> nx.tournament.is_tournament(G)
+    True
+    >>> nx.tournament.is_strongly_connected(G, backend="parallel")
+    True
 
     Notes
     -----
@@ -194,18 +157,15 @@ def tournament_is_strongly_connected(G):
            <http://eccc.hpi-web.de/report/2001/092/>
 
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
-    """Subset version of is_reachable"""
-
+    # Subset version of is_reachable
     def is_reachable_subset(G, chunk):
-        re = set()
-        for v in chunk:
-            re.update(is_reachable(G, u, v) for u in G)
-        return all(re)
+        return all(is_reachable(G, u, v) for v in chunk for u in G)
 
-    num_chunks = max(len(G) // cpu_count(), 1)
-    node_chunks = list(chunks(G.nodes, num_chunks))
+    num_in_chunk = max(len(G) // nxp.cpu_count(), 1)
     results = Parallel(n_jobs=-1)(
-        delayed(is_reachable_subset)(G, chunk) for chunk in node_chunks
+        delayed(is_reachable_subset)(G, ch) for ch in nxp.chunks(G, num_in_chunk)
     )
     return all(results)

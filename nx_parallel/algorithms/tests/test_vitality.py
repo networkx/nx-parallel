@@ -1,6 +1,7 @@
 """Modified unit tests ifor backend from :mod:`networkx.algorithms.vitality`"""
 
 import networkx as nx
+
 import nx_parallel
 
 
@@ -20,9 +21,7 @@ class TestClosenessVitality:
 
     def test_unweighted_digraph(self):
         G = nx.DiGraph(nx.cycle_graph(3))
-        print(G)
-        H = nx_parallel.ParallelDiGraph(G)
-        print(H)
+        H = nx_parallel.ParallelGraph(G)
         vitality = nx.closeness_vitality(H)
         assert vitality == {0: 4, 1: 4, 2: 4}
 
@@ -30,7 +29,7 @@ class TestClosenessVitality:
         G = nx.DiGraph()
         nx.add_cycle(G, [0, 1, 2], weight=2)
         nx.add_cycle(G, [2, 1, 0], weight=2)
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         vitality = nx.closeness_vitality(H, weight="weight")
         assert vitality == {0: 8, 1: 8, 2: 8}
 
@@ -38,7 +37,7 @@ class TestClosenessVitality:
         G = nx.MultiDiGraph()
         nx.add_cycle(G, [0, 1, 2], weight=2)
         nx.add_cycle(G, [2, 1, 0], weight=2)
-        H = nx_parallel.ParallelMultiDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         vitality = nx.closeness_vitality(H, weight="weight")
         assert vitality == {0: 8, 1: 8, 2: 8}
 

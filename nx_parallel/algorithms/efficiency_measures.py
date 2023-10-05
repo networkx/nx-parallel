@@ -1,42 +1,14 @@
 """Provides functions for computing the efficiency of nodes and graphs."""
-from joblib import Parallel, cpu_count, delayed
-from nx_parallel.algorithms.utils.chunk import chunks
-from nx_parallel.classes.graph import (
-    ParallelGraph,
-    ParallelDiGraph,
-    ParallelMultiDiGraph,
-    ParallelMultiGraph,
-)
 import networkx as nx
-from networkx.utils import not_implemented_for
+from joblib import Parallel, delayed
+
+import nx_parallel as nxp
 
 __all__ = ["local_efficiency"]
 
 """Helper to interface between graph types"""
 
 
-def _convert(G):
-    if isinstance(G, ParallelMultiDiGraph):
-        return ParallelMultiDiGraph.to_networkx(G)
-    if isinstance(G, ParallelMultiGraph):
-        return ParallelMultiGraph.to_networkx(G)
-    if isinstance(G, ParallelDiGraph):
-        return ParallelDiGraph.to_networkx(G)
-    if isinstance(G, ParallelGraph):
-        return ParallelGraph.to_networkx(G)
-
-
-@not_implemented_for("directed")
-def efficiency(G, u, v):
-    return nx.efficiency(_convert(G), u, v)
-
-
-@not_implemented_for("directed")
-def global_efficiency(G):
-    return nx.global_efficiency(_convert(G))
-
-
-@not_implemented_for("directed")
 def local_efficiency(G):
     """Returns the average local efficiency of the graph.
 
@@ -77,14 +49,18 @@ def local_efficiency(G):
            *Physical Review Letters* 87.19 (2001): 198701.
            <https://doi.org/10.1103/PhysRevLett.87.198701>
     """
-    total_cores = cpu_count()
-    num_chunks = max(len(G.nodes) // total_cores, 1)
-    node_chunks = list(chunks(G.nodes, num_chunks))
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
+    total_cores = nxp.cpu_count()
+    num_in_chunk = max(len(G.nodes) // total_cores, 1)
+    node_chunks = list(nxp.chunks(G.nodes, num_in_chunk))
+
     efficiencies = Parallel(n_jobs=total_cores)(
-        delayed(local_efficiency_node_subset)(G, chunk) for chunk in node_chunks
+        delayed(_local_efficiency_node_subset)(G, chunk) for chunk in node_chunks
     )
     return sum(efficiencies) / len(G)
 
 
-def local_efficiency_node_subset(G, nodes):
-    return sum(global_efficiency(G.subgraph(G[v])) for v in nodes)
+def _local_efficiency_node_subset(G, nodes):
+    return sum(nx.global_efficiency(G.subgraph(G[v])) for v in nodes)

@@ -1,12 +1,13 @@
 from functools import partial
+
 from joblib import Parallel, delayed
 import networkx as nx
-from nx_parallel.classes.graph import ParallelGraph, ParallelDiGraph,ParallelMultiDiGraph, ParallelMultiGraph
 
 __all__ = ["closeness_vitality"]
 
+
 def closeness_vitality(G, node=None, weight=None, wiener_index=None):
-    """Returns the closeness vitality for nodes in the graph. Parallel implementation.
+    """Returns the closeness vitality for nodes in `G`. Parallel implementation.
 
     The *closeness vitality* of a node, defined in Section 3.6.2 of [1],
     is the change in the sum of distances between all node pairs when
@@ -62,13 +63,16 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
            <http://books.google.com/books?id=TTNhSm7HYrIC>
 
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     if wiener_index is None:
-        wiener_index = nx.wiener_index(G.originalGraph, weight=weight)
+        wiener_index = nx.wiener_index(G, weight=weight)
+
     if node is not None:
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
-    vitality = partial(closeness_vitality, G.originalGraph, weight=weight, wiener_index=wiener_index)
-    result = Parallel(n_jobs=-1)(
-        delayed(lambda v: (v, vitality(v)))(v) for v in G.originalGraph
-    )
+
+    vitality = partial(closeness_vitality, G, weight=weight, wiener_index=wiener_index)
+    result = Parallel(n_jobs=-1)(delayed(lambda v: (v, vitality(v)))(v) for v in G)
     return dict(result)

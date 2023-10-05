@@ -1,6 +1,7 @@
+import networkx as nx
 import pytest
 
-import networkx as nx; import nx_parallel
+import nx_parallel
 
 
 def weighted_G():
@@ -45,7 +46,7 @@ class TestBetweennessCentrality:
     def test_P3_normalized(self):
         """Betweenness centrality: P3 normalized"""
         G = nx.path_graph(3)
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b = nx.betweenness_centrality(H, weight=None, normalized=True)
         b_answer = {0: 0.0, 1: 1.0, 2: 0.0}
         for n in sorted(G):
@@ -287,7 +288,7 @@ class TestBetweennessCentrality:
         """Betweenness centrality: directed path"""
         G = nx.DiGraph()
         nx.add_path(G, [0, 1, 2])
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b = nx.betweenness_centrality(H, weight=None, normalized=False)
         b_answer = {0: 0.0, 1: 1.0, 2: 0.0}
         for n in sorted(G):
@@ -297,7 +298,7 @@ class TestBetweennessCentrality:
         """Betweenness centrality: directed path normalized"""
         G = nx.DiGraph()
         nx.add_path(G, [0, 1, 2])
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b = nx.betweenness_centrality(H, weight=None, normalized=True)
         b_answer = {0: 0.0, 1: 0.5, 2: 0.0}
         for n in sorted(G):
@@ -317,7 +318,7 @@ class TestWeightedBetweennessCentrality:
     def test_P3_normalized(self):
         """Weighted betweenness centrality: P3 normalized"""
         G = nx.path_graph(3)
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b = nx.betweenness_centrality(H, weight="weight", normalized=True)
         b_answer = {0: 0.0, 1: 1.0, 2: 0.0}
         for n in sorted(G):
@@ -409,7 +410,7 @@ class TestWeightedBetweennessCentrality:
     def test_les_miserables_graph(self):
         """Weighted betweenness centrality: Les Miserables graph"""
         G = nx.les_miserables_graph()
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b_answer = {
             "Napoleon": 0.000,
             "Myriel": 0.177,
@@ -532,7 +533,7 @@ class TestWeightedBetweennessCentrality:
                 ("y", "v", 6),
             ]
         )
-        H = nx_parallel.ParallelDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b_answer = {"y": 5.0, "x": 5.0, "s": 4.0, "u": 2.0, "v": 2.0}
 
         b = nx.betweenness_centrality(H, weight="weight", normalized=False)
@@ -544,7 +545,7 @@ class TestWeightedBetweennessCentrality:
         G = nx.MultiGraph(weighted_G())
         es = list(G.edges(data=True))[::2]  # duplicate every other edge
         G.add_edges_from(es)
-        H = nx_parallel.ParallelMultiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b_answer = {0: 2.0, 1: 0.0, 2: 4.0, 3: 3.0, 4: 4.0, 5: 0.0}
         b = nx.betweenness_centrality(G, weight="weight", normalized=False)
         for n in sorted(G):
@@ -573,7 +574,7 @@ class TestWeightedBetweennessCentrality:
         )
 
         b_answer = {"y": 5.0, "x": 5.0, "s": 4.0, "u": 2.0, "v": 2.0}
-        H = nx_parallel.ParallelMultiDiGraph(G)
+        H = nx_parallel.ParallelGraph(G)
         b = nx.betweenness_centrality(H, weight="weight", normalized=False)
         for n in sorted(G):
             assert b[n] == pytest.approx(b_answer[n], abs=1e-7)

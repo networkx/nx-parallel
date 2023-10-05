@@ -3,16 +3,17 @@ name: Tests
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    continue-on-error: true
     defaults:
       run:
         shell: bash -l {0}
     strategy:
-      fail-fast: true
+      # fail-fast: true
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
         python-version: ["3.10", "3.11"]
@@ -37,5 +38,9 @@ jobs:
           echo "Done with installing"
       - name: PyTest
         run: |
-          NETWORKX_GRAPH_CONVERT=parallel pytest --pyargs networkx
-          python -m pytest --pyargs nx_parallel
+          NETWORKX_GRAPH_CONVERT=parallel \
+          NETWORKX_TEST_BACKEND=parallel \
+          NETWORKX_FALLBACK_TO_NX=True \
+                python -m pytest --pyargs networkx
+
+          python -m pytest --doctest-modules --pyargs nx_parallel

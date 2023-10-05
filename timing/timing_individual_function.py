@@ -1,9 +1,11 @@
-from matplotlib import pyplot as plt
-import networkx as nx
-import nx_parallel
 import time
-import seaborn as sns
+
+import networkx as nx
 import pandas as pd
+import seaborn as sns
+from matplotlib import pyplot as plt
+
+import nx_parallel
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
