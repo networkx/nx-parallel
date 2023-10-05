@@ -1,4 +1,3 @@
-import networkx as nx
 from joblib import Parallel, delayed
 
 import nx_parallel as nxp

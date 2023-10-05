@@ -1,5 +1,3 @@
-import networkx as nx
-
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
 from nx_parallel.algorithms.efficiency_measures import (
     local_efficiency,
@@ -26,7 +24,6 @@ class ParallelGraph:
     def is_directed(self):
         return self.graph_object.is_directed()
 
-
 class Dispatcher:
     # =============================
 
@@ -51,14 +48,15 @@ class Dispatcher:
     @staticmethod
     def convert_from_nx(
         graph,
-        *,
         edge_attrs=None,
         node_attrs=None,
-        preserve_edge_attrs=None,
-        preserve_node_attrs=None,
-        preserve_graph_attrs=None,
+        preserve_edge_attrs=False,
+        preserve_node_attrs=False,
+        preserve_graph_attrs=False,
         name=None,
         graph_name=None,
+        *,
+        weight=None,  # For nx.__version__ <= 3.1
     ):
         if isinstance(graph, ParallelGraph):
             return graph
