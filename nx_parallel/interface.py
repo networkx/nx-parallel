@@ -24,10 +24,6 @@ class ParallelGraph:
     def is_directed(self):
         return self.graph_object.is_directed()
 
-    def __len__(self):
-        return len(self.graph_object)
-
-
 class Dispatcher:
     # =============================
 
