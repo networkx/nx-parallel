@@ -18,7 +18,7 @@ for i in range(0, len(pList)):
         num = number_of_nodes_list[j]
 
         # create original and parallel graphs
-        G = nx.fast_gnp_random_graph(num, 0.5, directed=False)
+        G = nx.fast_gnp_random_graph(num, p, directed=False)
         H = nx_parallel.ParallelGraph(G)
 
         # time both versions and update heatmapDF
