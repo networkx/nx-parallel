@@ -1,4 +1,5 @@
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
+from nx_parallel.algorithms.shortest_paths.weighted import all_pairs_bellman_ford_path
 from nx_parallel.algorithms.efficiency_measures import (
     local_efficiency,
 )
@@ -42,6 +43,9 @@ class Dispatcher:
 
     # Efficiency
     local_efficiency = local_efficiency
+
+    # Shortest Paths : all pairs shortest paths(bellman_ford)
+    all_pairs_bellman_ford_path = all_pairs_bellman_ford_path
 
     # =============================
 
