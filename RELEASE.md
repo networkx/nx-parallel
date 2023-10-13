@@ -50,7 +50,7 @@ Example `version number`
 
       https://github.com/networkx/nx-parallel/tags
 
-- Update `version` in `pyproject.toml`.
+- Update `__version__` in `nx_parallel/__init__.py`.
 
 - Commit changes:
 
