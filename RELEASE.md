@@ -54,6 +54,6 @@ Example `version number`
 
 - Commit changes:
 
-      git add pyproject.toml
+      git add nx_parallel/__init__.py
       git commit -m 'Bump version'
       git push origin main
