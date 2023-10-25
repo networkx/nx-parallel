@@ -30,9 +30,9 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
 
     Returns
     -------
-    all_paths : 
-        dictionary keyed by source with value as another dictionary keyed 
-        by target and shortest path as its key value.
+    paths : iterator
+        (source, dictionary) iterator with dictionary keyed by target and
+        shortest path as the key value.
 
     Notes
     -----
@@ -40,6 +40,9 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     Distances are calculated as sums of weighted edges traversed.
 
     """
+    def _calculate_shortest_paths_subset(G, source, weight):
+        return (source, single_source_bellman_ford_path(G, source, weight=weight))
+
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
@@ -47,23 +50,12 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
 
     total_cores = nxp.cpu_count()
     
-    num_in_chunk = max(len(nodes) // total_cores, 1)
-    node_chunks = nxp.chunks(nodes, num_in_chunk)
-    
-    paths_list = Parallel(n_jobs=total_cores)(delayed(_calculate_shortest_paths_subset)(G, chunk, weight) for chunk in node_chunks)
-    
-    
-    all_paths = {}
-    for result in paths_list:
-        for source, paths in result.items():
-            all_paths[source]=paths
-    return all_paths
-
-
-# Helper function
-def _calculate_shortest_paths_subset(G, chunk, weight):
-    result = {}
-    for source in chunk:
-        paths = single_source_bellman_ford_path(G, source, weight=weight)
-        result[source] = paths
-    return result
+    paths = Parallel(n_jobs=total_cores, return_as="generator")(
+                    delayed(_calculate_shortest_paths_subset)(
+                        G, 
+                        source, 
+                        weight=weight
+                    )
+                    for source in nodes
+                )
+    return paths
