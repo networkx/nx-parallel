@@ -14,7 +14,7 @@ env:
 
 jobs:
   check-type-label:
-    name: ensure type label
+    name: core dev picked label & checked title
     runs-on: ubuntu-latest
     steps:
       - if: "contains( env.LABELS, 'type: ' ) == false"
