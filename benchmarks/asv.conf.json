@@ -23,9 +23,9 @@
 
     "show_commit_url": "https://github.com/networkx/nx-parallel/commit/",
     
-    "matrix": {
+    "matrix": {  
         "networkx":[],
-         "nx-parallel": []
+        "nx-parallel": []
     },
     
     "benchmark_dir": "benchmarks",
