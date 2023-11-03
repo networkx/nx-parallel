@@ -14,15 +14,13 @@ heatmapDF = pd.DataFrame()
 number_of_nodes_list = [10, 50, 100, 300, 500]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
 currFun = nx.all_pairs_bellman_ford_path
-for i in range(0, len(pList)):
-    p = pList[i]
-    for j in range(0, len(number_of_nodes_list)):
-        num = number_of_nodes_list[j]
-        
+for p in pList:
+    for num in number_of_nodes_list:
         # create original and parallel graphs
-        G = nx.fast_gnp_random_graph(num, p, directed=False)
+        G = nx.fast_gnp_random_graph(num, p, seed=42, directed=False)
         
         # for weighted graphs
+        random.seed(42)
         for u, v in G.edges():
             G[u][v]['weight'] = random.random()
         
@@ -40,14 +38,12 @@ for i in range(0, len(pList)):
         t2 = time.time()
         stdTime = t2 - t1
         timesFaster = stdTime / parallelTime
-        heatmapDF.at[j, i] = timesFaster
+        heatmapDF.at[num, p] = timesFaster
         print("Finished " + str(currFun))
 
 # Code to create for row of heatmap specifically for tournaments
-# for i in range(0, len(pList)):
-#     p = pList[i]
-#     for j in range(0, len(number_of_nodes_list)):
-#         num = number_of_nodes_list[j]
+# for p in pList:
+#     for num in number_of_nodes_list):
 #         G = nx.tournament.random_tournament(num)
 #         H = nx_parallel.ParallelDiGraph(G)
 #         t1 = time.time()
@@ -59,7 +55,7 @@ for i in range(0, len(pList)):
 #         t2 = time.time()
 #         stdTime = t2-t1
 #         timesFaster = stdTime/parallelTime
-#         heatmapDF.at[j, 3] = timesFaster
+#         heatmapDF.at[num, 3] = timesFaster
 
 # plotting the heatmap with numbers and a green color scheme
 plt.figure(figsize=(20, 4))

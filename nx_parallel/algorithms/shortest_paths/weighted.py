@@ -40,7 +40,7 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     Distances are calculated as sums of weighted edges traversed.
 
     """
-    def _calculate_shortest_paths_subset(G, source, weight):
+    def _calculate_shortest_paths_subset(source):
         return (source, single_source_bellman_ford_path(G, source, weight=weight))
 
     if hasattr(G, "graph_object"):
@@ -51,11 +51,7 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     total_cores = nxp.cpu_count()
     
     paths = Parallel(n_jobs=total_cores, return_as="generator")(
-                    delayed(_calculate_shortest_paths_subset)(
-                        G, 
-                        source, 
-                        weight=weight
-                    )
+                    delayed(_calculate_shortest_paths_subset)(source)
                     for source in nodes
                 )
     return paths
