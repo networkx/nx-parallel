@@ -39,6 +39,22 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     Edge weight attributes must be numerical.
     Distances are calculated as sums of weighted edges traversed.
 
+    Examples
+    --------
+    >>> import networkx as nx
+    >>> G = nx.Graph()
+    >>> G.add_weighted_edges_from([(1, 0, 1), (1, 2, 1), (2, 0, 3)])
+    >>> path = dict(nx.all_pairs_bellman_ford_path(G))
+    >>> path[0][2]
+    [0, 1, 2]
+    >>> parallel_path = dict(nx.all_pairs_bellman_ford_path(G, backend="parallel"))
+    >>> parallel_path[0][2]
+    [0, 1, 2]
+    >>> import nx_parallel as nxp
+    >>> parallel_path_ = dict(nx.all_pairs_bellman_ford_path(nxp.ParallelGraph(G)))
+    >>> parallel_path_
+    {1: {1: [1], 0: [1, 0], 2: [1, 2]}, 0: {0: [0], 1: [0, 1], 2: [0, 1, 2]}, 2: {2: [2], 1: [2, 1], 0: [2, 1, 0]}}
+
     """
     def _calculate_shortest_paths_subset(source):
         return (source, single_source_bellman_ford_path(G, source, weight=weight))
