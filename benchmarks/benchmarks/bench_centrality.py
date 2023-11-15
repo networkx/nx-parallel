@@ -1,6 +1,6 @@
 from .common import *
 
-class BetweennessCentrality(Benchmark):
+class Betweenness(Benchmark):
     params = [(algo_types),
               (num_nodes), 
               (edge_prob)

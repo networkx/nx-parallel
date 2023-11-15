@@ -22,17 +22,17 @@ def get_graph(num_nodes, edge_prob, is_weighted = False):
             G.edges[u, v]['weight'] = random.random()
     return G
 
-def timing_func(G, algo_type, func):
+def timing_func(G, algo_type, func, *args, **kwargs):
     if algo_type == "parallel":
         H = nxp.ParallelGraph(G)            
-        _ = func(H)
+        _ = func(H, *args, **kwargs)
         if type(_)==types.GeneratorType: d = dict(_)
     elif algo_type == "sequential":
-        _ = func(G)
+        _ = func(G, *args, **kwargs)
         if type(_)==types.GeneratorType: d = dict(_)
     # if you want to use the following, then pls add "using_kwargs" in `algo_types` above in line 12
     #elif algo_type == "using_kwargs": 
-    #    _ = func(G, backend='parallel')
+    #    _ = func(G, *args, **kwargs, backend='parallel')
     #    if type(_)==types.GeneratorType: d = dict(_)
     else:
         raise ValueError("Unknown algo_type") 
