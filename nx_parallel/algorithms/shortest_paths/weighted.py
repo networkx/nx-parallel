@@ -1,7 +1,5 @@
 from joblib import Parallel, delayed
-from networkx.algorithms.shortest_paths.weighted import (
-    single_source_bellman_ford_path
-)
+from networkx.algorithms.shortest_paths.weighted import single_source_bellman_ford_path
 
 import nx_parallel as nxp
 
@@ -41,7 +39,6 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
 
     Examples
     --------
-    >>> import networkx as nx
     >>> G = nx.Graph()
     >>> G.add_weighted_edges_from([(1, 0, 1), (1, 2, 1), (2, 0, 3)])
     >>> path = dict(nx.all_pairs_bellman_ford_path(G))
@@ -56,6 +53,7 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     {1: {1: [1], 0: [1, 0], 2: [1, 2]}, 0: {0: [0], 1: [0, 1], 2: [0, 1, 2]}, 2: {2: [2], 1: [2, 1], 0: [2, 1, 0]}}
 
     """
+
     def _calculate_shortest_paths_subset(source):
         return (source, single_source_bellman_ford_path(G, source, weight=weight))
 
@@ -65,9 +63,8 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     nodes = G.nodes
 
     total_cores = nxp.cpu_count()
-    
+
     paths = Parallel(n_jobs=total_cores, return_as="generator")(
-                    delayed(_calculate_shortest_paths_subset)(source)
-                    for source in nodes
-                )
+        delayed(_calculate_shortest_paths_subset)(source) for source in nodes
+    )
     return paths

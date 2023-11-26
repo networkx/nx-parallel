@@ -1,8 +1,6 @@
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
 from nx_parallel.algorithms.shortest_paths.weighted import all_pairs_bellman_ford_path
-from nx_parallel.algorithms.efficiency_measures import (
-    local_efficiency,
-)
+from nx_parallel.algorithms.efficiency_measures import local_efficiency
 from nx_parallel.algorithms.isolate import number_of_isolates
 from nx_parallel.algorithms.tournament import (
     is_reachable,
@@ -24,6 +22,7 @@ class ParallelGraph:
 
     def is_directed(self):
         return self.graph_object.is_directed()
+
 
 class Dispatcher:
     # =============================

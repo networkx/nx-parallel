@@ -18,23 +18,25 @@ for p in pList:
     for num in number_of_nodes_list:
         # create original and parallel graphs
         G = nx.fast_gnp_random_graph(num, p, seed=42, directed=False)
-        
+
         # for weighted graphs
         random.seed(42)
         for u, v in G.edges():
-            G[u][v]['weight'] = random.random()
-        
+            G[u][v]["weight"] = random.random()
+
         H = nx_parallel.ParallelGraph(G)
 
         # time both versions and update heatmapDF
         t1 = time.time()
         c = currFun(H)
-        if type(c)==types.GeneratorType: d = dict(c) 
+        if type(c) == types.GeneratorType:
+            d = dict(c)
         t2 = time.time()
         parallelTime = t2 - t1
         t1 = time.time()
         c = currFun(G)
-        if type(c)==types.GeneratorType: d = dict(c) 
+        if type(c) == types.GeneratorType:
+            d = dict(c)
         t2 = time.time()
         stdTime = t2 - t1
         timesFaster = stdTime / parallelTime
