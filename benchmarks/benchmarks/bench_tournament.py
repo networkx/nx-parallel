@@ -1,9 +1,10 @@
 from .common import *
 
-def get_tournament_graph(num, seed = 42):
-    return nx.tournament.random_tournament(num, seed = seed)
 
-    
+def get_tournament_graph(num, seed=42):
+    return nx.tournament.random_tournament(num, seed=seed)
+
+
 class Tournament(Benchmark):
     params = [(algo_types), (num_nodes)]
     param_names = ["algo_type", "num_nodes"]
