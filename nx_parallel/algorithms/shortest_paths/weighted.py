@@ -39,6 +39,7 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
 
     Examples
     --------
+    >>> import networkx as nx
     >>> G = nx.Graph()
     >>> G.add_weighted_edges_from([(1, 0, 1), (1, 2, 1), (2, 0, 3)])
     >>> path = dict(nx.all_pairs_bellman_ford_path(G))
