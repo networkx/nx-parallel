@@ -1,4 +1,5 @@
 from .common import *
+import networkx as nx
 
 
 def get_tournament_graph(num, seed=42):

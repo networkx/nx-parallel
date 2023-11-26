@@ -1,4 +1,5 @@
 from .common import *
+import networkx as nx
 
 
 class Betweenness(Benchmark):
@@ -7,5 +8,5 @@ class Betweenness(Benchmark):
 
     def time_betweenness_centrality(self, algo_type, num_nodes, edge_prob):
         timing_func(
-            get_graph(num_nodes, edge_prob), algo_type, func = nx.betweenness_centrality
+            get_graph(num_nodes, edge_prob), algo_type, func=nx.betweenness_centrality
         )

@@ -6,6 +6,14 @@ import random
 import networkx as nx
 import nx_parallel as nxp
 
+__all__ = [
+    "get_graph",
+    "timing_func",
+    "Benchmark",
+    "algo_types",
+    "num_nodes",
+    "edge_prob",
+]
 
 CACHE_ROOT = Path(__file__).resolve().parent.parent / "env" / "nxp_benchdata"
 
@@ -16,6 +24,7 @@ edge_prob = [0.8, 0.6, 0.4, 0.2]
 
 @lru_cache(typed=True)
 def get_graph(num_nodes, edge_prob, is_weighted=False):
+    print("Generating graph")
     G = nx.fast_gnp_random_graph(num_nodes, edge_prob, seed=42, directed=False)
     if is_weighted:
         random.seed(42)

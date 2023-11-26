@@ -1,4 +1,5 @@
 from .common import *
+import networkx as nx
 
 
 class EfficiencyMeasures(Benchmark):
