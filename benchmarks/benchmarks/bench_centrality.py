@@ -3,10 +3,9 @@ import networkx as nx
 
 
 class Betweenness(Benchmark):
-    params = [(algo_types), (num_nodes), (edge_prob)]
-    param_names = ["algo_type", "num_nodes", "edge_prob"]
+    params = [(backends), (num_nodes), (edge_prob)]
+    param_names = ["backend", "num_nodes", "edge_prob"]
 
-    def time_betweenness_centrality(self, algo_type, num_nodes, edge_prob):
-        timing_func(
-            get_graph(num_nodes, edge_prob), algo_type, func=nx.betweenness_centrality
-        )
+    def time_betweenness_centrality(self, backend, num_nodes, edge_prob):
+        G = get_graph(num_nodes, edge_prob)
+        _ = nx.betweenness_centrality(G, backend=backend)
