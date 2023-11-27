@@ -7,5 +7,5 @@ class Isolate(Benchmark):
     param_names = ["backend", "num_nodes", "edge_prob"]
 
     def time_number_of_isolates(self, backend, num_nodes, edge_prob):
-        G = cached_gnp_random_graph(num_nodes, edge_prob)
+        G = get_cached_gnp_random_graph(num_nodes, edge_prob)
         _ = nx.number_of_isolates(G, backend=backend)

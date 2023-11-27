@@ -7,5 +7,5 @@ class EfficiencyMeasures(Benchmark):
     param_names = ["backend", "num_nodes", "edge_prob"]
 
     def time_local_efficiency(self, backend, num_nodes, edge_prob):
-        G = cached_gnp_random_graph(num_nodes, edge_prob)
+        G = get_cached_gnp_random_graph(num_nodes, edge_prob)
         _ = nx.local_efficiency(G, backend=backend)
