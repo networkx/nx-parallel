@@ -27,3 +27,6 @@ local_efficiency
 
 tournament is_reachable
 ![alt text](heatmap_is_reachable_timing.png)
+
+all_pairs_bellman_ford_path
+![alt text](heatmap_all_pairs_bellman_ford_path_timing.png)
