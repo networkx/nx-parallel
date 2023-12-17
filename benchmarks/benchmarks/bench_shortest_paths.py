@@ -8,4 +8,4 @@ class Weighted(Benchmark):
 
     def time_all_pairs_bellman_ford_path(self, backend, num_nodes, edge_prob):
         G = get_cached_gnp_random_graph(num_nodes, edge_prob, is_weighted=True)
-        _ = nx.all_pairs_bellman_ford_path(G, backend=backend)
+        _ = dict(nx.all_pairs_bellman_ford_path(G, backend=backend))
