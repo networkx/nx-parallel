@@ -1,19 +1,28 @@
 ## nx-parallel
 
-nx-parallel is a NetworkX backend plugin that uses joblib and multiprocessing for parallelization. This project aims to provide parallelized implementations of various NetworkX functions to improve performance.
+nx-parallel is a NetworkX backend that uses joblib for parallelization. This project aims to provide parallelized implementations of various NetworkX functions to improve performance.
 
 ## Features
 
 nx-parallel provides parallelized implementations for the following NetworkX functions:
 
 ```
-├── centrality
-│   ├── betweenness_centrality
-│   ├── closeness_vitality
-├── tournament
-│   ├── is_reachable
-├── efficiency_measures
-│   ├── local_efficiency
+├── algorithms
+│   ├── centrality
+│   │   └── betweenness.py
+│   │       ├── betweeness_centrality
+│   ├── efficiency_measures.py
+│   │   ├── local_efficiency
+│   ├── isolate.py
+│   │   ├── number_of_isolates
+│   ├── shortest_paths
+│   │   └── weighted.py
+│   │       ├── all_pairs_dijkstra_path_length
+│   ├── tournament.py
+│   │   ├── is_reachable
+│   │   ├── tournament_is_strongly_connected
+│   └── vitality.py
+│       ├── closeness_vitality
 ```
 
 ![alt text](timing/heatmap_all_functions.png)
