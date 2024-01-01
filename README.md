@@ -6,24 +6,13 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
 
 nx-parallel provides parallelized implementations for the following NetworkX functions:
 
-```
-├── algorithms
-│   ├── centrality
-│   │   └── betweenness.py
-│   │       ├── betweeness_centrality
-│   ├── efficiency_measures.py
-│   │   ├── local_efficiency
-│   ├── isolate.py
-│   │   ├── number_of_isolates
-│   ├── shortest_paths
-│   │   └── weighted.py
-│   │       ├── all_pairs_dijkstra_path_length
-│   ├── tournament.py
-│   │   ├── is_reachable
-│   │   ├── tournament_is_strongly_connected
-│   └── vitality.py
-│       ├── closeness_vitality
-```
+- [betweeness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L17)
+- [local_efficiency](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L12)
+- [number_of_isolates](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L9)
+- [all_pairs_bellman_ford_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L9)
+- [is_reachable](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L11)
+- [tournament_is_strongly_connected](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L103)
+- [closeness_vitality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L9)
 
 ![alt text](timing/heatmap_all_functions.png)
 
