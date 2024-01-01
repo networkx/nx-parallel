@@ -12,3 +12,9 @@ def chunks(iterable, n):
         if not x:
             return
         yield x
+
+def cpu_count():
+    # Check if we are running under pytest
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        return 2
+    return os.cpu_count()
