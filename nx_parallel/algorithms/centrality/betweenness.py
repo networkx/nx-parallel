@@ -7,7 +7,7 @@ from networkx.algorithms.centrality.betweenness import (
     _single_source_shortest_path_basic,
 )
 from networkx.utils import py_random_state
-
+import os
 import nx_parallel as nxp
 
 __all__ = ["betweenness_centrality"]
@@ -15,7 +15,7 @@ __all__ = ["betweenness_centrality"]
 
 @py_random_state(5)
 def betweenness_centrality(
-    G, k=None, normalized=True, weight=None, endpoints=False, seed=None
+    G, k=None, normalized=True, weight=None, endpoints=False, seed=None, n_jobs=-1
 ):
     r"""Parallel Compute shortest-path betweenness centrality for nodes
 
@@ -61,6 +61,12 @@ def betweenness_centrality(
         See :ref:`Randomness<randomness>`.
         Note that this is only used if k is not None.
 
+    n_jobs : int, optional (default=-1)
+        The number of logical CPUs or cores you want to use. 
+        If `-1` all available cores are used.
+        For `n_jobs` less than `-1`, (`n_cpus + 1 + n_jobs`) are used.
+        If an invalid value is given, then `n_jobs` is set to `os.cpu_count()`.
+
     Returns
     -------
     nodes : dictionary
@@ -80,17 +86,17 @@ def betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    total_cores = nxp.cpu_count()
-    num_in_chunk = max(len(nodes) // total_cores, 1)
+    n_cpus = os.cpu_count()
+    if abs(n_jobs) > n_cpus:
+        n_jobs = n_cpus
+    if n_jobs < 0:
+        n_jobs = n_cpus + 1 + n_jobs
+
+    num_in_chunk = max(len(nodes) // n_jobs, 1)
     node_chunks = nxp.chunks(nodes, num_in_chunk)
 
-    bt_cs = Parallel(n_jobs=total_cores)(
-        delayed(_betweenness_centrality_node_subset)(
-            G,
-            chunk,
-            weight,
-            endpoints,
-        )
+    bt_cs = Parallel(n_jobs=n_jobs)(
+        delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints,)
         for chunk in node_chunks
     )
 

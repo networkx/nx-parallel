@@ -1,12 +1,12 @@
 from functools import partial
-
+import os
 from joblib import Parallel, delayed
 import networkx as nx
 
 __all__ = ["closeness_vitality"]
 
 
-def closeness_vitality(G, node=None, weight=None, wiener_index=None):
+def closeness_vitality(G, node=None, weight=None, wiener_index=None, n_jobs=-1):
     """Returns the closeness vitality for nodes in `G`. Parallel implementation.
 
     The *closeness vitality* of a node, defined in Section 3.6.2 of [1],
@@ -27,6 +27,12 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
         returned. Otherwise, a dictionary mapping each node to its
         closeness vitality will be returned.
 
+    n_jobs : int, optional (default=-1)
+        The number of logical CPUs or cores you want to use. 
+        If `-1` all available cores are used.
+        For `n_jobs` less than `-1`, (`n_cpus + 1 + n_jobs`) are used.
+        If an invalid value is given, then `n_jobs` is set to `os.cpu_count()`.
+
     Other parameters
     ----------------
     wiener_index : number
@@ -44,16 +50,6 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
 
         The closeness vitality of a node may be negative infinity if
         removing that node would disconnect the graph.
-
-    Examples
-    --------
-    >>> G = nx.cycle_graph(3)
-    >>> nx.closeness_vitality(G)
-    {0: 2.0, 1: 2.0, 2: 2.0}
-
-    See Also
-    --------
-    closeness_centrality
 
     References
     ----------
@@ -73,6 +69,10 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
 
+    n_cpus = os.cpu_count()
+    if abs(n_jobs) > n_cpus:
+        n_jobs = n_cpus
+
     vitality = partial(closeness_vitality, G, weight=weight, wiener_index=wiener_index)
-    result = Parallel(n_jobs=-1)(delayed(lambda v: (v, vitality(v)))(v) for v in G)
+    result = Parallel(n_jobs=n_jobs)(delayed(lambda v: (v, vitality(v)))(v) for v in G)
     return dict(result)

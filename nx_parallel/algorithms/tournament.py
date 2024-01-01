@@ -1,5 +1,5 @@
 from joblib import Parallel, delayed
-
+import os
 import nx_parallel as nxp
 
 __all__ = [
@@ -8,7 +8,7 @@ __all__ = [
 ]
 
 
-def is_reachable(G, s, t):
+def is_reachable(G, s, t, n_jobs=-1):
     """Decides whether there is a path from `s` to `t` in the tournament
 
     This function is more theoretically efficient than the reachability
@@ -28,6 +28,12 @@ def is_reachable(G, s, t):
 
     t : node
         A node in the graph.
+
+    n_jobs : int, optional (default=-1)
+        The number of logical CPUs or cores you want to use. 
+        If `-1` all available cores are used.
+        For `n_jobs` less than `-1`, (`n_cpus + 1 + n_jobs`) are used.
+        If an invalid value is given, then `n_jobs` is set to `os.cpu_count()`.
 
     Returns
     -------
@@ -71,6 +77,12 @@ def is_reachable(G, s, t):
     G_adj = G._adj
     setG = set(G)
 
+    n_cpus = os.cpu_count()
+    if abs(n_jobs) > n_cpus:
+        n_jobs = n_cpus
+    if n_jobs < 0:
+        n_jobs = n_cpus + 1 + n_jobs
+
     def two_nbrhood_subset(G, chunk):
         result = []
         for v in chunk:
@@ -85,22 +97,22 @@ def is_reachable(G, s, t):
         return all(not (s in S and t not in S and is_closed(G, S)) for S in chunk)
 
     # send chunk of vertices to each process (calculating neighborhoods)
-    num_in_chunk = max(len(G) // nxp.cpu_count(), 1)
+    num_in_chunk = max(len(G) // n_jobs, 1)
 
     # neighborhoods = [two_neighborhood_subset(G, chunk) for chunk in node_chunks]
-    neighborhoods = Parallel(n_jobs=-1)(
+    neighborhoods = Parallel(n_jobs=n_jobs)(
         delayed(two_nbrhood_subset)(G, chunk) for chunk in nxp.chunks(G, num_in_chunk)
     )
 
     # send chunk of neighborhoods to each process (checking closure conditions)
     nbrhoods = (nhood for nh_chunk in neighborhoods for nhood in nh_chunk)
-    results = Parallel(n_jobs=-1, backend="loky")(
+    results = Parallel(n_jobs=n_jobs)(
         delayed(check_closure_subset)(ch) for ch in nxp.chunks(nbrhoods, num_in_chunk)
     )
     return all(results)
 
 
-def tournament_is_strongly_connected(G):
+def tournament_is_strongly_connected(G, n_jobs=-1):
     """Decides whether the given tournament is strongly connected.
 
     This function is more theoretically efficient than the
@@ -114,6 +126,12 @@ def tournament_is_strongly_connected(G):
     ----------
     G : NetworkX graph
         A directed graph representing a tournament.
+    
+    n_jobs : int, optional (default=-1)
+        The number of logical CPUs or cores you want to use. 
+        If `-1` all available cores are used.
+        For `n_jobs` less than `-1`, (`n_cpus + 1 + n_jobs`) are used.
+        If an invalid value is given, then `n_jobs` is set to `os.cpu_count()`.
 
     Returns
     -------
@@ -159,12 +177,18 @@ def tournament_is_strongly_connected(G):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
+    n_cpus = os.cpu_count()
+    if abs(n_jobs) > n_cpus:
+        n_jobs = n_cpus
+    if n_jobs < 0:
+        n_jobs = n_cpus + 1 + n_jobs
+
     # Subset version of is_reachable
     def is_reachable_subset(G, chunk):
         return all(is_reachable(G, u, v) for v in chunk for u in G)
 
-    num_in_chunk = max(len(G) // nxp.cpu_count(), 1)
-    results = Parallel(n_jobs=-1)(
+    num_in_chunk = max(len(G) // n_jobs, 1)
+    results = Parallel(n_jobs=n_jobs)(
         delayed(is_reachable_subset)(G, ch) for ch in nxp.chunks(G, num_in_chunk)
     )
     return all(results)
