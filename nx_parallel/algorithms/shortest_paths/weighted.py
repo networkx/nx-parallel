@@ -1,6 +1,6 @@
 from joblib import Parallel, delayed
 from networkx.algorithms.shortest_paths.weighted import single_source_bellman_ford_path
-import os
+import nx_parallel as nxp
 
 __all__ = ["all_pairs_bellman_ford_path"]
 
@@ -27,9 +27,8 @@ def all_pairs_bellman_ford_path(G, weight="weight", n_jobs=-1):
 
     n_jobs : int, optional (default=-1)
         The number of logical CPUs or cores you want to use. 
-        If `-1` all available cores are used.
-        For `n_jobs` less than `-1`, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `os.cpu_count()`.
+        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
+        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
 
     Returns
     -------
@@ -65,13 +64,11 @@ def all_pairs_bellman_ford_path(G, weight="weight", n_jobs=-1):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    n_cpus = os.cpu_count()
-    if abs(n_jobs) > n_cpus:
-        n_jobs = n_cpus
+    cpu_count = nxp.cpu_count(n_jobs)
 
     nodes = G.nodes
 
-    paths = Parallel(n_jobs=n_jobs, return_as="generator")(
+    paths = Parallel(n_jobs=cpu_count, return_as="generator")(
         delayed(_calculate_shortest_paths_subset)(source) for source in nodes
     )
     return paths

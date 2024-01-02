@@ -1,5 +1,5 @@
 from functools import partial
-import os
+import nx_parallel as nxp
 from joblib import Parallel, delayed
 import networkx as nx
 
@@ -29,9 +29,8 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None, n_jobs=-1):
 
     n_jobs : int, optional (default=-1)
         The number of logical CPUs or cores you want to use. 
-        If `-1` all available cores are used.
-        For `n_jobs` less than `-1`, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `os.cpu_count()`.
+        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
+        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
 
     Other parameters
     ----------------
@@ -69,10 +68,10 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None, n_jobs=-1):
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
 
-    n_cpus = os.cpu_count()
-    if abs(n_jobs) > n_cpus:
-        n_jobs = n_cpus
+    cpu_count = nxp.cpu_count(n_jobs)
 
     vitality = partial(closeness_vitality, G, weight=weight, wiener_index=wiener_index)
-    result = Parallel(n_jobs=n_jobs)(delayed(lambda v: (v, vitality(v)))(v) for v in G)
+    result = Parallel(n_jobs=cpu_count)(
+        delayed(lambda v: (v, vitality(v)))(v) for v in G
+    )
     return dict(result)

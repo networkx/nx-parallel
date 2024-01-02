@@ -1,7 +1,6 @@
 """Provides functions for computing the efficiency of nodes and graphs."""
 import networkx as nx
 from joblib import Parallel, delayed
-import os
 import nx_parallel as nxp
 
 __all__ = ["local_efficiency"]
@@ -23,9 +22,8 @@ def local_efficiency(G, n_jobs=-1):
 
     n_jobs : int, optional (default=-1)
         The number of logical CPUs or cores you want to use. 
-        If `-1` all available cores are used.
-        For `n_jobs` less than `-1`, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `os.cpu_count()`.
+        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
+        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
 
     Returns
     -------
@@ -50,16 +48,12 @@ def local_efficiency(G, n_jobs=-1):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    n_cpus = os.cpu_count()
-    if abs(n_jobs) > n_cpus:
-        n_jobs = n_cpus
-    if n_jobs < 0:
-        n_jobs = n_cpus + 1 + n_jobs
+    cpu_count = nxp.cpu_count()
 
-    num_in_chunk = max(len(G.nodes) // n_jobs, 1)
+    num_in_chunk = max(len(G.nodes) // cpu_count, 1)
     node_chunks = list(nxp.chunks(G.nodes, num_in_chunk))
 
-    efficiencies = Parallel(n_jobs=n_jobs)(
+    efficiencies = Parallel(n_jobs=cpu_count)(
         delayed(_local_efficiency_node_subset)(G, chunk) for chunk in node_chunks
     )
     return sum(efficiencies) / len(G)
