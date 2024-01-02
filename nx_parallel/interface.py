@@ -12,7 +12,7 @@ __all__ = ["Dispatcher", "ParallelGraph"]
 
 
 class ParallelGraph:
-    __networkx_plugin__ = "parallel"
+    __networkx_backend__ = "parallel"
 
     def __init__(self, graph_object):
         self.graph_object = graph_object
