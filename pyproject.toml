@@ -30,7 +30,7 @@ developer = [
     'pytest',
 ]
 
-[project.entry-points."networkx.backends"]
+[project.entry-points."networkx.plugins"]
 parallel = "nx_parallel.interface:Dispatcher"
 
 [tool.setuptools]
