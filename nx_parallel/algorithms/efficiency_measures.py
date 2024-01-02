@@ -7,7 +7,7 @@ __all__ = ["local_efficiency"]
 
 
 def local_efficiency(G, n_jobs=-1):
-    """Returns the average local efficiency of the graph.
+    """Parallelly computes the average local efficiency of the graph.
 
     The *efficiency* of a pair of nodes in a graph is the multiplicative
     inverse of the shortest path distance between the nodes. The *local

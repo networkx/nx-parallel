@@ -7,7 +7,7 @@ __all__ = ["closeness_vitality"]
 
 
 def closeness_vitality(G, node=None, weight=None, wiener_index=None, n_jobs=-1):
-    """Returns the closeness vitality for nodes in `G`. Parallel implementation.
+    """Parallelly computes the closeness vitality for nodes in `G`. 
 
     The *closeness vitality* of a node, defined in Section 3.6.2 of [1],
     is the change in the sum of distances between all node pairs when

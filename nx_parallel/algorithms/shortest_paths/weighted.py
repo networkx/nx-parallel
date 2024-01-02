@@ -6,7 +6,7 @@ __all__ = ["all_pairs_bellman_ford_path"]
 
 
 def all_pairs_bellman_ford_path(G, weight="weight", n_jobs=-1):
-    """Computes shortest paths between all nodes in a weighted graph.
+    """Parallelly computes shortest paths between all nodes in a weighted graph.
 
     Parameters
     ----------

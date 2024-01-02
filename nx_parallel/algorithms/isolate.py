@@ -6,7 +6,7 @@ __all__ = ["number_of_isolates"]
 
 
 def number_of_isolates(G, n_jobs=-1):
-    """Returns the number of isolates in the graph. Parallel implementation.
+    """Parallelly computes the number of isolates in the graph.
 
     An *isolate* is a node with no neighbors (that is, with degree
     zero). For directed graphs, this means no in-neighbors and no

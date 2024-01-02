@@ -16,7 +16,7 @@ __all__ = ["betweenness_centrality"]
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None, n_jobs=-1
 ):
-    r"""Parallel Computes shortest-path betweenness centrality for nodes
+    r"""Parallelly computes shortest-path betweenness centrality for nodes
 
     Betweenness centrality of a node $v$ is the sum of the
     fraction of all-pairs shortest paths that pass through $v$
@@ -69,12 +69,6 @@ def betweenness_centrality(
     -------
     nodes : dictionary
        Dictionary of nodes with betweenness centrality as the value.
-
-    Notes
-    -----
-    This algorithm is a parallelized version of betwenness centrality in NetworkX.
-    Nodes are divided into chunks based on the number of available processors,
-    and otherwise all calculations are similar.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
