@@ -5,15 +5,13 @@
     "repo": "..",
     "branches": ["main"],
     "build_command": [
-        "python -m pip install build hatchling",
-        "python -m build .",
-        "PIP_NO_BUILD_ISOLATION=false python -mpip wheel --no-deps --no-index -w {build_cache_dir} {build_dir}"
+        "python -m pip install build",
+        "python -m build --wheel -o {build_cache_dir} {build_dir}"
     ],
-    "install_command": ["in-dir={env_dir} python -mpip install {wheel_file}"],
     "dvcs": "git",
     "environment_type": "virtualenv",
     "show_commit_url": "https://github.com/networkx/nx-parallel/commit/",
-    "matrix": {"networkx": [], "nx-parallel": []},
+    "matrix": {"networkx": ["3.2"], "nx-parallel": []},
     "benchmark_dir": "benchmarks",
     "env_dir": "env",
     "results_dir": "results",
