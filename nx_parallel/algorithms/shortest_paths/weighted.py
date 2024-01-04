@@ -51,7 +51,8 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     >>> import nx_parallel as nxp
     >>> parallel_path_ = dict(nx.all_pairs_bellman_ford_path(nxp.ParallelGraph(G)))
     >>> parallel_path_
-    {1: {1: [1], 0: [1, 0], 2: [1, 2]}, 0: {0: [0], 1: [0, 1], 2: [0, 1, 2]}, 2: {2: [2], 1: [2, 1], 0: [2, 1, 0]}}
+    {1: {1: [1], 0: [1, 0], 2: [1, 2]}, 0: {0: [0], 1: [0, 1], 2: [0, 1, 2]}, 
+    2: {2: [2], 1: [2, 1], 0: [2, 1, 0]}}
 
     """
 
