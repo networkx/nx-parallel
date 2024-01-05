@@ -1,0 +1,20 @@
+{
+    "version": 1,
+    "project": "nx-parallel",
+    "project_url": "https://github.com/networkx/nx-parallel",
+    "repo": "..",
+    "branches": ["main"],
+    "build_command": [
+        "python -m pip install build",
+        "python -m build --wheel -o {build_cache_dir} {build_dir}"
+    ],
+    "dvcs": "git",
+    "environment_type": "virtualenv",
+    "show_commit_url": "https://github.com/networkx/nx-parallel/commit/",
+    "matrix": {"networkx": ["3.2"], "nx-parallel": []},
+    "benchmark_dir": "benchmarks",
+    "env_dir": "env",
+    "results_dir": "results",
+    "html_dir": "html",
+    "build_cache_size": 8
+}
