@@ -1,5 +1,4 @@
 from joblib import Parallel, delayed
-
 import nx_parallel as nxp
 
 __all__ = [
@@ -9,14 +8,15 @@ __all__ = [
 
 
 def is_reachable(G, s, t):
-    """Decides whether there is a path from `s` to `t` in the tournament
+    """ 
+    Parallel implementation of :func:`networkx.algorithms.tournament.is_reachable`
 
-    This function is more theoretically efficient than the reachability
-    checks than the shortest path algorithms in
-    :mod:`networkx.algorithms.shortest_paths`.
+    Decides whether there is a path from `s` to `t` in the tournament
 
-    The given graph **must** be a tournament, otherwise this function's
-    behavior is undefined.
+    The function parallelizes the calculation of two neighborhoods of vertices in `G` 
+    and checks closure conditions for each neighborhood subset in parallel. 
+
+    Refer to :func:`networkx.algorithms.tournament.is_reachable` for more details.
 
     Parameters
     ----------
@@ -47,29 +47,14 @@ def is_reachable(G, s, t):
     False
     >>> nx.tournament.is_reachable(G, 3, 2, backend="parallel")
     False
-
-    Notes
-    -----
-    Although this function is more theoretically efficient than the
-    generic shortest path functions, a speedup requires the use of
-    parallelism. Though it may in the future, the current implementation
-    does not use parallelism, thus you may not see much of a speedup.
-
-    This algorithm comes from [1].
-
-    References
-    ----------
-    .. [1] Tantau, Till.
-           "A note on the complexity of the reachability problem for
-           tournaments."
-           *Electronic Colloquium on Computational Complexity*. 2001.
-           <http://eccc.hpi-web.de/report/2001/092/>
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
     G_adj = G._adj
     setG = set(G)
+
+    cpu_count = nxp.cpu_count()
 
     def two_nbrhood_subset(G, chunk):
         result = []
@@ -85,30 +70,30 @@ def is_reachable(G, s, t):
         return all(not (s in S and t not in S and is_closed(G, S)) for S in chunk)
 
     # send chunk of vertices to each process (calculating neighborhoods)
-    num_in_chunk = max(len(G) // nxp.cpu_count(), 1)
+    num_in_chunk = max(len(G) // cpu_count, 1)
 
     # neighborhoods = [two_neighborhood_subset(G, chunk) for chunk in node_chunks]
-    neighborhoods = Parallel(n_jobs=-1)(
+    neighborhoods = Parallel(n_jobs=cpu_count)(
         delayed(two_nbrhood_subset)(G, chunk) for chunk in nxp.chunks(G, num_in_chunk)
     )
 
     # send chunk of neighborhoods to each process (checking closure conditions)
     nbrhoods = (nhood for nh_chunk in neighborhoods for nhood in nh_chunk)
-    results = Parallel(n_jobs=-1, backend="loky")(
+    results = Parallel(n_jobs=cpu_count)(
         delayed(check_closure_subset)(ch) for ch in nxp.chunks(nbrhoods, num_in_chunk)
     )
     return all(results)
 
 
 def tournament_is_strongly_connected(G):
-    """Decides whether the given tournament is strongly connected.
+    """
+    Paralell implementation of 
+    :func:`networkx.algorithms.tournament.is_strongly_connected`
 
-    This function is more theoretically efficient than the
-    :func:`~networkx.algorithms.components.is_strongly_connected`
-    function.
+    Decides whether the given tournament is strongly connected.
 
-    The given graph **must** be a tournament, otherwise this function's
-    behavior is undefined.
+    The parallel computation is implemented by dividing the nodes into chunks and
+    then checking whether each node is reachable from each other node in parallel.
 
     Parameters
     ----------
@@ -137,24 +122,6 @@ def tournament_is_strongly_connected(G):
     True
     >>> nx.tournament.is_strongly_connected(G, backend="parallel")
     True
-
-    Notes
-    -----
-    Although this function is more theoretically efficient than the
-    generic strong connectivity function, a speedup requires the use of
-    parallelism. Though it may in the future, the current implementation
-    does not use parallelism, thus you may not see much of a speedup.
-
-    This algorithm comes from [1].
-
-    References
-    ----------
-    .. [1] Tantau, Till.
-           "A note on the complexity of the reachability problem for
-           tournaments."
-           *Electronic Colloquium on Computational Complexity*. 2001.
-           <http://eccc.hpi-web.de/report/2001/092/>
-
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
@@ -163,8 +130,11 @@ def tournament_is_strongly_connected(G):
     def is_reachable_subset(G, chunk):
         return all(is_reachable(G, u, v) for v in chunk for u in G)
 
-    num_in_chunk = max(len(G) // nxp.cpu_count(), 1)
-    results = Parallel(n_jobs=-1)(
-        delayed(is_reachable_subset)(G, ch) for ch in nxp.chunks(G, num_in_chunk)
+    cpu_count = nxp.cpu_count()
+    num_in_chunk = max(len(G) // cpu_count, 1)
+    node_chunks = nxp.chunks(G, num_in_chunk)
+
+    results = Parallel(n_jobs=cpu_count)(
+        delayed(is_reachable_subset)(G, chunk) for chunk in node_chunks
     )
     return all(results)

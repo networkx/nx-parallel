@@ -1,5 +1,5 @@
 from functools import partial
-
+import nx_parallel as nxp
 from joblib import Parallel, delayed
 import networkx as nx
 
@@ -7,11 +7,17 @@ __all__ = ["closeness_vitality"]
 
 
 def closeness_vitality(G, node=None, weight=None, wiener_index=None):
-    """Returns the closeness vitality for nodes in `G`. Parallel implementation.
+    """
+    Parallel implementation of :func:`networkx.algorithms.vitality.closeness_vitality`
+    
+    Rreturns the closeness vitality for nodes in `G`. 
+    *Closeness vitality* of a node is the change in the sum of 
+    distances between all node pairs when excluding that node.
 
-    The *closeness vitality* of a node, defined in Section 3.6.2 of [1],
-    is the change in the sum of distances between all node pairs when
-    excluding that node.
+    The parallel computation is implemented only when the node is not specified.
+    The closeness vitality for each node is computed concurrently.
+
+    Refer to :func:`networkx.algorithms.vitality.closeness_vitality` for more details.
 
     Parameters
     ----------
@@ -19,8 +25,7 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
         A strongly-connected graph.
 
     weight : string
-        The name of the edge attribute used as weight. This is passed
-        directly to the :func:`~networkx.wiener_index` function.
+        The name of the edge attribute used as weight.
 
     node : object
         If specified, only the closeness vitality for this node will be
@@ -31,37 +36,23 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
     ----------------
     wiener_index : number
         If you have already computed the Wiener index of the graph
-        `G`, you can provide that value here. Otherwise, it will be
-        computed for you.
+        `G`, you can provide that value here.
 
     Returns
     -------
     dictionary or float
-        If `node` is None, this function returns a dictionary
-        with nodes as keys and closeness vitality as the
-        value. Otherwise, it returns only the closeness vitality for the
-        specified `node`.
-
-        The closeness vitality of a node may be negative infinity if
-        removing that node would disconnect the graph.
+        Returns a dictionary with nodes as keys and closeness vitality as values,
+        based on the `node` parameter.
 
     Examples
-    --------
-    >>> G = nx.cycle_graph(3)
-    >>> nx.closeness_vitality(G)
-    {0: 2.0, 1: 2.0, 2: 2.0}
-
-    See Also
-    --------
-    closeness_centrality
-
-    References
-    ----------
-    .. [1] Ulrik Brandes, Thomas Erlebach (eds.).
-           *Network Analysis: Methodological Foundations*.
-           Springer, 2005.
-           <http://books.google.com/books?id=TTNhSm7HYrIC>
-
+    ---------
+    >>> import networkx as nx
+    >>> import nx_parallel as nxp
+    >>> G = nx.path_graph(4)
+    >>> nx.closeness_vitality(G, 0, backend="parallel")
+    6.0
+    >>> nx.closeness_vitality(nxp.ParallelGraph(G), 0)
+    6.0
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
@@ -73,6 +64,10 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
 
+    cpu_count = nxp.cpu_count()
+
     vitality = partial(closeness_vitality, G, weight=weight, wiener_index=wiener_index)
-    result = Parallel(n_jobs=-1)(delayed(lambda v: (v, vitality(v)))(v) for v in G)
+    result = Parallel(n_jobs=cpu_count)(
+        delayed(lambda v: (v, vitality(v)))(v) for v in G
+    )
     return dict(result)
