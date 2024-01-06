@@ -7,15 +7,13 @@ __all__ = [
 ]
 
 
-def is_reachable(G, s, t, n_jobs=-1):
-    """Decides whether there is a path from `s` to `t` in the tournament
+def is_reachable(G, s, t):
+    """ 
+    Parallel implementation of :func:`networkx.algorithms.tournament.is_reachable`
 
-    This function is more theoretically efficient than the reachability
-    checks than the shortest path algorithms in
-    :mod:`networkx.algorithms.shortest_paths`.
+    Decides whether there is a path from `s` to `t` in the tournament
 
-    The given graph **must** be a tournament, otherwise this function's
-    behavior is undefined.
+    Refer to :func:`networkx.algorithms.tournament.is_reachable` for more details.
 
     Parameters
     ----------
@@ -27,11 +25,6 @@ def is_reachable(G, s, t, n_jobs=-1):
 
     t : node
         A node in the graph.
-
-    n_jobs : int, optional (default=-1)
-        The number of logical CPUs or cores you want to use. 
-        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
 
     Returns
     -------
@@ -51,23 +44,6 @@ def is_reachable(G, s, t, n_jobs=-1):
     False
     >>> nx.tournament.is_reachable(G, 3, 2, backend="parallel")
     False
-
-    Notes
-    -----
-    Although this function is more theoretically efficient than the
-    generic shortest path functions, a speedup requires the use of
-    parallelism. Though it may in the future, the current implementation
-    does not use parallelism, thus you may not see much of a speedup.
-
-    This algorithm comes from [1].
-
-    References
-    ----------
-    .. [1] Tantau, Till.
-           "A note on the complexity of the reachability problem for
-           tournaments."
-           *Electronic Colloquium on Computational Complexity*. 2001.
-           <http://eccc.hpi-web.de/report/2001/092/>
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
@@ -75,7 +51,7 @@ def is_reachable(G, s, t, n_jobs=-1):
     G_adj = G._adj
     setG = set(G)
 
-    cpu_count = nxp.cpu_count(n_jobs)
+    cpu_count = nxp.cpu_count()
 
     def two_nbrhood_subset(G, chunk):
         result = []
@@ -106,25 +82,17 @@ def is_reachable(G, s, t, n_jobs=-1):
     return all(results)
 
 
-def tournament_is_strongly_connected(G, n_jobs=-1):
-    """Decides whether the given tournament is strongly connected.
+def tournament_is_strongly_connected(G):
+    """
+    Paralell implementation of 
+    :func:`networkx.algorithms.tournament.is_strongly_connected`
 
-    This function is more theoretically efficient than the
-    :func:`~networkx.algorithms.components.is_strongly_connected`
-    function.
-
-    The given graph **must** be a tournament, otherwise this function's
-    behavior is undefined.
+    Decides whether the given tournament is strongly connected.
 
     Parameters
     ----------
     G : NetworkX graph
         A directed graph representing a tournament.
-    
-    n_jobs : int, optional (default=-1)
-        The number of logical CPUs or cores you want to use. 
-        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
 
     Returns
     -------
@@ -148,24 +116,6 @@ def tournament_is_strongly_connected(G, n_jobs=-1):
     True
     >>> nx.tournament.is_strongly_connected(G, backend="parallel")
     True
-
-    Notes
-    -----
-    Although this function is more theoretically efficient than the
-    generic strong connectivity function, a speedup requires the use of
-    parallelism. Though it may in the future, the current implementation
-    does not use parallelism, thus you may not see much of a speedup.
-
-    This algorithm comes from [1].
-
-    References
-    ----------
-    .. [1] Tantau, Till.
-           "A note on the complexity of the reachability problem for
-           tournaments."
-           *Electronic Colloquium on Computational Complexity*. 2001.
-           <http://eccc.hpi-web.de/report/2001/092/>
-
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

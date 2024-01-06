@@ -5,41 +5,30 @@ import nx_parallel as nxp
 __all__ = ["all_pairs_bellman_ford_path"]
 
 
-def all_pairs_bellman_ford_path(G, weight="weight", n_jobs=-1):
-    """Parallelly computes shortest paths between all nodes in a weighted graph.
+def all_pairs_bellman_ford_path(G, weight="weight"):
+    """Parallel implementation of :func:`networkx.all_pairs_bellman_ford_path`
+
+    Returns shortest paths between all nodes in a weighted graph.
+
+    The parallel computation is implemented by dividing the nodes into chunks and
+    computing shortest paths for each chunk concurrently.
+
+    Refer to the :func:`networkx.all_pairs_bellman_ford_path` for more details about 
+    the computation and parameter description.
 
     Parameters
     ----------
     G : NetworkX graph
 
     weight : string or function (default="weight")
-        If this is a string, then edge weights will be accessed via the
-        edge attribute with this key (that is, the weight of the edge
-        joining `u` to `v` will be ``G.edges[u, v][weight]``). If no
-        such edge attribute exists, the weight of the edge is assumed to
-        be one.
-
-        If this is a function, the weight of an edge is the value
-        returned by the function. The function must accept exactly three
-        positional arguments: the two endpoints of an edge and the
-        dictionary of edge attributes for that edge. The function must
-        return a number.
-
-    n_jobs : int, optional (default=-1)
-        The number of logical CPUs or cores you want to use. 
-        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
+        If string, then edge weights will be accessed like ``G.edges[u, v][weight]``.
+        If function, the weight of an edge is the value returned by the function.
 
     Returns
     -------
     paths : iterator
         (source, dictionary) iterator with dictionary keyed by target and
         shortest path as the key value.
-
-    Notes
-    -----
-    Edge weight attributes must be numerical.
-    Distances are calculated as sums of weighted edges traversed.
 
     Examples
     --------
@@ -49,13 +38,13 @@ def all_pairs_bellman_ford_path(G, weight="weight", n_jobs=-1):
     >>> path = dict(nx.all_pairs_bellman_ford_path(G))
     >>> path[0][2]
     [0, 1, 2]
-    >>> parallel_path = dict(nx.all_pairs_bellman_ford_path(G, backend="parallel", n_jobs=3))
+    >>> parallel_path = dict(nx.all_pairs_bellman_ford_path(G, backend="parallel"))
     >>> parallel_path[0][2]
     [0, 1, 2]
     >>> import nx_parallel as nxp
     >>> parallel_path_ = dict(nx.all_pairs_bellman_ford_path(nxp.ParallelGraph(G)))
-    >>> parallel_path_
-    {1: {1: [1], 0: [1, 0], 2: [1, 2]}, 0: {0: [0], 1: [0, 1], 2: [0, 1, 2]}, 2: {2: [2], 1: [2, 1], 0: [2, 1, 0]}}
+    >>> parallel_path_[0][2] 
+    [0, 1, 2]
     """
 
     def _calculate_shortest_paths_subset(source):
@@ -64,7 +53,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", n_jobs=-1):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    cpu_count = nxp.cpu_count(n_jobs)
+    cpu_count = nxp.cpu_count()
 
     nodes = G.nodes
 

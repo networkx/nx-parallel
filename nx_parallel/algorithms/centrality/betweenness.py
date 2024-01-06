@@ -14,13 +14,16 @@ __all__ = ["betweenness_centrality"]
 
 @py_random_state(5)
 def betweenness_centrality(
-    G, k=None, normalized=True, weight=None, endpoints=False, seed=None, n_jobs=-1
+    G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):
     """Parallel implementation of :func:`networkx.betweenness_centrality`.
 
     Returns the shortest-path betweenness centrality for all the nodes.
     Betweenness centrality of a node $v$ is the sum of the fraction of all-pairs 
     shortest paths that pass through $v$.
+
+    The parallel computation is implemented by dividing the nodes into chunks and
+    computing betweenness centrality for each chunk concurrently.
 
     Refer to the :func:`networkx.betweenness_centrality` documentation for more 
     details on how the betweenness centrality is defined and computed.
@@ -46,30 +49,20 @@ def betweenness_centrality(
     seed : integer, random_state, or None (default)
         Indicator of random number generation state. Only used if `k` is not None.
 
-    n_jobs : int, optional (default=-1)
-        Number of parallel jobs. If -1, uses all available CPUs.
-        For `n_jobs` < 0, (`n_cpus` + 1 + `n_jobs`) CPUs are used.
-        Here, `n_cpus` are computed by `os.cpu_count()`.
-        If an invalid value is given, then `n_jobs` is set to default.
-
     Returns
     -------
     nodes : dictionary
        Dictionary of nodes with betweenness centrality as the value.
-
-    Notes
-    -------
-    The parallel computation is implemented by dividing the nodes into chunks and
-    computing betweenness centrality for each chunk concurrently.
 
     Examples
     --------
     >>> import networkx as nx
     >>> import nx_parallel as nxp
     >>> G = nx.Graph()
-    >>> G.add_weighted_edges_from([(1, 0, 1), (1, 2, 1), (2, 0, 3)])
-    >>> centrality = nxp.betweenness_centrality(G, n_jobs=3)
-    >>> centrality_ = nx.betweenness_centrality(G, backend="parallel", n_jobs=3)
+    >>> G.add_nodes_from(range(6))
+    >>> G.add_edges_from([(1, 0), (1, 2), (2, 0), (2, 3), (3, 4), (4, 5), (3, 5)])
+    >>> centrality = nxp.betweenness_centrality(G)
+    >>> centrality_ = nx.betweenness_centrality(G, backend="parallel")
 
     See Also
     --------
@@ -83,13 +76,12 @@ def betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    cpu_count = nxp.cpu_count(n_jobs)
-
-    num_in_chunk = max(len(nodes) // cpu_count, 1)
+    total_cores = nxp.cpu_count()
+    num_in_chunk = max(len(nodes) // total_cores, 1)
     node_chunks = nxp.chunks(nodes, num_in_chunk)
 
-    bt_cs = Parallel(n_jobs=cpu_count)(
-        delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints,)
+    bt_cs = Parallel(n_jobs=total_cores)(
+        delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
         for chunk in node_chunks
     )
 

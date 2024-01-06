@@ -14,22 +14,9 @@ def chunks(iterable, n):
         yield x
 
 
-def cpu_count(n_jobs=-1):
-    """Returns the positive number of logical CPUs or cores based on `n_jobs`"""
+def cpu_count():
+    """Returns the number of logical CPUs or cores"""
     # Check if we are running under pytest
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
-
-    n_cpus = os.cpu_count()  # available CPUs
-
-    # invalid n_jobs
-    if abs(n_jobs) > n_cpus or n_jobs == 0:
-        cpu_count = n_cpus
-
-    # getting positive n_jobs
-    if n_jobs < 0:
-        cpu_count = n_cpus + 1 + n_jobs
-    else:
-        cpu_count = n_jobs
-
-    return cpu_count
+    return os.cpu_count()

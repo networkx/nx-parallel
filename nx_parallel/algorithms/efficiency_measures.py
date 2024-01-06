@@ -6,40 +6,38 @@ import nx_parallel as nxp
 __all__ = ["local_efficiency"]
 
 
-def local_efficiency(G, n_jobs=-1):
-    """Parallelly computes the average local efficiency of the graph.
+def local_efficiency(G):
+    """
+    Parallel implementation of :func:`networkx.algorithms.efficiency.local_efficiency`
 
-    The *efficiency* of a pair of nodes in a graph is the multiplicative
-    inverse of the shortest path distance between the nodes. The *local
-    efficiency* of a node in the graph is the average global efficiency of the
-    subgraph induced by the neighbors of the node. The *average local
-    efficiency* is the average of the local efficiencies of each node [1]_.
+    Returns the average local efficiency of the graph.
+    The *average local efficiency* is the average of the local efficiencies of 
+    each node. The *efficiency* of a pair of nodes in a graph is the multiplicative
+    inverse of the shortest path distance between the nodes.
+
+    Refer :func:`networkx.algorithms.efficiency.local_efficiency` for more details.
 
     Parameters
     ----------
     G : :class:`networkx.Graph`
-        An undirected graph for which to compute the average local efficiency.
-
-    n_jobs : int, optional (default=-1)
-        The number of logical CPUs or cores you want to use. 
-        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
+        An undirected graph
 
     Returns
     -------
     float
         The average local efficiency of the graph.
 
-    Notes
-    -----
-    Edge weights are ignored when computing the shortest path distances.
-
-    References
-    ----------
-    .. [1] Latora, Vito, and Massimo Marchiori.
-           "Efficient behavior of small-world networks."
-           *Physical Review Letters* 87.19 (2001): 198701.
-           <https://doi.org/10.1103/PhysRevLett.87.198701>
+    Examples
+    --------
+    >>> import networkx as nx
+    >>> import nx_parallel as nxp
+    >>> G = nx.Graph([(0, 1), (0, 2), (0, 3), (1, 2), (1, 3)])
+    >>> nx.local_efficiency(G)
+    0.9166666666666667
+    >>> nxp.local_efficiency(G)
+    0.9166666666666667
+    >>> nx.local_efficiency(G, backend="parallel")
+    0.9166666666666667
     """
 
     def _local_efficiency_node_subset(G, nodes):

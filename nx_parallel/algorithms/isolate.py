@@ -5,27 +5,35 @@ import nx_parallel as nxp
 __all__ = ["number_of_isolates"]
 
 
-def number_of_isolates(G, n_jobs=-1):
-    """Parallelly computes the number of isolates in the graph.
+def number_of_isolates(G):
+    """Parallel implementation of :func:`networkx.algorithms.isolates.number_of_isolates`
+    
+    Returns the number of isolates in `G`.
 
-    An *isolate* is a node with no neighbors (that is, with degree
-    zero). For directed graphs, this means no in-neighbors and no
-    out-neighbors.
+    Refer to :func:`networkx.algorithms.isolates.number_of_isolates` for more details.
 
     Parameters
     ----------
     G : NetworkX graph
-
-    n_jobs : int, optional (default=-1)
-        The number of logical CPUs or cores you want to use. 
-        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
 
     Returns
     -------
     int
         The number of degree zero nodes in the graph `G`.
 
+    Examples
+    --------
+    >>> import networkx as nx
+    >>> import nx_parallel as nxp
+    >>> G = nx.Graph()
+    >>> G.add_edge(1, 2)
+    >>> G.add_node(3)
+    >>> list(nx.isolates(G))
+    [3]
+    >>> nxp.number_of_isolates(G)
+    1
+    >>> nx.number_of_isolates(G, backend="parallel")
+    1
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
