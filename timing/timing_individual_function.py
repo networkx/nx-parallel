@@ -29,13 +29,13 @@ for p in pList:
         # time both versions and update heatmapDF
         t1 = time.time()
         c = currFun(H)
-        if type(c) == types.GeneratorType:
+        if isinstance(c, types.GeneratorType):
             d = dict(c)
         t2 = time.time()
         parallelTime = t2 - t1
         t1 = time.time()
         c = currFun(G)
-        if type(c) == types.GeneratorType:
+        if isinstance(c, types.GeneratorType):
             d = dict(c)
         t2 = time.time()
         stdTime = t2 - t1
