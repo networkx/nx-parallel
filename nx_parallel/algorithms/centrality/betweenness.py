@@ -16,20 +16,14 @@ __all__ = ["betweenness_centrality"]
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None, n_jobs=-1
 ):
-    r"""Parallelly computes shortest-path betweenness centrality for nodes
+    """Parallel implementation of :func:`networkx.betweenness_centrality`.
 
-    Betweenness centrality of a node $v$ is the sum of the
-    fraction of all-pairs shortest paths that pass through $v$
+    Returns the shortest-path betweenness centrality for all the nodes.
+    Betweenness centrality of a node $v$ is the sum of the fraction of all-pairs 
+    shortest paths that pass through $v$.
 
-    .. math::
-
-       c_B(v) =\sum_{s,t \in V} \frac{\sigma(s, t|v)}{\sigma(s, t)}
-
-    where $V$ is the set of nodes, $\sigma(s, t)$ is the number of
-    shortest $(s, t)$-paths,  and $\sigma(s, t|v)$ is the number of
-    those paths  passing through some  node $v$ other than $s, t$.
-    If $s = t$, $\sigma(s, t) = 1$, and if $v \in {s, t}$,
-    $\sigma(s, t|v) = 0$ [2]_.
+    Refer to the :func:`networkx.betweenness_centrality` documentation for more 
+    details on how the betweenness centrality is defined and computed.
 
     Parameters
     ----------
@@ -37,38 +31,49 @@ def betweenness_centrality(
       A NetworkX graph.
 
     k : int, optional (default=None)
-      If k is not None use k node samples to estimate betweenness.
-      The value of k <= n where n is the number of nodes in the graph.
-      Higher values give better approximation.
+        If k is not None, use k node samples to estimate betweenness.
 
     normalized : bool, optional
-      If True the betweenness values are normalized by `2/((n-1)(n-2))`
-      for graphs, and `1/((n-1)(n-2))` for directed graphs where `n`
-      is the number of nodes in G.
+        If True the betweenness values are normalized
 
     weight : None or string, optional (default=None)
-      If None, all edge weights are considered equal.
-      Otherwise holds the name of the edge attribute used as weight.
-      Weights are used to calculate weighted shortest paths, so they are
-      interpreted as distances.
+        If None, all edge weights are considered equal.
+        Otherwise, holds the name of the edge attribute used as weight.
 
     endpoints : bool, optional
-      If True include the endpoints in the shortest path counts.
+        If True include the endpoints in the shortest path counts.
 
     seed : integer, random_state, or None (default)
-        Indicator of random number generation state.
-        See :ref:`Randomness<randomness>`.
-        Note that this is only used if k is not None.
+        Indicator of random number generation state. Only used if `k` is not None.
 
     n_jobs : int, optional (default=-1)
-        The number of logical CPUs or cores you want to use. 
-        For `n_jobs` less than 0, (`n_cpus + 1 + n_jobs`) are used.
-        If an invalid value is given, then `n_jobs` is set to `n_cpus`.
+        Number of parallel jobs. If -1, uses all available CPUs.
+        For `n_jobs` < 0, (`n_cpus` + 1 + `n_jobs`) CPUs are used.
+        Here, `n_cpus` are computed by `os.cpu_count()`.
+        If an invalid value is given, then `n_jobs` is set to default.
 
     Returns
     -------
     nodes : dictionary
        Dictionary of nodes with betweenness centrality as the value.
+
+    Notes
+    -------
+    The parallel computation is implemented by dividing the nodes into chunks and
+    computing betweenness centrality for each chunk concurrently.
+
+    Examples
+    --------
+    >>> import networkx as nx
+    >>> import nx_parallel as nxp
+    >>> G = nx.Graph()
+    >>> G.add_weighted_edges_from([(1, 0, 1), (1, 2, 1), (2, 0, 3)])
+    >>> centrality = nxp.betweenness_centrality(G, n_jobs=3)
+    >>> centrality_ = nx.betweenness_centrality(G, backend="parallel", n_jobs=3)
+
+    See Also
+    --------
+    :func:`networkx.betweenness_centrality`
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
