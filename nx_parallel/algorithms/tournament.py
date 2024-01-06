@@ -13,6 +13,9 @@ def is_reachable(G, s, t):
 
     Decides whether there is a path from `s` to `t` in the tournament
 
+    The function parallelizes the calculation of two neighborhoods of vertices in `G` 
+    and checks closure conditions for each neighborhood subset in parallel. 
+
     Refer to :func:`networkx.algorithms.tournament.is_reachable` for more details.
 
     Parameters
@@ -89,6 +92,9 @@ def tournament_is_strongly_connected(G):
 
     Decides whether the given tournament is strongly connected.
 
+    The parallel computation is implemented by dividing the nodes into chunks and
+    then checking whether each node is reachable from each other node in parallel.
+
     Parameters
     ----------
     G : NetworkX graph
@@ -120,14 +126,15 @@ def tournament_is_strongly_connected(G):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    cpu_count = nxp.cpu_count()
-
     # Subset version of is_reachable
     def is_reachable_subset(G, chunk):
         return all(is_reachable(G, u, v) for v in chunk for u in G)
 
+    cpu_count = nxp.cpu_count()
     num_in_chunk = max(len(G) // cpu_count, 1)
+    node_chunks = nxp.chunks(G, num_in_chunk)
+
     results = Parallel(n_jobs=cpu_count)(
-        delayed(is_reachable_subset)(G, ch) for ch in nxp.chunks(G, num_in_chunk)
+        delayed(is_reachable_subset)(G, chunk) for chunk in node_chunks
     )
     return all(results)

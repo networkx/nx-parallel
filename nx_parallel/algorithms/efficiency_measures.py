@@ -15,6 +15,11 @@ def local_efficiency(G):
     each node. The *efficiency* of a pair of nodes in a graph is the multiplicative
     inverse of the shortest path distance between the nodes.
 
+    The parallel computation is implemented by dividing the nodes into chunks and
+    then computing and adding global efficiencies of all node in all chunks,
+    in parallel, and then adding all these sums and dividing by the total number
+    of nodes at the end.
+
     Refer :func:`networkx.algorithms.efficiency.local_efficiency` for more details.
 
     Parameters
