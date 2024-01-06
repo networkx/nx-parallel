@@ -43,6 +43,16 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
     dictionary or float
         Returns a dictionary with nodes as keys and closeness vitality as values,
         based on the `node` parameter.
+
+    Examples
+    ---------
+    >>> import networkx as nx
+    >>> import nx_parallel as nxp
+    >>> G = nx.path_graph(4)
+    >>> nx.closeness_vitality(G, 0, backend="parallel")
+    6.0
+    >>> nx.closeness_vitality(nxp.ParallelGraph(G), 0)
+    6.0
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
