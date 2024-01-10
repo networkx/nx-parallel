@@ -73,6 +73,9 @@ def betweenness_centrality(
         See :ref:`Randomness<randomness>`.
         Note that this is only used if k is not None.
 
+    ref https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html
+    for joblib related parameters
+
     Returns
     -------
     nodes : dictionary
@@ -95,7 +98,7 @@ def betweenness_centrality(
     if get_chunks is not None and callable(get_chunks):
         node_chunks = get_chunks(nodes)
     else:
-        node_chunks = nxp.create_iterables(G, 'nodes', nodes)
+        node_chunks = nxp.create_iterables(G, "node", nodes)
 
     bt_cs = Parallel(
         n_jobs=n_jobs,

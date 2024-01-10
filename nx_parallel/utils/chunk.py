@@ -37,7 +37,7 @@ def create_iterables(G, iterator, list_of_iterator=None):
         iterable : Iterable
             An iterable of function inputs.
         """
-    total_cores = nxp.cpu_count()
+    total_cores = cpu_count()
     if iterator in ["node", "edge", "isolate"]:
         if list_of_iterator is None:
             if iterator == "node":
