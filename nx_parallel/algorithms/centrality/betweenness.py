@@ -24,7 +24,10 @@ def betweenness_centrality(
     get_chunks=None,
     n_jobs=-1,
     nxp_backend="loky",
-    verbose=0
+    prefer=None,
+    verbose=0,
+    pre_dispatch="2*n_jobs",
+    batch_size="auto",
 ):
     r"""Parallel Compute shortest-path betweenness centrality for nodes
 
@@ -89,15 +92,19 @@ def betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    total_cores = nxp.cpu_count()
-
-    if get_chunks is None:
-        num_in_chunk = max(len(nodes) // total_cores, 1)
-        node_chunks = nxp.chunks(nodes, num_in_chunk)
-    else:
+    if get_chunks is not None and callable(get_chunks):
         node_chunks = get_chunks(nodes)
+    else:
+        node_chunks = nxp.create_iterables(G, 'nodes', nodes)
 
-    bt_cs = Parallel(n_jobs=n_jobs, backend=nxp_backend, verbose=verbose)(
+    bt_cs = Parallel(
+        n_jobs=n_jobs,
+        backend=nxp_backend,
+        prefer=prefer,
+        verbose=verbose,
+        pre_dispatch=pre_dispatch,
+        batch_size=batch_size,
+    )(
         delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
         for chunk in node_chunks
     )
