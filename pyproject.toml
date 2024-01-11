@@ -9,7 +9,7 @@ authors = [
 ]
 description = "An experimental parallel backend for NetworkX"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 keywords = ["networkx", "algorithms", "parallel"]
 license = {text = "BSD-3-Clause"}
 classifiers = [
@@ -38,7 +38,7 @@ py-modules = []
 
 [tool.ruff]
 line-length = 88
-target-version = 'py311'
+target-version = 'py310'
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ['I', 'F403']
