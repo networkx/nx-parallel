@@ -14,10 +14,12 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
     *Closeness vitality* of a node is the change in the sum of 
     distances between all node pairs when excluding that node.
 
+    Refer to :func:`networkx.algorithms.vitality.closeness_vitality` for more details.
+
+    Parallel Computation
+    ---------------------
     The parallel computation is implemented only when the node is not specified.
     The closeness vitality for each node is computed concurrently.
-
-    Refer to :func:`networkx.algorithms.vitality.closeness_vitality` for more details.
 
     Parameters
     ----------
@@ -45,7 +47,7 @@ def closeness_vitality(G, node=None, weight=None, wiener_index=None):
         based on the `node` parameter.
 
     Examples
-    ---------
+    --------
     >>> import networkx as nx
     >>> import nx_parallel as nxp
     >>> G = nx.path_graph(4)

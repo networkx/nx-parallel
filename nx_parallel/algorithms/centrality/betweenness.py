@@ -22,11 +22,13 @@ def betweenness_centrality(
     Betweenness centrality of a node $v$ is the sum of the fraction of all-pairs 
     shortest paths that pass through $v$.
 
-    The parallel computation is implemented by dividing the nodes into chunks and
-    computing betweenness centrality for each chunk concurrently.
-
     Refer to the :func:`networkx.betweenness_centrality` documentation for more 
     details on how the betweenness centrality is defined and computed.
+
+    Parallel Computation
+    ---------------------
+    The parallel computation is implemented by dividing the nodes into chunks and
+    computing betweenness centrality for each chunk concurrently.
 
     Parameters
     ----------
@@ -49,6 +51,9 @@ def betweenness_centrality(
     seed : integer, random_state, or None (default)
         Indicator of random number generation state. Only used if `k` is not None.
 
+    Additional Parameters
+    ----------------------
+
     Returns
     -------
     nodes : dictionary
@@ -63,10 +68,6 @@ def betweenness_centrality(
     >>> G.add_edges_from([(1, 0), (1, 2), (2, 0), (2, 3), (3, 4), (4, 5), (3, 5)])
     >>> centrality = nxp.betweenness_centrality(G)
     >>> centrality_ = nx.betweenness_centrality(G, backend="parallel")
-
-    See Also
-    --------
-    :func:`networkx.betweenness_centrality`
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

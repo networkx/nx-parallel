@@ -10,11 +10,13 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
 
     Returns shortest paths between all nodes in a weighted graph.
 
-    The parallel computation is implemented by computing the shortest paths
-    for each node concurrently.
-
     Refer to the :func:`networkx.all_pairs_bellman_ford_path` for more details about 
     the computation and parameter description.
+
+    Parallel Computation
+    ---------------------
+    The parallel computation is implemented by computing the shortest paths
+    for each node concurrently.
 
     Parameters
     ----------
