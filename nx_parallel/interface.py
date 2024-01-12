@@ -4,7 +4,7 @@ from nx_parallel.algorithms.efficiency_measures import local_efficiency
 from nx_parallel.algorithms.isolate import number_of_isolates
 from nx_parallel.algorithms.tournament import (
     is_reachable,
-    tournament_is_strongly_connected,
+    is_strongly_connected,
 )
 from nx_parallel.algorithms.vitality import closeness_vitality
 
@@ -38,7 +38,7 @@ class Dispatcher:
 
     # Tournament
     is_reachable = is_reachable
-    tournament_is_strongly_connected = tournament_is_strongly_connected
+    tournament_is_strongly_connected = is_strongly_connected
 
     # Centrality
     betweenness_centrality = betweenness_centrality

@@ -3,7 +3,7 @@ import nx_parallel as nxp
 
 __all__ = [
     "is_reachable",
-    "tournament_is_strongly_connected",
+    "is_strongly_connected",
 ]
 
 
@@ -11,14 +11,11 @@ def is_reachable(G, s, t):
     """ 
     Parallel implementation of :func:`networkx.algorithms.tournament.is_reachable`
 
-    Decides whether there is a path from `s` to `t` in the tournament
+    Decides whether there is a path from `s` to `t` in the tournament `G`.
 
-    Refer to :func:`networkx.algorithms.tournament.is_reachable` for more details.
-
-    Parallel Computation
-    ---------------------
-    The function parallelizes the calculation of two neighborhoods of vertices in `G` 
-    and checks closure conditions for each neighborhood subset in parallel. 
+    Parallel Computation : The function parallelizes the calculation of two
+    neighborhoods of vertices in `G` and checks closure conditions for each 
+    neighborhood subset in parallel. 
 
     Parameters
     ----------
@@ -40,8 +37,6 @@ def is_reachable(G, s, t):
     --------
     >>> import networkx as nx
     >>> G = nx.DiGraph([(1, 0), (1, 3), (1, 2), (2, 3), (2, 0), (3, 0)])
-    >>> nx.tournament.is_tournament(G)
-    True
     >>> nx.tournament.is_reachable(G, 1, 3, backend="parallel")
     True
     >>> import nx_parallel as nxp
@@ -87,17 +82,16 @@ def is_reachable(G, s, t):
     return all(results)
 
 
-def tournament_is_strongly_connected(G):
+def is_strongly_connected(G):
     """
     Paralell implementation of 
     :func:`networkx.algorithms.tournament.is_strongly_connected`
 
     Decides whether the given tournament is strongly connected.
 
-    Parallel Computation
-    ---------------------
-    The parallel computation is implemented by dividing the nodes into chunks and
-    then checking whether each node is reachable from each other node in parallel.
+    Parallel Computation : The parallel computation is implemented by dividing the
+    nodes into chunks and then checking whether each node is reachable from each 
+    other node in parallel.
 
     Parameters
     ----------
@@ -112,18 +106,14 @@ def tournament_is_strongly_connected(G):
     Examples
     --------
     >>> import networkx as nx
-    >>> G = nx.DiGraph([(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)])
-    >>> nx.tournament.is_tournament(G)
-    True
     >>> import nx_parallel as nxp
+    >>> G = nx.DiGraph([(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)])
     >>> nx.tournament.is_strongly_connected(nxp.ParallelGraph(G))
     False
     >>> nx.tournament.is_strongly_connected(G, backend="parallel")
     False
     >>> G.remove_edge(0, 3)
     >>> G.add_edge(3, 0)
-    >>> nx.tournament.is_tournament(G)
-    True
     >>> nx.tournament.is_strongly_connected(G, backend="parallel")
     True
     """

@@ -17,18 +17,15 @@ def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):
     """Parallel implementation of :func:`networkx.betweenness_centrality`.
+    Refer it's documentation for more details on how the betweenness centrality
+    is defined and computed.
 
     Returns the shortest-path betweenness centrality for all the nodes.
     Betweenness centrality of a node $v$ is the sum of the fraction of all-pairs 
     shortest paths that pass through $v$.
 
-    Refer to the :func:`networkx.betweenness_centrality` documentation for more 
-    details on how the betweenness centrality is defined and computed.
-
-    Parallel Computation
-    ---------------------
-    The parallel computation is implemented by dividing the nodes into chunks and
-    computing betweenness centrality for each chunk concurrently.
+    Parallel Computation : The parallel computation is implemented by dividing the
+    nodes into chunks and computing betweenness centrality for each chunk concurrently
 
     Parameters
     ----------
@@ -50,9 +47,6 @@ def betweenness_centrality(
 
     seed : integer, random_state, or None (default)
         Indicator of random number generation state. Only used if `k` is not None.
-
-    Additional Parameters
-    ----------------------
 
     Returns
     -------

@@ -10,12 +10,8 @@ def number_of_isolates(G):
     
     Returns the number of isolates in `G`.
 
-    Refer to :func:`networkx.algorithms.isolates.number_of_isolates` for more details.
-
-    Parallel Computation
-    ---------------------
-    The parallel computation is implemented by dividing the list of isolated nodes
-    into chunks and then finding the length of each chunk in parallel
+    Parallel Computation : The parallel computation is implemented by dividing the list
+    of isolated nodes into chunks and then finding the length of each chunk in parallel
     and then adding all the lengths at the end.
 
     Parameters
@@ -34,8 +30,6 @@ def number_of_isolates(G):
     >>> G = nx.Graph()
     >>> G.add_edge(1, 2)
     >>> G.add_node(3)
-    >>> list(nx.isolates(G))
-    [3]
     >>> nxp.number_of_isolates(G)
     1
     >>> nx.number_of_isolates(G, backend="parallel")

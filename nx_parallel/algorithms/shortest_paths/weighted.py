@@ -7,16 +7,12 @@ __all__ = ["all_pairs_bellman_ford_path"]
 
 def all_pairs_bellman_ford_path(G, weight="weight"):
     """Parallel implementation of :func:`networkx.all_pairs_bellman_ford_path`
+    Refer to it's for more details about the computation and parameter description.
 
     Returns shortest paths between all nodes in a weighted graph.
 
-    Refer to the :func:`networkx.all_pairs_bellman_ford_path` for more details about 
-    the computation and parameter description.
-
-    Parallel Computation
-    ---------------------
-    The parallel computation is implemented by computing the shortest paths
-    for each node concurrently.
+    Parallel Computation : The parallel computation is implemented by computing the 
+    shortest paths for each node concurrently.
 
     Parameters
     ----------
@@ -37,9 +33,6 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     >>> import networkx as nx
     >>> G = nx.Graph()
     >>> G.add_weighted_edges_from([(1, 0, 1), (1, 2, 1), (2, 0, 3)])
-    >>> path = dict(nx.all_pairs_bellman_ford_path(G))
-    >>> path[0][2]
-    [0, 1, 2]
     >>> parallel_path = dict(nx.all_pairs_bellman_ford_path(G, backend="parallel"))
     >>> parallel_path[0][2]
     [0, 1, 2]
