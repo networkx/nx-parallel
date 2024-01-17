@@ -18,7 +18,7 @@ def betweenness_centrality(
 ):
     """The parallel computation is implemented by dividing the
     nodes into chunks and computing betweenness centrality for each chunk concurrently.
-    
+
     networkx.betweenness_centrality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html
     """
     if hasattr(G, "graph_object"):
