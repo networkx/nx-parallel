@@ -56,23 +56,6 @@ def get_info():
                         docstring = getattr(file_module, function).__doc__
 
                         try:
-                            # Extracting examples section
-                            examples = []
-                            imports = [
-                                ">>> import networkx as nx",
-                                ">>> import nx_parallel as nxp",
-                                "",
-                            ]
-                            examples_ = docstring.split("Examples")[1].split(
-                                "--------"
-                            )[1]
-                            for line in examples_.split("\n"):
-                                if line.strip() not in imports:
-                                    examples.append(line.strip())
-                        except IndexError:
-                            examples = None
-
-                        try:
                             # Extracting additional parameters section
 
                             # Requirement : all additional parameters should be
@@ -122,12 +105,11 @@ def get_info():
 
                     except Exception as e:
                         print(e)
-                        examples, add_params, par_docs = None, None, None
+                        add_params, par_docs = None, None
 
                     funcs[function] = {
                         "backend_func_url": f"https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/{file_name}.py#{func_line}",
                         "backend_func_docs": par_docs,
-                        "backend_func_examples": examples,
                         "additional_parameters": add_params,
                     }
 

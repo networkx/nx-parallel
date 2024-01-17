@@ -6,34 +6,11 @@ __all__ = ["number_of_isolates"]
 
 
 def number_of_isolates(G):
-    """Parallel implementation of :func:`networkx.algorithms.isolates.number_of_isolates`
-    
-    Returns the number of isolates in `G`.
-
-    Parallel Computation : The parallel computation is implemented by dividing the list
+    """The parallel computation is implemented by dividing the list
     of isolated nodes into chunks and then finding the length of each chunk in parallel
     and then adding all the lengths at the end.
 
-    Parameters
-    ----------
-    G : NetworkX graph
-
-    Returns
-    -------
-    int
-        The number of degree zero nodes in the graph `G`.
-
-    Examples
-    --------
-    >>> import networkx as nx
-    >>> import nx_parallel as nxp
-    >>> G = nx.Graph()
-    >>> G.add_edge(1, 2)
-    >>> G.add_node(3)
-    >>> nxp.number_of_isolates(G)
-    1
-    >>> nx.number_of_isolates(G, backend="parallel")
-    1
+    networkx.number_of_isolates : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.isolate.number_of_isolates.html#number-of-isolates
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

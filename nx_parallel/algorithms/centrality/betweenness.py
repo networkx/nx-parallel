@@ -16,52 +16,10 @@ __all__ = ["betweenness_centrality"]
 def betweenness_centrality(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):
-    """Parallel implementation of :func:`networkx.betweenness_centrality`.
-    Refer it's documentation for more details on how the betweenness centrality
-    is defined and computed.
-
-    Returns the shortest-path betweenness centrality for all the nodes.
-    Betweenness centrality of a node $v$ is the sum of the fraction of all-pairs 
-    shortest paths that pass through $v$.
-
-    Parallel Computation : The parallel computation is implemented by dividing the
-    nodes into chunks and computing betweenness centrality for each chunk concurrently
-
-    Parameters
-    ----------
-    G : graph
-      A NetworkX graph.
-
-    k : int, optional (default=None)
-        If k is not None, use k node samples to estimate betweenness.
-
-    normalized : bool, optional
-        If True the betweenness values are normalized
-
-    weight : None or string, optional (default=None)
-        If None, all edge weights are considered equal.
-        Otherwise, holds the name of the edge attribute used as weight.
-
-    endpoints : bool, optional
-        If True include the endpoints in the shortest path counts.
-
-    seed : integer, random_state, or None (default)
-        Indicator of random number generation state. Only used if `k` is not None.
-
-    Returns
-    -------
-    nodes : dictionary
-       Dictionary of nodes with betweenness centrality as the value.
-
-    Examples
-    --------
-    >>> import networkx as nx
-    >>> import nx_parallel as nxp
-    >>> G = nx.Graph()
-    >>> G.add_nodes_from(range(6))
-    >>> G.add_edges_from([(1, 0), (1, 2), (2, 0), (2, 3), (3, 4), (4, 5), (3, 5)])
-    >>> centrality = nxp.betweenness_centrality(G)
-    >>> centrality_ = nx.betweenness_centrality(G, backend="parallel")
+    """The parallel computation is implemented by dividing the
+    nodes into chunks and computing betweenness centrality for each chunk concurrently.
+    
+    networkx.betweenness_centrality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
