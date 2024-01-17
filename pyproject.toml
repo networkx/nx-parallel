@@ -34,7 +34,7 @@ developer = [
 parallel = "nx_parallel.interface:Dispatcher"
 
 [project.entry-points."networkx.backend_info"]
-parallel = "nx_parallel:get_info"
+parallel = "nx_parallel.utils.backend:get_info"
 
 [tool.setuptools]
 py-modules = []
