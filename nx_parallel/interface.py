@@ -7,6 +7,7 @@ from nx_parallel.algorithms.tournament import (
     tournament_is_strongly_connected,
 )
 from nx_parallel.algorithms.vitality import closeness_vitality
+from nx_parallel.algorithms.cluster import square_clustering
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 
@@ -48,6 +49,9 @@ class Dispatcher:
 
     # Shortest Paths : all pairs shortest paths(bellman_ford)
     all_pairs_bellman_ford_path = all_pairs_bellman_ford_path
+
+    # Clustering
+    square_clustering = square_clustering
 
     # =============================
 
