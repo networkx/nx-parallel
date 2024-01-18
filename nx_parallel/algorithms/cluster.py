@@ -1,7 +1,8 @@
 from itertools import combinations
 from joblib import Parallel, delayed
 
-__all__ = ['square_clustering']
+__all__ = ["square_clustering"]
+
 
 def square_clustering(G, nodes=None):
     def _compute_clustering(v):
@@ -29,7 +30,9 @@ def square_clustering(G, nodes=None):
     else:
         node_iter = G.nbunch_iter(nodes)
 
-    clustering = dict(Parallel(n_jobs=-1)(delayed(_compute_clustering)(v) for v in node_iter))
+    clustering = dict(
+        Parallel(n_jobs=-1)(delayed(_compute_clustering)(v) for v in node_iter)
+    )
 
     if nodes in G:
         return clustering[nodes]
