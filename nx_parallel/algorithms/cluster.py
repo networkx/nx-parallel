@@ -26,7 +26,7 @@ def square_clustering(G, nodes=None):
         return v, clustering
 
     if nodes is None:
-        node_iter = G
+        node_iter = G.nodes()
     else:
         node_iter = G.nbunch_iter(nodes)
 
