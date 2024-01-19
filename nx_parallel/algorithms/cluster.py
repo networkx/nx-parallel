@@ -5,6 +5,11 @@ __all__ = ["square_clustering"]
 
 
 def square_clustering(G, nodes=None):
+    """The squares clustering coefficient for nodes for all nodes
+    are computed in parallel over all available CPU cores.
+
+    networkx.square_clustering: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.square_clustering.html
+    """
     def _compute_clustering(v):
         clustering = 0
         potential = 0
