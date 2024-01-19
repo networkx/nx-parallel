@@ -24,6 +24,15 @@ class ParallelGraph:
     def __getattr__(self, name):
         return getattr(self.graph_object, name)
 
+    def __iter__(self):
+        return iter(self.graph_object)
+
+    def __getitem__(self, key):
+        return self.graph_object[key]
+
+    def __reduce__(self):
+        return (self.__class__, (self.graph_object,))
+
     def is_multigraph(self):
         return self.graph_object.is_multigraph()
 
