@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 __all__ = ["square_clustering"]
 
 
-def square_clustering(G, nodes=None):    
+def square_clustering(G, nodes=None):
     def _compute_clustering(v):
         clustering = 0
         potential = 0
