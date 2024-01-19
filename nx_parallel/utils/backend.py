@@ -20,13 +20,6 @@ def get_info():
                 ]
                 for function in functions:
                     try:
-                        func_line = inspect.getsourcelines(
-                            getattr(file_module, function)
-                        )[1]
-                    except Exception as e:
-                        print(e)
-                        func_line = None
-                    try:
                         # Extracting docstring
                         docstring = getattr(file_module, function).__doc__
 
@@ -47,9 +40,8 @@ def get_info():
                         par_docs = None
 
                     funcs[function] = {
-                        "backend_func_url": f"https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/{file_name}.py#{func_line}",
-                        "backend_func_docs": par_docs,
-                        "additional_parameters": None,  # just for now, as we don't have any additional parameters in any function
+                        "extra_docstring": par_docs,
+                        "extra_parameters": None,  # just for now, as we don't have any additional parameters in any function
                     }
         return funcs
 
