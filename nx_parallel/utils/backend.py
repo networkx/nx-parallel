@@ -1,7 +1,8 @@
-import inspect
 import nx_parallel.algorithms as algorithms
 
+
 __all__ = ["get_info"]
+
 
 def get_info():
     """Return a dictionary with information about the package."""
@@ -35,13 +36,27 @@ def get_info():
                         except IndexError:
                             par_docs = None
 
+                        try:
+                            # Extracting extra parameters
+                            # Assuming that the last para in docstring is the function's extra params
+                            par_params_ = docstring.split("------------")[1]
+
+                            par_params_ = par_params_.split("\n")
+                            par_params_ = [
+                                line.strip() for line in par_params_ if line.strip()
+                            ]
+                            par_params = "\n".join(
+                                par_params_[:-1]
+                            )  # removing last line with the networkx link
+                        except IndexError:
+                            par_params = None
                     except Exception as e:
                         print(e)
                         par_docs = None
 
                     funcs[function] = {
                         "extra_docstring": par_docs,
-                        "extra_parameters": None,  # just for now, as we don't have any additional parameters in any function
+                        "extra_parameters": par_params,
                     }
         return funcs
 
