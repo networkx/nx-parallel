@@ -1,5 +1,15 @@
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
-from nx_parallel.algorithms.shortest_paths.weighted import all_pairs_bellman_ford_path
+from nx_parallel.algorithms.shortest_paths.weighted import (
+    all_pairs_dijkstra,
+    all_pairs_dijkstra_path_length,
+    all_pairs_dijkstra_path,
+    all_pairs_bellman_ford_path_length,
+    all_pairs_bellman_ford_path,
+)
+from nx_parallel.algorithms.shortest_paths.unweighted import (
+    all_pairs_shortest_path,
+    all_pairs_shortest_path_length,
+)
 from nx_parallel.algorithms.efficiency_measures import local_efficiency
 from nx_parallel.algorithms.isolate import number_of_isolates
 from nx_parallel.algorithms.tournament import (
@@ -46,8 +56,16 @@ class Dispatcher:
     # Efficiency
     local_efficiency = local_efficiency
 
-    # Shortest Paths : all pairs shortest paths(bellman_ford)
+    # Shortest Paths : weighted graphs
+    all_pairs_dijkstra = all_pairs_dijkstra
+    all_pairs_dijkstra_path_length = all_pairs_dijkstra_path_length
+    all_pairs_dijkstra_path = all_pairs_dijkstra_path
+    all_pairs_bellman_ford_path_length = all_pairs_bellman_ford_path_length
     all_pairs_bellman_ford_path = all_pairs_bellman_ford_path
+
+    # Shortest Paths : unweighted graphs
+    all_pairs_shortest_path = all_pairs_shortest_path
+    all_pairs_shortest_path_length = all_pairs_shortest_path_length
 
     # =============================
 
