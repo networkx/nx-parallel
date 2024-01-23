@@ -46,14 +46,12 @@ pre-commit install
 Here's an example of how to use nx-parallel:
 
 ```python
-In [1]: import networkx as nx; import nx_parallel
-
-In [2]: G = nx.path_graph(4)
-
-In [3]: H = nx_parallel.ParallelGraph(G)
-
-In [4]: nx.betweenness_centrality(H)
-Out[4]: {0: 0.0, 1: 0.6666666666666666, 2: 0.6666666666666666, 3: 0.0}
+import networkx as nx
+import nx_parallel
+G = nx.path_graph(4)
+H = nx_parallel.ParallelGraph(G)
+nx.betweenness_centrality(H)
+# output : {0: 0.0, 1: 0.6666666666666666, 2: 0.6666666666666666, 3: 0.0}
 ```
 
 ## Testing
