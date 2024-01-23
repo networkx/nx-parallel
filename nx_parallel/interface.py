@@ -17,6 +17,7 @@ from nx_parallel.algorithms.tournament import (
     tournament_is_strongly_connected,
 )
 from nx_parallel.algorithms.vitality import closeness_vitality
+from nx_parallel.algorithms.approximation.connectivity import all_pairs_node_connectivity
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 
@@ -29,6 +30,18 @@ class ParallelGraph:
 
     def __init__(self, graph_object):
         self.graph_object = graph_object
+
+    def __getattr__(self, name):
+        return getattr(self.graph_object, name)
+
+    def __iter__(self):
+        return iter(self.graph_object)
+
+    def __getitem__(self, key):
+        return self.graph_object[key]
+
+    def __reduce__(self):
+        return (self.__class__, (self.graph_object,))
 
     def is_multigraph(self):
         return self.graph_object.is_multigraph()
@@ -66,6 +79,9 @@ class Dispatcher:
     # Shortest Paths : unweighted graphs
     all_pairs_shortest_path = all_pairs_shortest_path
     all_pairs_shortest_path_length = all_pairs_shortest_path_length
+
+    #
+    approximate_all_pairs_node_connectivity = all_pairs_node_connectivity
 
     # =============================
 

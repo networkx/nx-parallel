@@ -1,6 +1,7 @@
 # subpackages
 from .centrality import *
 from .shortest_paths import *
+from .approximation import *
 
 # modules
 from .efficiency_measures import *
