@@ -48,6 +48,7 @@ Here's an example of how to use nx-parallel:
 ```python
 import networkx as nx
 import nx_parallel
+
 G = nx.path_graph(4)
 H = nx_parallel.ParallelGraph(G)
 nx.betweenness_centrality(H)
