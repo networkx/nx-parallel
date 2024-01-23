@@ -1,5 +1,8 @@
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
-from nx_parallel.algorithms.shortest_paths.weighted import all_pairs_bellman_ford_path, johnson
+from nx_parallel.algorithms.shortest_paths.weighted import (
+    all_pairs_bellman_ford_path,
+    johnson,
+)
 from nx_parallel.algorithms.efficiency_measures import local_efficiency
 from nx_parallel.algorithms.isolate import number_of_isolates
 from nx_parallel.algorithms.tournament import (
@@ -19,6 +22,18 @@ class ParallelGraph:
 
     def __init__(self, graph_object):
         self.graph_object = graph_object
+
+    def __getattr__(self, name):
+        return getattr(self.graph_object, name)
+
+    def __iter__(self):
+        return iter(self.graph_object)
+
+    def __getitem__(self, key):
+        return self.graph_object[key]
+
+    def __reduce__(self):
+        return (self.__class__, (self.graph_object,))
 
     def is_multigraph(self):
         return self.graph_object.is_multigraph()

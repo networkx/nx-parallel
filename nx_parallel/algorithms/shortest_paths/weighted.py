@@ -9,7 +9,8 @@ import nx_parallel as nxp
 
 __all__ = [
     "all_pairs_bellman_ford_path",
-    "johnson",]
+    "johnson",
+]
 
 
 def all_pairs_bellman_ford_path(G, weight="weight"):
@@ -33,6 +34,7 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
         delayed(_calculate_shortest_paths_subset)(source) for source in nodes
     )
     return paths
+
 
 def johnson(G, weight="weight"):
     """Uses Johnson's Algorithm to compute shortest paths."""
