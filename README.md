@@ -18,25 +18,28 @@ nx-parallel provides parallelized implementations for the following NetworkX fun
 
 See the `/timing` folder for more heatmaps and code for heatmap generation!
 
-
 ### Development install
 
 To setup a local development:
 
 - Fork this repository.
 - Clone the forked repository locally.
+
 ```
 git clone git@github.com:<your_username>/networkx.git
 ```
+
 - Create a fresh conda/mamba virtualenv and install the dependencies
+
 ```
 pip install -e ".[developer]"
 ```
+
 - Install pre-commit actions that will run the linters before making a commit
+
 ```
 pre-commit install
 ```
-
 
 ## Usage
 
