@@ -27,11 +27,9 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight"):
     """Find shortest weighted paths and lengths between all nodes."""
 
     def _calculate_all_pairs_dijkstra_subset(n):
-        return (n, (single_source_dijkstra(G, n, cutoff=cutoff, weight=weight)))
+        return (n, single_source_dijkstra(G, n, cutoff=cutoff, weight=weight))
 
-    total_cores = nxp.cpu_count()
-
-    return Parallel(n_jobs=total_cores, return_as="generator")(
+    return Parallel(n_jobs=-1, return_as="generator")(
         delayed(_calculate_all_pairs_dijkstra_subset)(n) for n in G
     )
 
@@ -41,11 +39,9 @@ def all_pairs_dijkstra_path_length(G, cutoff=None, weight="weight"):
     length = single_source_dijkstra_path_length
 
     def _calculate_all_pairs_dijkstra_path_length_subset(n):
-        return (n, (length(G, n, cutoff=cutoff, weight=weight)))
+        return (n, length(G, n, cutoff=cutoff, weight=weight))
 
-    total_cores = nxp.cpu_count()
-
-    return Parallel(n_jobs=total_cores, return_as="generator")(
+    return Parallel(n_jobs=-1, return_as="generator")(
         delayed(_calculate_all_pairs_dijkstra_path_length_subset)(n) for n in G
     )
 
@@ -57,9 +53,7 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight"):
     def _calculate_all_pairs_dijkstra_path_subset(n):
         return (n, path(G, n, cutoff=cutoff, weight=weight))
 
-    total_cores = nxp.cpu_count()
-
-    return Parallel(n_jobs=total_cores, return_as="generator")(
+    return Parallel(n_jobs=-1, return_as="generator")(
         delayed(_calculate_all_pairs_dijkstra_path_subset)(n) for n in G
     )
 
@@ -68,12 +62,11 @@ def all_pairs_bellman_ford_path_length(G, weight="weight"):
     """Compute shortest path lengths between all nodes in a weighted graph."""
 
     def _calculate_shortest_paths_length_subset(n):
-        return (n, dict(length(G, n, weight=weight)))
+        return (n, length(G, n, weight=weight))
 
     length = single_source_bellman_ford_path_length
-    total_cores = nxp.cpu_count()
 
-    distance = Parallel(n_jobs=total_cores, return_as="generator")(
+    distance = Parallel(n_jobs=-1, return_as="generator")(
         delayed(_calculate_shortest_paths_length_subset)(n) for n in G
     )
     return distance
