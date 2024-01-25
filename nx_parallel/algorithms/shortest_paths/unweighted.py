@@ -19,6 +19,9 @@ __all__ = [
 
 def all_pairs_shortest_path_length(G, cutoff=None):
     """Computes the shortest path lengths between all nodes in `G`."""
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     length = single_source_shortest_path_length
 
     def _calculate_all_pairs_shortest_path_length_subset(n):
@@ -33,6 +36,8 @@ def all_pairs_shortest_path_length(G, cutoff=None):
 
 def all_pairs_shortest_path(G, cutoff=None):
     """Compute shortest paths between all nodes."""
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
     def _calculate_all_pairs_shortest_path_subset(n):
         return (n, (single_source_shortest_path(G, n, cutoff=cutoff)))

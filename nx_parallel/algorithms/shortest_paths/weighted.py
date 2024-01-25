@@ -29,6 +29,9 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight"):
     def _calculate_all_pairs_dijkstra_subset(n):
         return (n, single_source_dijkstra(G, n, cutoff=cutoff, weight=weight))
 
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     return Parallel(n_jobs=-1, return_as="generator")(
         delayed(_calculate_all_pairs_dijkstra_subset)(n) for n in G
     )
@@ -36,6 +39,9 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight"):
 
 def all_pairs_dijkstra_path_length(G, cutoff=None, weight="weight"):
     """Compute shortest path lengths between all nodes in a weighted graph."""
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     length = single_source_dijkstra_path_length
 
     def _calculate_all_pairs_dijkstra_path_length_subset(n):
@@ -48,6 +54,9 @@ def all_pairs_dijkstra_path_length(G, cutoff=None, weight="weight"):
 
 def all_pairs_dijkstra_path(G, cutoff=None, weight="weight"):
     """Compute shortest paths between all nodes in a weighted graph."""
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     path = single_source_dijkstra_path
 
     def _calculate_all_pairs_dijkstra_path_subset(n):
@@ -63,6 +72,9 @@ def all_pairs_bellman_ford_path_length(G, weight="weight"):
 
     def _calculate_shortest_paths_length_subset(n):
         return (n, length(G, n, weight=weight))
+
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
     length = single_source_bellman_ford_path_length
 

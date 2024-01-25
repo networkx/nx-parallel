@@ -17,6 +17,9 @@ def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
                 d[v][u] = k
         return d
 
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     if nbunch is None:
         nbunch = G
     else:
