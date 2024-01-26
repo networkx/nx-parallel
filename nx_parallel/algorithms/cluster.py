@@ -24,6 +24,9 @@ def square_clustering(G, nodes=None):
             clustering /= potential
         return (v, clustering)
 
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     if nodes is None:
         node_iter = G
     else:
