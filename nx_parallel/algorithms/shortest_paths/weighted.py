@@ -38,6 +38,9 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
 
 def johnson(G, weight="weight"):
     """Uses Johnson's Algorithm to compute shortest paths."""
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     dist = {v: 0 for v in G}
     pred = {v: [] for v in G}
     weight = _weight_function(G, weight)
