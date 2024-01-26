@@ -9,13 +9,11 @@ __all__ = ["all_pairs_node_connectivity",]
 
 def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
     def _calculate_all_pairs_node_connectivity_subset(chunk):
-        d = {}
         for u, v in chunk:
             k = local_node_connectivity(G, u, v, cutoff=cutoff)
-            d[u][v] = k
+            all_pairs[u][v] = k
             if not directed:
-                d[v][u] = k
-        return d
+                all_pairs[v][u] = k
 
     if hasattr(G, "graph_object"):
         G = G.graph_object
@@ -33,15 +31,18 @@ def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
 
     pairs = list(iter_func(nbunch, 2))
 
+    all_pairs = {}
+    for u, v in pairs:
+        all_pairs.setdefault(u, {})[v] = None
+        if not directed:
+            all_pairs.setdefault(v, {})[u] = None
+
     total_cores = nxp.cpu_count()
     num_in_chunk = max(len(pairs) // total_cores, 1)
     pair_chunks = nxp.chunks(pairs, num_in_chunk)
 
-    all_pairs = {n: {} for n in nbunch}
-
-    results = Parallel(n_jobs=total_cores)(
+    Parallel(n_jobs=total_cores, backend="threading")(
         delayed(_calculate_all_pairs_node_connectivity_subset)(chunk) for chunk in pair_chunks
     )
-    
-    all_pairs = {u: all_pairs[u].update(values) for result in results for u, values in result.items()}
+
     return all_pairs

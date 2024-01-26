@@ -43,6 +43,9 @@ class ParallelGraph:
     def __reduce__(self):
         return (self.__class__, (self.graph_object,))
 
+    def __len__(self):
+        return len(self.graph_object)
+
     def is_multigraph(self):
         return self.graph_object.is_multigraph()
 
