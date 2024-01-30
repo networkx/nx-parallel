@@ -11,6 +11,7 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
 
     networkx.all_pairs_bellman_ford_path : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_bellman_ford_path.html#all-pairs-bellman-ford-path
     """
+
     def _calculate_shortest_paths_subset(source):
         return (source, single_source_bellman_ford_path(G, source, weight=weight))
 
