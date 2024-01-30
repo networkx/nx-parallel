@@ -42,4 +42,3 @@ jobs:
           NETWORKX_TEST_BACKEND=parallel \
           NETWORKX_FALLBACK_TO_NX=True \
                 python -m pytest --pyargs networkx
-
