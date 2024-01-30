@@ -24,7 +24,7 @@ def get_cached_gnp_random_graph(num_nodes, edge_prob, is_weighted=False):
     G = nx.fast_gnp_random_graph(num_nodes, edge_prob, seed=42, directed=False)
     if is_weighted:
         random.seed(42)
-        for (u, v) in G.edges():
+        for u, v in G.edges():
             G.edges[u, v]["weight"] = random.random()
     return G
 

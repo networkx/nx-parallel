@@ -1,4 +1,3 @@
-"""Divides an iterable into chunks of size n"""
 import itertools
 import os
 import nx_parallel as nxp
@@ -8,6 +7,7 @@ __all__ = ["chunks", "cpu_count", "create_iterables"]
 
 
 def chunks(iterable, n):
+    """Divides an iterable into chunks of size n"""
     it = iter(iterable)
     while True:
         x = tuple(itertools.islice(it, n))
@@ -17,6 +17,7 @@ def chunks(iterable, n):
 
 
 def cpu_count():
+    """Returns the number of logical CPUs or cores"""
     # Check if we are running under pytest
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2

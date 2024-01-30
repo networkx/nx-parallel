@@ -12,6 +12,9 @@ __all__ = ["Dispatcher", "ParallelGraph"]
 
 
 class ParallelGraph:
+    """A wrapper class for networkx.Graph, networkx.DiGraph, networkx.MultiGraph, 
+    and networkx.MultiDiGraph."""
+
     __networkx_backend__ = "parallel"
 
     def __init__(self, graph_object):
@@ -25,7 +28,7 @@ class ParallelGraph:
 
 
 class Dispatcher:
-    # =============================
+    """Dispatcher class for parallel algorithms."""
 
     # Isolates
     number_of_isolates = number_of_isolates
@@ -61,10 +64,14 @@ class Dispatcher:
         *,
         weight=None,  # For nx.__version__ <= 3.1
     ):
+        """Convert a networkx.Graph, networkx.DiGraph, networkx.MultiGraph, 
+        or networkx.MultiDiGraph to a ParallelGraph."""
         if isinstance(graph, ParallelGraph):
             return graph
         return ParallelGraph(graph)
 
     @staticmethod
     def convert_to_nx(result, *, name=None):
+        """Convert a ParallelGraph to a networkx.Graph, networkx.DiGraph, 
+        networkx.MultiGraph, or networkx.MultiDiGraph."""
         return result

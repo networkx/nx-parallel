@@ -34,7 +34,8 @@ def betweenness_centrality(
     else:
         node_chunks = nxp.create_iterables(G, "node", nodes)
 
-    bt_cs = Parallel(n_jobs=-1)(
+
+    bt_cs = Parallel(n_jobs=total_cores)(
         delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
         for chunk in node_chunks
     )

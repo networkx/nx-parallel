@@ -1,32 +1,26 @@
 import networkx as nx
 from joblib import Parallel, delayed
-
 import nx_parallel as nxp
 
 __all__ = ["number_of_isolates"]
 
 
 def number_of_isolates(G):
-    """Returns the number of isolates in the graph. Parallel implementation.
+    """The parallel computation is implemented by dividing the list
+    of isolated nodes into chunks and then finding the length of each chunk in parallel
+    and then adding all the lengths at the end.
 
-    An *isolate* is a node with no neighbors (that is, with degree
-    zero). For directed graphs, this means no in-neighbors and no
-    out-neighbors.
-
-    Parameters
-    ----------
-    G : NetworkX graph
-
-    Returns
-    -------
-    int
-        The number of degree zero nodes in the graph `G`.
-
+    networkx.number_of_isolates : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.isolate.number_of_isolates.html#number-of-isolates
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
+
+    cpu_count = nxp.cpu_count()
+
     isolates_list = list(nx.isolates(G))
-    num_in_chunk = max(len(isolates_list) // nxp.cpu_count(), 1)
+    num_in_chunk = max(len(isolates_list) // cpu_count, 1)
     isolate_chunks = nxp.chunks(isolates_list, num_in_chunk)
-    results = Parallel(n_jobs=-1)(delayed(len)(chunk) for chunk in isolate_chunks)
+    results = Parallel(n_jobs=cpu_count)(
+        delayed(len)(chunk) for chunk in isolate_chunks
+    )
     return sum(results)
