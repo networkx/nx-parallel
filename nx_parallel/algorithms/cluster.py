@@ -36,7 +36,9 @@ def square_clustering(G, nodes=None):
 
     total_cores = nxp.cpu_count()
 
-    result = Parallel(n_jobs=total_cores)(delayed(_compute_clustering)(v) for v in node_iter)
+    result = Parallel(n_jobs=total_cores)(
+        delayed(_compute_clustering)(v) for v in node_iter
+    )
     clustering = dict(result)
 
     if nodes in G:
