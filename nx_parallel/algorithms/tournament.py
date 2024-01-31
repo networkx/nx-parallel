@@ -9,8 +9,8 @@ __all__ = [
 
 def is_reachable(G, s, t):
     """The function parallelizes the calculation of two
-    neighborhoods of vertices in `G` and checks closure conditions for each 
-    neighborhood subset in parallel. 
+    neighborhoods of vertices in `G` and checks closure conditions for each
+    neighborhood subset in parallel.
 
     networkx.tournament.is_reachable : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_reachable.html#networkx.algorithms.tournament.is_reachable
     """
@@ -53,7 +53,7 @@ def is_reachable(G, s, t):
 
 def tournament_is_strongly_connected(G):
     """The parallel computation is implemented by dividing the
-    nodes into chunks and then checking whether each node is reachable from each 
+    nodes into chunks and then checking whether each node is reachable from each
     other node in parallel.
 
     networkx.tournament.is_strongly_connected : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_strongly_connected.html#networkx.algorithms.tournament.is_strongly_connected
