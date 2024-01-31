@@ -1,5 +1,6 @@
 from itertools import combinations
 from joblib import Parallel, delayed
+import nx_parallel as nxp
 
 __all__ = ["square_clustering"]
 
@@ -10,6 +11,7 @@ def square_clustering(G, nodes=None):
 
     networkx.square_clustering: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.square_clustering.html
     """
+
     def _compute_clustering(v):
         clustering = 0
         potential = 0
@@ -32,7 +34,9 @@ def square_clustering(G, nodes=None):
     else:
         node_iter = G.nbunch_iter(nodes)
 
-    result = Parallel(n_jobs=-1)(delayed(_compute_clustering)(v) for v in node_iter)
+    total_cores = nxp.cpu_count()
+
+    result = Parallel(n_jobs=total_cores)(delayed(_compute_clustering)(v) for v in node_iter)
     clustering = dict(result)
 
     if nodes in G:
