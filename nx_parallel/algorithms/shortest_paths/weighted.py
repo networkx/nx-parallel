@@ -38,7 +38,7 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
 
 def johnson(G, weight="weight"):
     """The parallel computation is implemented by dividing the
-    nodes into chunks and computing the shortest paths using Johnson's Algorithm 
+    nodes into chunks and computing the shortest paths using Johnson's Algorithm
     for each chunk in parallel.
 
     networkx.johnson : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.johnson.html#johnson
