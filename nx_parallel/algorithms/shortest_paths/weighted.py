@@ -85,7 +85,7 @@ def all_pairs_bellman_ford_path_length(G, weight="weight"):
 
 
 def all_pairs_bellman_ford_path(G, weight="weight"):
-    """The parallel computation is implemented by computing the 
+    """The parallel computation is implemented by computing the
     shortest paths for each node concurrently.
 
     networkx.all_pairs_bellman_ford_path : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_bellman_ford_path.html#all-pairs-bellman-ford-path

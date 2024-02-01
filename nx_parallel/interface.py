@@ -17,7 +17,9 @@ from nx_parallel.algorithms.tournament import (
     tournament_is_strongly_connected,
 )
 from nx_parallel.algorithms.vitality import closeness_vitality
-from nx_parallel.algorithms.approximation.connectivity import all_pairs_node_connectivity
+from nx_parallel.algorithms.approximation.connectivity import (
+    all_pairs_node_connectivity,
+)
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 

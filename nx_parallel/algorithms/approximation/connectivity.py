@@ -4,7 +4,9 @@ from joblib import Parallel, delayed
 import nx_parallel as nxp
 from networkx.algorithms.approximation.connectivity import local_node_connectivity
 
-__all__ = ["all_pairs_node_connectivity",]
+__all__ = [
+    "all_pairs_node_connectivity",
+]
 
 
 def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
@@ -42,7 +44,8 @@ def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
     pair_chunks = nxp.chunks(pairs, num_in_chunk)
 
     Parallel(n_jobs=total_cores, backend="threading")(
-        delayed(_calculate_all_pairs_node_connectivity_subset)(chunk) for chunk in pair_chunks
+        delayed(_calculate_all_pairs_node_connectivity_subset)(chunk)
+        for chunk in pair_chunks
     )
 
     return all_pairs
