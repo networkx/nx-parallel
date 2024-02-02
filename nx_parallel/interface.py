@@ -1,12 +1,14 @@
-from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
-from nx_parallel.algorithms.shortest_paths.weighted import all_pairs_bellman_ford_path
-from nx_parallel.algorithms.efficiency_measures import local_efficiency
-from nx_parallel.algorithms.isolate import number_of_isolates
+from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality_chunk, betweenness_centrality_no_chunk
+from nx_parallel.algorithms.shortest_paths.weighted import all_pairs_bellman_ford_path_chunk, all_pairs_bellman_ford_path_no_chunk
+from nx_parallel.algorithms.efficiency_measures import local_efficiency_chunk, local_efficiency_no_chunk
+from nx_parallel.algorithms.isolate import number_of_isolates_chunk, number_of_isolates_no_chunk
 from nx_parallel.algorithms.tournament import (
-    is_reachable,
-    tournament_is_strongly_connected,
+    is_reachable_chunk,
+    is_reachable_no_chunk,
+    is_strongly_connected_chunk,
+    is_strongly_connected_no_chunk,
 )
-from nx_parallel.algorithms.vitality import closeness_vitality
+from nx_parallel.algorithms.vitality import closeness_vitality_chunk, closeness_vitality_no_chunk
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 
@@ -31,23 +33,30 @@ class Dispatcher:
     """Dispatcher class for parallel algorithms."""
 
     # Isolates
-    number_of_isolates = number_of_isolates
+    number_of_isolates_chunk = number_of_isolates_chunk
+    number_of_isolates_no_chunk = number_of_isolates_no_chunk
 
     # Vitality
-    closeness_vitality = closeness_vitality
+    closeness_vitality_chunk = closeness_vitality_chunk
+    closeness_vitality_no_chunk = closeness_vitality_no_chunk
 
     # Tournament
-    is_reachable = is_reachable
-    tournament_is_strongly_connected = tournament_is_strongly_connected
+    is_reachable_chunk = is_reachable_chunk
+    is_reachable_no_chunk = is_reachable_no_chunk
+    tournament_is_strongly_connected_chunk = is_strongly_connected_chunk
+    tournament_is_strongly_connected_no_chunk = is_strongly_connected_no_chunk
 
     # Centrality
-    betweenness_centrality = betweenness_centrality
+    betweenness_centrality_chunk = betweenness_centrality_chunk
+    betweenness_centrality_no_chunk = betweenness_centrality_no_chunk
 
     # Efficiency
-    local_efficiency = local_efficiency
+    local_efficiency_chunk = local_efficiency_chunk
+    local_efficiency_no_chunk = local_efficiency_no_chunk
 
     # Shortest Paths : all pairs shortest paths(bellman_ford)
-    all_pairs_bellman_ford_path = all_pairs_bellman_ford_path
+    all_pairs_bellman_ford_path_chunk = all_pairs_bellman_ford_path_chunk
+    all_pairs_bellman_ford_path_no_chunk = all_pairs_bellman_ford_path_no_chunk
 
     # =============================
 
