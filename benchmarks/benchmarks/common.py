@@ -5,7 +5,7 @@ import random
 import networkx as nx
 
 __all__ = [
-    "backends",
+    "chunking",
     "num_nodes",
     "edge_prob",
     "get_cached_gnp_random_graph",
@@ -14,7 +14,7 @@ __all__ = [
 
 CACHE_ROOT = Path(__file__).resolve().parent.parent / "env" / "nxp_benchdata"
 
-backends = ["parallel", None]
+chunking = [True, False]
 num_nodes = [50, 100, 200, 400, 800]
 edge_prob = [0.8, 0.6, 0.4, 0.2]
 
