@@ -16,5 +16,6 @@
     "env_dir": "env",
     "results_dir": "results",
     "html_dir": "html",
-    "build_cache_size": 8
+    "build_cache_size": 8,
+    "default_benchmark_timeout": 1200
 }
