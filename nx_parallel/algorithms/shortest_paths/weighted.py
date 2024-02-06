@@ -30,7 +30,7 @@ def all_pairs_bellman_ford_path_no_chunk(G, weight="weight"):
 def all_pairs_bellman_ford_path_chunk(G, weight="weight"):
     def _calculate_shortest_paths_subset(nodes):
         for source in nodes:
-            return (source, single_source_bellman_ford_path(G, source, weight=weight))
+            yield (source, single_source_bellman_ford_path(G, source, weight=weight))
 
     if hasattr(G, "graph_object"):
         G = G.graph_object
