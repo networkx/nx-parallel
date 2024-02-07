@@ -10,7 +10,7 @@ __all__ = [
 
 
 def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
-    def _calculate_all_pairs_node_connectivity_subset(chunk):
+    def _calculate_all_pairs_node_connectivity_subset(chunk, directed=False):
         for u, v in chunk:
             k = local_node_connectivity(G, u, v, cutoff=cutoff)
             all_pairs[u][v] = k
@@ -40,7 +40,7 @@ def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
     pair_chunks = nxp.chunks(pairs, num_in_chunk)
 
     Parallel(n_jobs=total_cores, backend="threading")(
-        delayed(_calculate_all_pairs_node_connectivity_subset)(chunk)
+        delayed(_calculate_all_pairs_node_connectivity_subset)(chunk, directed=directed)
         for chunk in pair_chunks
     )
 
