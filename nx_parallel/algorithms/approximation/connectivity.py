@@ -33,11 +33,7 @@ def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
 
     pairs = list(iter_func(nbunch, 2))
 
-    all_pairs = {}
-    for u, v in pairs:
-        all_pairs.setdefault(u, {})[v] = None
-        if not directed:
-            all_pairs.setdefault(v, {})[u] = None
+    all_pairs = {u: {v: None for v in nbunch if v != u} for u in nbunch}
 
     total_cores = nxp.cpu_count()
     num_in_chunk = max(len(pairs) // total_cores, 1)
