@@ -20,6 +20,7 @@ class Unweighted(Benchmark):
         G = get_cached_gnp_random_graph(num_nodes, edge_prob)
         _ = dict(nx.all_pairs_shortest_path(G, backend=backend))
 
+
 class Weighted(Benchmark):
     params = [(backends), (num_nodes), (edge_prob)]
     param_names = ["backend", "num_nodes", "edge_prob"]
