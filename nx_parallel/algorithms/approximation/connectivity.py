@@ -11,7 +11,7 @@ __all__ = [
 
 def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
     """The parallel computation is implemented by computing the
-    `local_node_connectivity` for all nodes in `G` in chunks, concurrently 
+    `local_node_connectivity` for all nodes in `G` in chunks, concurrently
     on different threads. Backend used is `threading`.
 
     networkx.all_pairs_node_connectivity : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.approximation.connectivity.all_pairs_node_connectivity.html
