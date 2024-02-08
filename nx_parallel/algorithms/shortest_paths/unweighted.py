@@ -18,7 +18,10 @@ __all__ = [
 
 
 def all_pairs_shortest_path_length(G, cutoff=None):
-    """Computes the shortest path lengths between all nodes in `G`."""
+    """The parallel computation is implemented by computing the
+    shortest paths lengths for each node in `G` concurrently.
+
+    networkx.single_source_shortest_path_length : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.unweighted.all_pairs_shortest_path_length.html#all-pairs-shortest-path-length"""
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
@@ -35,7 +38,10 @@ def all_pairs_shortest_path_length(G, cutoff=None):
 
 
 def all_pairs_shortest_path(G, cutoff=None):
-    """Compute shortest paths between all nodes."""
+    """The parallel computation is implemented by computing the
+    shortest paths for each node in `G` concurrently.
+
+    networkx.single_source_shortest_path : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.unweighted.all_pairs_shortest_path.html#all-pairs-shortest-path"""
     if hasattr(G, "graph_object"):
         G = G.graph_object
 

@@ -24,7 +24,11 @@ __all__ = [
 
 
 def all_pairs_dijkstra(G, cutoff=None, weight="weight"):
-    """Find shortest weighted paths and lengths between all nodes."""
+    """The parallel computation is implemented by computing the
+    `single_source_dijkstra` for each node in `G` concurrently.
+
+    networkx.all_pairs_dijkstra : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra.html#all-pairs-dijkstra
+    """
 
     def _calculate_all_pairs_dijkstra_subset(n):
         return (n, single_source_dijkstra(G, n, cutoff=cutoff, weight=weight))
@@ -38,7 +42,11 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight"):
 
 
 def all_pairs_dijkstra_path_length(G, cutoff=None, weight="weight"):
-    """Compute shortest path lengths between all nodes in a weighted graph."""
+    """The parallel computation is implemented by computing the
+    shortest paths lengths for each node in `G` concurrently.
+
+    networkx.all_pairs_dijkstra_path_length : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra_path_length.html#all-pairs-dijkstra-path-length
+    """
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
@@ -53,7 +61,11 @@ def all_pairs_dijkstra_path_length(G, cutoff=None, weight="weight"):
 
 
 def all_pairs_dijkstra_path(G, cutoff=None, weight="weight"):
-    """Compute shortest paths between all nodes in a weighted graph."""
+    """The parallel computation is implemented by computing the
+    shortest paths for each node in `G` concurrently.
+
+    networkx.all_pairs_dijkstra_path : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra_path.html#all-pairs-dijkstra-path
+    """
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
@@ -68,7 +80,11 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight"):
 
 
 def all_pairs_bellman_ford_path_length(G, weight="weight"):
-    """Compute shortest path lengths between all nodes in a weighted graph."""
+    """The parallel computation is implemented by computing the
+    shortest paths lengths for each node in `G` concurrently.
+
+    networkx.all_pairs_bellman_ford_path_length : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_bellman_ford_path_length.html#all-pairs-bellman-ford-path-length
+    """
 
     def _calculate_shortest_paths_length_subset(n):
         return (n, length(G, n, weight=weight))
