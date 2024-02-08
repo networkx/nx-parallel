@@ -70,6 +70,7 @@ def _betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
             betweenness, delta = _accumulate_basic(betweenness, S, P, sigma, s)
     return betweenness
 
+
 def betweenness_centrality_no_chunk(
     G, k=None, normalized=True, weight=None, endpoints=False, seed=None
 ):
@@ -98,8 +99,7 @@ def betweenness_centrality_no_chunk(
     total_cores = nxp.cpu_count()
 
     bt_cs = Parallel(n_jobs=total_cores)(
-        delayed(_betweenness_centrality_node)(G, n, weight, endpoints)
-        for n in nodes
+        delayed(_betweenness_centrality_node)(G, n, weight, endpoints) for n in nodes
     )
 
     # Reducing partial solution

@@ -25,12 +25,15 @@ def number_of_isolates_chunk(G):
     )
     return sum(results)
 
+
 def number_of_isolates_no_chunk(G):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
     cpu_count = nxp.cpu_count()
 
-    results = Parallel(n_jobs=cpu_count)(delayed(lambda v: 1)(v) for v in nx.isolates(G))
-    
+    results = Parallel(n_jobs=cpu_count)(
+        delayed(lambda v: 1)(v) for v in nx.isolates(G)
+    )
+
     return sum(results)

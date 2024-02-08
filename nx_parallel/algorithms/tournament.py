@@ -53,17 +53,23 @@ def is_reachable_chunk(G, s, t):
     )
     return all(results)
 
+
 def is_reachable_no_chunk(G, s, t):
-    def two_neighborhood(G,v):
+    def two_neighborhood(G, v):
         return {
-            x for x in G if x == v or x in G[v] or any(Parallel(n_jobs=-1)(delayed(is_path)(G, [v, z, x]) for z in G))
+            x
+            for x in G
+            if x == v
+            or x in G[v]
+            or any(Parallel(n_jobs=-1)(delayed(is_path)(G, [v, z, x]) for z in G))
         }
-    
+
     def is_closed(G, nodes):
         def is_closed_subset(G, node):
             return all(node in G_adj[u] for u in set(G) - {node})
+
         return Parallel(n_jobs=-1)(delayed(is_closed_subset)(G, v) for v in nodes)
-   
+
     def is_reachable_no_chunk_node(S):
         return not (is_closed(G, S) and s in S and t not in S)
 
@@ -72,8 +78,14 @@ def is_reachable_no_chunk(G, s, t):
 
     G_adj = G._adj
 
-    neighborhoods = list(Parallel(n_jobs=-1)(delayed(two_neighborhood)(G, v) for v in G))
-    return all(Parallel(n_jobs=-1)(delayed(is_reachable_no_chunk_node)(S) for S in neighborhoods))
+    neighborhoods = list(
+        Parallel(n_jobs=-1)(delayed(two_neighborhood)(G, v) for v in G)
+    )
+    return all(
+        Parallel(n_jobs=-1)(
+            delayed(is_reachable_no_chunk_node)(S) for S in neighborhoods
+        )
+    )
 
 
 def is_strongly_connected_chunk(G):
@@ -114,8 +126,6 @@ def is_strongly_connected_no_chunk(G):
     cpu_count = nxp.cpu_count()
     nodes = list(G.nodes())
 
-    results = Parallel(n_jobs=cpu_count)(
-        delayed(is_reachable_node)(v) for v in nodes
-    )
+    results = Parallel(n_jobs=cpu_count)(delayed(is_reachable_node)(v) for v in nodes)
 
     return all(results)

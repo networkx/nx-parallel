@@ -3,9 +3,10 @@ from .common import (
     num_nodes,
     edge_prob,
     get_cached_gnp_random_graph,
-    Benchmark
+    Benchmark,
 )
 import nx_parallel as nxp
+
 
 class ChunkBenchmarks(Benchmark):
     params = [(chunking), (num_nodes), (edge_prob)]

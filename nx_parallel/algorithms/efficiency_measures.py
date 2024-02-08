@@ -31,16 +31,17 @@ def local_efficiency_chunk(G):
     )
     return sum(efficiencies) / len(G)
 
+
 def local_efficiency_no_chunk(G):
     def _local_efficiency_node(G, v):
         return nx.global_efficiency(G.subgraph(G[v]))
 
     if hasattr(G, "graph_object"):
         G = G.graph_object
-    
+
     nodes = G.nodes
     cpu_count = nxp.cpu_count()
-    
+
     efficiency_list = Parallel(n_jobs=cpu_count)(
         delayed(_local_efficiency_node)(G, v) for v in nodes
     )

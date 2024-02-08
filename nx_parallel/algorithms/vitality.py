@@ -24,7 +24,9 @@ def closeness_vitality_no_chunk(G, node=None, weight=None, wiener_index=None):
 
     cpu_count = nxp.cpu_count()
 
-    vitality = partial(closeness_vitality_no_chunk, G, weight=weight, wiener_index=wiener_index)
+    vitality = partial(
+        closeness_vitality_no_chunk, G, weight=weight, wiener_index=wiener_index
+    )
     result = Parallel(n_jobs=cpu_count)(
         delayed(lambda v: (v, vitality(v)))(v) for v in G
     )
@@ -40,7 +42,7 @@ def closeness_vitality_chunk(G, node=None, weight=None, wiener_index=None):
 
     def closeness_vitality_chunk_subset(chunk):
         return {v: vitality(v) for v in chunk}
-    
+
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
@@ -55,11 +57,11 @@ def closeness_vitality_chunk(G, node=None, weight=None, wiener_index=None):
     num_in_chunk = max(len(G) // cpu_count, 1)
     node_chunks = nxp.chunks(G.nodes, num_in_chunk)
 
+    vitality = partial(
+        closeness_vitality_chunk, G, weight=weight, wiener_index=wiener_index
+    )
 
-    vitality = partial(closeness_vitality_chunk, G, weight=weight, wiener_index=wiener_index)
-    
     result = Parallel(n_jobs=cpu_count)(
         delayed(closeness_vitality_chunk_subset)(chunk) for chunk in node_chunks
     )
     return {k: v for d in result for k, v in d.items()}
-

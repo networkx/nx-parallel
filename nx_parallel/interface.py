@@ -1,14 +1,29 @@
-from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality_chunk, betweenness_centrality_no_chunk
-from nx_parallel.algorithms.shortest_paths.weighted import all_pairs_bellman_ford_path_chunk, all_pairs_bellman_ford_path_no_chunk
-from nx_parallel.algorithms.efficiency_measures import local_efficiency_chunk, local_efficiency_no_chunk
-from nx_parallel.algorithms.isolate import number_of_isolates_chunk, number_of_isolates_no_chunk
+from nx_parallel.algorithms.centrality.betweenness import (
+    betweenness_centrality_chunk,
+    betweenness_centrality_no_chunk,
+)
+from nx_parallel.algorithms.shortest_paths.weighted import (
+    all_pairs_bellman_ford_path_chunk,
+    all_pairs_bellman_ford_path_no_chunk,
+)
+from nx_parallel.algorithms.efficiency_measures import (
+    local_efficiency_chunk,
+    local_efficiency_no_chunk,
+)
+from nx_parallel.algorithms.isolate import (
+    number_of_isolates_chunk,
+    number_of_isolates_no_chunk,
+)
 from nx_parallel.algorithms.tournament import (
     is_reachable_chunk,
     is_reachable_no_chunk,
     is_strongly_connected_chunk,
     is_strongly_connected_no_chunk,
 )
-from nx_parallel.algorithms.vitality import closeness_vitality_chunk, closeness_vitality_no_chunk
+from nx_parallel.algorithms.vitality import (
+    closeness_vitality_chunk,
+    closeness_vitality_no_chunk,
+)
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 

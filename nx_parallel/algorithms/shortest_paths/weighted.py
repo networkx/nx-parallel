@@ -27,6 +27,7 @@ def all_pairs_bellman_ford_path_no_chunk(G, weight="weight"):
     )
     return paths
 
+
 def all_pairs_bellman_ford_path_chunk(G, weight="weight"):
     def _calculate_shortest_paths_subset(nodes):
         for source in nodes:
