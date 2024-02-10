@@ -4,8 +4,7 @@ import nx_parallel as nxp
 
 def test_betweenness_centrality_get_chunks():
     def get_chunk(nodes, num_chunks):
-        ebc = nx.edge_betweenness_centrality(G)
-        nodes_ebc = {i: 0 for i in G.nodes}
+        nodes_ebc = {i: 0 for i in nodes}
         for i in ebc:
             nodes_ebc[i[0]] += ebc[i]
             nodes_ebc[i[1]] += ebc[i]
@@ -26,7 +25,8 @@ def test_betweenness_centrality_get_chunks():
 
         return chunks
 
-    G = nx.fast_gnp_random_graph(50, 0.5, directed=False)
+    G = nx.fast_gnp_random_graph(50, 0.5, seed=5, directed=False)
+    ebc = nx.edge_betweenness_centrality(G)
     par_bc = nxp.betweenness_centrality(G, get_chunks=get_chunk)  # smoke test
     bc = nx.betweenness_centrality(G)
     for i in range(20):
