@@ -7,9 +7,9 @@ __all__ = ["local_efficiency"]
 
 
 def local_efficiency(G):
-    """The parallel computation is implemented by dividing the 
-    nodes into chunks and then computing and adding global efficiencies of all node 
-    in all chunks, in parallel, and then adding all these sums and dividing by the 
+    """The parallel computation is implemented by dividing the
+    nodes into chunks and then computing and adding global efficiencies of all node
+    in all chunks, in parallel, and then adding all these sums and dividing by the
     total number of nodes at the end.
 
     networkx.local_efficiency : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.efficiency_measures.local_efficiency.html#local-efficiency
