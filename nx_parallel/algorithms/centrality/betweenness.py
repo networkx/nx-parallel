@@ -29,12 +29,12 @@ def betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    if get_chunks is not None:
-        node_chunks = get_chunks(nodes)
-    else:
-        node_chunks = nxp.create_iterables(G, "node", nodes)
-
     total_cores = nxp.cpu_count()
+
+    if get_chunks is not None:
+        node_chunks = get_chunks(nodes, total_cores)
+    else:
+        node_chunks = nxp.create_iterables(G, "node", total_cores, nodes)
 
     bt_cs = Parallel(n_jobs=total_cores)(
         delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
