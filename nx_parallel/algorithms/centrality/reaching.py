@@ -3,7 +3,7 @@
 import networkx as nx
 from joblib import Parallel, delayed
 import nx_parallel as nxp
-from networkx.algorithms.centrality.betweenness import _average_weight
+from networkx.algorithms.centrality.reaching import _average_weight
 
 __all__ = ["global_reaching_centrality", "local_reaching_centrality"]
 
