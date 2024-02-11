@@ -32,11 +32,9 @@ def global_reaching_centrality(G, weight=None, normalized=True):
     centrality = local_reaching_centrality
     total_cores = nxp.cpu_count()
     lrc = Parallel(n_jobs=total_cores)(
-            delayed(centrality)(
-                G, node, paths=paths, weight=weight, normalized=normalized
-            )
-            for node, paths in dict(shortest_paths).items()
-        )
+        delayed(centrality)(G, node, paths=paths, weight=weight, normalized=normalized)
+        for node, paths in dict(shortest_paths).items()
+    )
 
     max_lrc = max(lrc)
     return sum(max_lrc - c for c in lrc) / (len(G) - 1)
