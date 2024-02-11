@@ -10,8 +10,7 @@ __all__ = ["node_redundancy"]
 def node_redundancy(G, nodes=None):
     """Computes the node redundancy coefficients for the nodes in the bipartite
     graph `G`."""
-    def compute_node_redundancy(G, v):
-        return _node_redundancy(G, v)
+
     if hasattr(G, "graph_object"):
         G = G.graph_object
     if nodes is None:
@@ -23,6 +22,6 @@ def node_redundancy(G, nodes=None):
         )
     total_cores = nxp.cpu_count()
     node_redundancies = Parallel(n_jobs=total_cores)(
-        delayed(compute_node_redundancy)(G, v) for v in nodes
+        delayed(lambda G, v: (v, _node_redundancy(G, v)))(G, v) for v in nodes
     )
-    return dict(zip(nodes, node_redundancies))
+    return dict(node_redundancies)
