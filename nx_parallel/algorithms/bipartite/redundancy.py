@@ -8,8 +8,10 @@ __all__ = ["node_redundancy"]
 
 
 def node_redundancy(G, nodes=None):
-    """Computes the node redundancy coefficients for the nodes in the bipartite
-    graph `G`."""
+    """In the parallel implementation we compute the node redundancy coefficients
+    for all the nodes in the bipartite graph `G` concurrently.
+
+    networkx.bipartite.node_redundancy : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.bipartite.redundancy.node_redundancy.html"""
 
     if hasattr(G, "graph_object"):
         G = G.graph_object
