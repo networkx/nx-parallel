@@ -1,5 +1,7 @@
 import networkx as nx
 import nx_parallel as nxp
+import time
+import math
 
 
 def test_betweenness_centrality_get_chunks():
@@ -9,25 +11,27 @@ def test_betweenness_centrality_get_chunks():
             nodes_ebc[i[0]] += ebc[i]
             nodes_ebc[i[1]] += ebc[i]
 
-        sorted_ebc = sorted(nodes_ebc.items(), key=lambda x: x[1])
+        sorted_nodes = sorted(nodes_ebc.items(), key=lambda x: x[1], reverse=True)
 
-        chunks_with_avg = [[] for _ in range(num_chunks)]
+        chunks = [[] for _ in range(num_chunks)]
         chunk_sums = [0] * num_chunks
 
-        # Assign values to chunks based on balancing the sums
-        for key, value in sorted_ebc:
-            # Find the chunk with the smallest sum and add the value to it
-            min_chunk = min(enumerate(chunk_sums), key=lambda x: x[1])[0]
-            chunks_with_avg[min_chunk].append((key, value))
-            chunk_sums[min_chunk] += value
-
-        chunks = [[j[0] for j in i] for i in chunks_with_avg]
+        for node, value in sorted_nodes:
+            min_chunk_index = chunk_sums.index(min(chunk_sums))
+            chunks[min_chunk_index].append(node)
+            chunk_sums[min_chunk_index] += value
 
         return chunks
 
-    G = nx.fast_gnp_random_graph(50, 0.5, seed=5, directed=False)
+    G = nx.bipartite.random_graph(400, 700, 0.8, seed=5, directed=False)
     ebc = nx.edge_betweenness_centrality(G)
-    par_bc = nxp.betweenness_centrality(G, get_chunks=get_chunk)  # smoke test
-    bc = nx.betweenness_centrality(G)
-    for i in range(20):
-        assert round(par_bc[i], 15) == round(bc[i], 15)
+    t1 = time.time()
+    par_bc_chunk = nxp.betweenness_centrality(G, get_chunks=get_chunk)  # smoke test
+    t2 = time.time()
+    par_bc = nxp.betweenness_centrality(G)
+    t3 = time.time()
+    for i in range(1100):
+        assert math.isclose(par_bc[i], par_bc_chunk[i], abs_tol=1e-16)
+    with_chunk = t2 - t1
+    without_chunk = t3 - t2
+    assert with_chunk < without_chunk  # get_chunk is faster than default(for big graphs)
