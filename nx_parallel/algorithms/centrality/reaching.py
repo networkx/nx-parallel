@@ -11,7 +11,7 @@ __all__ = ["global_reaching_centrality", "local_reaching_centrality"]
 def global_reaching_centrality(G, weight=None, normalized=True):
     """The parallel computation is implemented by running the `local_reaching_centrality`
     for each (`node`, `paths`) pairs in `shortest_paths` dictionary in parallel.
-    
+
     networkx.global_reaching_centrality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.global_reaching_centrality.html#networkx.algorithms.centrality.global_reaching_centrality"""
 
     if hasattr(G, "graph_object"):
@@ -46,7 +46,7 @@ def global_reaching_centrality(G, weight=None, normalized=True):
 def local_reaching_centrality(G, v, paths=None, weight=None, normalized=True):
     """The parallel computation is implemented by computing the `_average_weight`
     for all paths in `shortest_path` dictionary in parallel.
-    
+
     networkx.local_reaching_centrality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.local_reaching_centrality.html#networkx.algorithms.centrality.local_reaching_centrality"""
 
     if hasattr(G, "graph_object"):
