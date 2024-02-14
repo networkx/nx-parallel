@@ -11,13 +11,13 @@ import nx_parallel
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
-number_of_nodes_list = [10, 50, 100, 300, 500]
+number_of_nodes_list = [125, 250, 500, 1000]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.local_reaching_centrality
+currFun = nx.global_reaching_centrality
 for p in pList:
     for num in number_of_nodes_list:
         # create original and parallel graphs
-        G = nx.fast_gnp_random_graph(num, p, seed=42, directed=False)
+        G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
 
         # for weighted graphs
         random.seed(42)
@@ -27,15 +27,15 @@ for p in pList:
         H = nx_parallel.ParallelGraph(G)
 
         # time both versions and update heatmapDF
-        v = random.choice(list(G.nodes()))
+        # v = random.choice(list(G.nodes()))
         t1 = time.time()
-        c = currFun(H, v)
+        c = currFun(H)
         if isinstance(c, types.GeneratorType):
             d = dict(c)
         t2 = time.time()
         parallelTime = t2 - t1
         t1 = time.time()
-        c = currFun(G, v)
+        c = currFun(G)
         if isinstance(c, types.GeneratorType):
             d = dict(c)
         t2 = time.time()
