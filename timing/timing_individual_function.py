@@ -13,7 +13,7 @@ import nx_parallel
 heatmapDF = pd.DataFrame()
 number_of_nodes_list = [10, 50, 100, 300, 500]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.all_pairs_bellman_ford_path
+currFun = nx.local_reaching_centrality
 for p in pList:
     for num in number_of_nodes_list:
         # create original and parallel graphs
@@ -27,14 +27,15 @@ for p in pList:
         H = nx_parallel.ParallelGraph(G)
 
         # time both versions and update heatmapDF
+        v = random.choice(list(G.nodes()))
         t1 = time.time()
-        c = currFun(H)
+        c = currFun(H, v)
         if isinstance(c, types.GeneratorType):
             d = dict(c)
         t2 = time.time()
         parallelTime = t2 - t1
         t1 = time.time()
-        c = currFun(G)
+        c = currFun(G, v)
         if isinstance(c, types.GeneratorType):
             d = dict(c)
         t2 = time.time()
