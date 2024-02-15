@@ -13,7 +13,7 @@ These asv benchmarks are not just good to see how parallel implementations are i
    - or `asv run -b <benchmark_file_name> -k <benchmark_name>` to run a particular benchmark in a file.
    - or `asv run -b BenchmarkClassName.time_benchmark_func_name` to run a specific benchmark in a benchmark class.
    - if you are running benchmarks for the first time, you will be asked to enter your machine information after this command.
-6. `asv publish` will create a `html` folder with the results.
+6. `asv publish` will create an `html` folder with the results.
 7. `asv preview` will host the results locally at http://127.0.0.1:8080/
 
 <hr>
