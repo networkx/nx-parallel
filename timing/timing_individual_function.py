@@ -11,14 +11,30 @@ import nx_parallel
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
-number_of_nodes_list = [10, 50, 100, 300, 500]
-pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.all_pairs_bellman_ford_path
+# for bipartite graphs
+#n = [50, 100, 200, 400]
+#m = [25, 50, 100, 200]
+number_of_nodes_list = [75, 150, 300, 600] 
+pList = [1, 0.8, 0.6, 0.4]
+currFun = nx.bipartite.node_redundancy
 for p in pList:
-    for num in number_of_nodes_list:
+    for num in range(len(number_of_nodes_list)):
         # create original and parallel graphs
-        G = nx.fast_gnp_random_graph(num, p, seed=42, directed=False)
+        
 
+        '''
+        # for bipartite.node_redundancy
+        G = nx.bipartite.random_graph(n[num], m[num], p, seed=42, directed=True)
+        for i in G.nodes:
+            l = list(G.neighbors(i))
+            if len(l)==0:
+                v = random.choice(list(G.nodes) - [i,])
+                G.add_edge(i, v)
+                G.add_edge(i, random.choice(list(G.nodes) - [i, v]))
+            elif len(l)==1:
+                G.add_edge(i, random.choice(list(G.nodes) - [i, list(G.neighbors(i))[0]]))
+        '''
+                
         # for weighted graphs
         random.seed(42)
         for u, v in G.edges():
@@ -40,7 +56,7 @@ for p in pList:
         t2 = time.time()
         stdTime = t2 - t1
         timesFaster = stdTime / parallelTime
-        heatmapDF.at[num, p] = timesFaster
+        heatmapDF.at[number_of_nodes_list[num], p] = timesFaster
         print("Finished " + str(currFun))
 
 # Code to create for row of heatmap specifically for tournaments
