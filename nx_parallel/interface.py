@@ -71,7 +71,7 @@ class Dispatcher:
     all_pairs_shortest_path_length = all_pairs_shortest_path_length
 
     #
-    approximate_all_pairs_node_connectivity = all_pairs_node_connectivity
+    all_pairs_node_connectivity = all_pairs_node_connectivity
 
     # =============================
 
