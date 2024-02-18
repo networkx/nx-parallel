@@ -20,7 +20,7 @@ currFun = nx.bipartite.node_redundancy
 for p in pList:
     for num in range(len(number_of_nodes_list)):
         # create original and parallel graphs
-
+        G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
         """
         # for bipartite.node_redundancy
         G = nx.bipartite.random_graph(n[num], m[num], p, seed=42, directed=True)
