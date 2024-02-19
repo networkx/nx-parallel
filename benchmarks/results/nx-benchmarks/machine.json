@@ -1,0 +1,9 @@
+{
+    "arch": "x86_64",
+    "cpu": "AMD EPYC-Milan Processor",
+    "machine": "nx-benchmarks",
+    "num_cpu": "4",
+    "os": "Linux 5.15.0-92-generic",
+    "ram": "15981980",
+    "version": 1
+}

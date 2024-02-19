@@ -1,0 +1,241 @@
+{
+    "bench_node_chunks.ChunkBenchmarks.time_all_pairs_bellman_ford_path_chunking": {
+        "code": "class ChunkBenchmarks:\n    def time_all_pairs_bellman_ford_path_chunking(self, chunking, num_nodes, edge_prob):\n        G = get_cached_gnp_random_graph(num_nodes, edge_prob, is_weighted=True)\n        if chunking:\n            _ = dict(nxp.all_pairs_bellman_ford_path_chunk(G))\n        else:\n            _ = dict(nxp.all_pairs_bellman_ford_path_no_chunk(G))",
+        "min_run_count": 2,
+        "name": "bench_node_chunks.ChunkBenchmarks.time_all_pairs_bellman_ford_path_chunking",
+        "number": 0,
+        "param_names": [
+            "chunking",
+            "num_nodes",
+            "edge_prob"
+        ],
+        "params": [
+            [
+                "True",
+                "False"
+            ],
+            [
+                "50",
+                "100",
+                "200",
+                "400"
+            ],
+            [
+                "0.8",
+                "0.6",
+                "0.4",
+                "0.2"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "type": "time",
+        "unit": "seconds",
+        "version": "e9757c6be51c91c2aee020bd7fde7a04ae799e219bbd99c6d5c9fdce23561f6d",
+        "warmup_time": -1
+    },
+    "bench_node_chunks.ChunkBenchmarks.time_betweenness_centrality_chunking": {
+        "code": "class ChunkBenchmarks:\n    def time_betweenness_centrality_chunking(self, chunking, num_nodes, edge_prob):\n        G = get_cached_gnp_random_graph(num_nodes, edge_prob)\n        if chunking:\n            _ = nxp.betweenness_centrality_chunk(G)\n        else:\n            _ = nxp.betweenness_centrality_no_chunk(G)",
+        "min_run_count": 2,
+        "name": "bench_node_chunks.ChunkBenchmarks.time_betweenness_centrality_chunking",
+        "number": 0,
+        "param_names": [
+            "chunking",
+            "num_nodes",
+            "edge_prob"
+        ],
+        "params": [
+            [
+                "True",
+                "False"
+            ],
+            [
+                "50",
+                "100",
+                "200",
+                "400"
+            ],
+            [
+                "0.8",
+                "0.6",
+                "0.4",
+                "0.2"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "type": "time",
+        "unit": "seconds",
+        "version": "5da80cc07d9fe0b7f4e3e795342bc2a2107789b24875ac23949c522be2d3d13f",
+        "warmup_time": -1
+    },
+    "bench_node_chunks.ChunkBenchmarks.time_closeness_vitality_chunking": {
+        "code": "class ChunkBenchmarks:\n    def time_closeness_vitality_chunking(self, chunking, num_nodes, edge_prob):\n        G = get_cached_gnp_random_graph(num_nodes, edge_prob)\n        if chunking:\n            _ = nxp.closeness_vitality_chunk(G)\n        else:\n            _ = nxp.closeness_vitality_no_chunk(G)",
+        "min_run_count": 2,
+        "name": "bench_node_chunks.ChunkBenchmarks.time_closeness_vitality_chunking",
+        "number": 0,
+        "param_names": [
+            "chunking",
+            "num_nodes",
+            "edge_prob"
+        ],
+        "params": [
+            [
+                "True",
+                "False"
+            ],
+            [
+                "50",
+                "100",
+                "200",
+                "400"
+            ],
+            [
+                "0.8",
+                "0.6",
+                "0.4",
+                "0.2"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "type": "time",
+        "unit": "seconds",
+        "version": "d102b10547154fd5efcbed43b5eff31a785892f9130dab0b391f9cc61dff1a3d",
+        "warmup_time": -1
+    },
+    "bench_node_chunks.ChunkBenchmarks.time_local_efficiency_chunking": {
+        "code": "class ChunkBenchmarks:\n    def time_local_efficiency_chunking(self, chunking, num_nodes, edge_prob):\n        G = get_cached_gnp_random_graph(num_nodes, edge_prob)\n        if chunking:\n            _ = nxp.local_efficiency_chunk(G)\n        else:\n            _ = nxp.local_efficiency_no_chunk(G)",
+        "min_run_count": 2,
+        "name": "bench_node_chunks.ChunkBenchmarks.time_local_efficiency_chunking",
+        "number": 0,
+        "param_names": [
+            "chunking",
+            "num_nodes",
+            "edge_prob"
+        ],
+        "params": [
+            [
+                "True",
+                "False"
+            ],
+            [
+                "50",
+                "100",
+                "200",
+                "400"
+            ],
+            [
+                "0.8",
+                "0.6",
+                "0.4",
+                "0.2"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "type": "time",
+        "unit": "seconds",
+        "version": "09e2a2972f09ef65b648414c485aa1aadd8c4712ace5ef4d7b8664bae74805e7",
+        "warmup_time": -1
+    },
+    "bench_node_chunks.ChunkBenchmarks.time_number_of_isolates_chunking": {
+        "code": "class ChunkBenchmarks:\n    def time_number_of_isolates_chunking(self, chunking, num_nodes, edge_prob):\n        G = get_cached_gnp_random_graph(num_nodes, edge_prob)\n        if chunking:\n            _ = nxp.number_of_isolates_chunk(G)\n        else:\n            _ = nxp.number_of_isolates_no_chunk(G)",
+        "min_run_count": 2,
+        "name": "bench_node_chunks.ChunkBenchmarks.time_number_of_isolates_chunking",
+        "number": 0,
+        "param_names": [
+            "chunking",
+            "num_nodes",
+            "edge_prob"
+        ],
+        "params": [
+            [
+                "True",
+                "False"
+            ],
+            [
+                "50",
+                "100",
+                "200",
+                "400"
+            ],
+            [
+                "0.8",
+                "0.6",
+                "0.4",
+                "0.2"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "type": "time",
+        "unit": "seconds",
+        "version": "5b64d9d6bcb895d5a09c57bed4fb3f1e05cbb3963f112d0a66616617dfdd2aad",
+        "warmup_time": -1
+    },
+    "bench_node_chunks_tournament.TournamentChunkBenchmark.time_tournament_is_reachable_chunking": {
+        "code": "class TournamentChunkBenchmark:\n    def time_tournament_is_reachable_chunking(self, chunking, num_nodes):\n        G = nx.tournament.random_tournament(num_nodes, seed=42)\n        if chunking:\n            _ = nxp.tournament.is_reachable_chunk(G, 1, num_nodes)\n        else:\n            _ = nxp.tournament.is_reachable_no_chunk(G, 1, num_nodes)",
+        "min_run_count": 2,
+        "name": "bench_node_chunks_tournament.TournamentChunkBenchmark.time_tournament_is_reachable_chunking",
+        "number": 0,
+        "param_names": [
+            "chunking",
+            "num_nodes"
+        ],
+        "params": [
+            [
+                "True",
+                "False"
+            ],
+            [
+                "50",
+                "100",
+                "200",
+                "400"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "type": "time",
+        "unit": "seconds",
+        "version": "7edf4744f7a978e5675e5d744af0d4559ab4512083593455a98395328dda172e",
+        "warmup_time": -1
+    },
+    "bench_node_chunks_tournament.TournamentChunkBenchmark.time_tournament_is_strongly_connected_chunking": {
+        "code": "class TournamentChunkBenchmark:\n    def time_tournament_is_strongly_connected_chunking(self, chunking, num_nodes):\n        G = nx.tournament.random_tournament(num_nodes, seed=42)\n        if chunking:\n            _ = nxp.tournament.is_strongly_connected_chunk(G)\n        else:\n            _ = nxp.tournament.is_strongly_connected_no_chunk(G)",
+        "min_run_count": 2,
+        "name": "bench_node_chunks_tournament.TournamentChunkBenchmark.time_tournament_is_strongly_connected_chunking",
+        "number": 0,
+        "param_names": [
+            "chunking",
+            "num_nodes"
+        ],
+        "params": [
+            [
+                "True",
+                "False"
+            ],
+            [
+                "50",
+                "100",
+                "200",
+                "400"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "type": "time",
+        "unit": "seconds",
+        "version": "93702cc7cb7bd80498b63a6b363813824eab29039218b7e6099d2223fdadbc4b",
+        "warmup_time": -1
+    },
+    "version": 2
+}
