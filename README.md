@@ -61,7 +61,6 @@ To run tests for the project, use the following command:
 
 ```
 PYTHONPATH=. \
-NETWORKX_GRAPH_CONVERT=parallel \
 NETWORKX_TEST_BACKEND=parallel \
 NETWORKX_FALLBACK_TO_NX=True \
     pytest --pyargs networkx "$@"
