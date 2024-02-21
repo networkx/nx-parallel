@@ -1,4 +1,5 @@
 import nx_parallel.algorithms as algorithms
+import inspect
 
 
 __all__ = ["get_info"]
@@ -20,6 +21,13 @@ def get_info():
                     if callable(getattr(file_module, name, None))
                 ]
                 for function in functions:
+                    try:
+                        func_line = inspect.getsourcelines(
+                            getattr(file_module, function)
+                        )[1]
+                    except Exception as e:
+                        print(e)
+                        func_line = None
                     try:
                         # Extracting docstring
                         docstring = getattr(file_module, function).__doc__
@@ -55,8 +63,9 @@ def get_info():
                         par_docs = None
 
                     funcs[function] = {
-                        "extra_docstring": par_docs,
-                        "extra_parameters": par_params,
+                        "backend_func_url": f"https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/{file_name}.py#{func_line}",
+                        "backend_func_docs": par_docs,
+                        "additional_parameters": par_params,
                     }
         return funcs
 
