@@ -1,4 +1,5 @@
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
+from nx_parallel.algorithms.shortest_paths.generic import all_pairs_all_shortest_paths
 from nx_parallel.algorithms.shortest_paths.weighted import (
     all_pairs_dijkstra,
     all_pairs_dijkstra_path_length,
@@ -20,6 +21,7 @@ from nx_parallel.algorithms.vitality import closeness_vitality
 from nx_parallel.algorithms.approximation.connectivity import (
     all_pairs_node_connectivity,
 )
+from nx_parallel.algorithms.connectivity import connectivity
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 
@@ -59,6 +61,9 @@ class Dispatcher:
     # Efficiency
     local_efficiency = local_efficiency
 
+    # Shortest Paths : generic
+    all_pairs_all_shortest_paths = all_pairs_all_shortest_paths
+
     # Shortest Paths : weighted graphs
     all_pairs_dijkstra = all_pairs_dijkstra
     all_pairs_dijkstra_path_length = all_pairs_dijkstra_path_length
@@ -70,8 +75,11 @@ class Dispatcher:
     all_pairs_shortest_path = all_pairs_shortest_path
     all_pairs_shortest_path_length = all_pairs_shortest_path_length
 
-    #
-    all_pairs_node_connectivity = all_pairs_node_connectivity
+    # Approximation
+    approximate_all_pairs_node_connectivity = all_pairs_node_connectivity
+
+    # Connectivity
+    all_pairs_node_connectivity = connectivity.all_pairs_node_connectivity
 
     # =============================
 

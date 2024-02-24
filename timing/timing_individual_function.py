@@ -20,9 +20,9 @@ for p in pList:
         G = nx.fast_gnp_random_graph(num, p, seed=42, directed=False)
 
         # for weighted graphs
-        #random.seed(42)
-        #for u, v in G.edges():
-        #    G[u][v]["weight"] = random.random()
+        random.seed(42)
+        for u, v in G.edges():
+            G[u][v]["weight"] = random.random()
 
         H = nx_parallel.ParallelGraph(G)
 
