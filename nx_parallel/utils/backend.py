@@ -35,7 +35,8 @@ def get_info():
                         try:
                             # Extracting Parallel Computation description
                             # Assuming that the first para in docstring is the function's PC desc
-                            par_docs_ = docstring.split("\n\n")[0] # "par" is short for "parallel"
+                            # "par" is short for "parallel"
+                            par_docs_ = docstring.split("\n\n")[0]
                             par_docs_ = par_docs_.split("\n")
                             par_docs_ = [
                                 line.strip() for line in par_docs_ if line.strip()
