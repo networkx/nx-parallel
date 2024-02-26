@@ -22,8 +22,17 @@ __all__ = [
 
 
 def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
-    """The parallel computation is implemented by computing the
-    `single_source_dijkstra` for each node in `G` concurrently.
+    """The parallel implementation first divides the nodes into chunks and then
+    creates a generator to lazily compute shortest paths and lengths for each
+    `node_chunk`, and then employs joblib's `Parallel` function to execute these
+    computations in parallel across all available CPU cores.
+
+    Parameters
+    ------------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in an iterable of all the nodes as input and returns
+        an iterable `node_chunks`. The default chunking is done by slicing the
+        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
 
     networkx.all_pairs_dijkstra : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra.html#all-pairs-dijkstra
     """
@@ -58,8 +67,17 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
 def all_pairs_dijkstra_path_length(
     G, cutoff=None, weight="weight", get_chunks="chunks"
 ):
-    """The parallel computation is implemented by computing the
-    shortest paths lengths for each node in `G` concurrently.
+    """The parallel implementation first divides the nodes into chunks and then
+    creates a generator to lazily compute shortest paths lengths for each node in
+    `node_chunk`, and then employs joblib's `Parallel` function to execute these
+    computations in parallel across all available CPU cores.
+
+    Parameters
+    ------------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in an iterable of all the nodes as input and returns
+        an iterable `node_chunks`. The default chunking is done by slicing the
+        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
 
     networkx.all_pairs_dijkstra_path_length : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra_path_length.html#all-pairs-dijkstra-path-length
     """
@@ -97,8 +115,17 @@ def all_pairs_dijkstra_path_length(
 
 
 def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"):
-    """The parallel computation is implemented by computing the
-    shortest paths for each node in `G` concurrently.
+    """The parallel implementation first divides the nodes into chunks and then
+    creates a generator to lazily compute shortest paths for each `node_chunk`, and
+    then employs joblib's `Parallel` function to execute these computations in
+    parallel across all available CPU cores.
+
+    Parameters
+    ------------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in an iterable of all the nodes as input and returns
+        an iterable `node_chunks`. The default chunking is done by slicing the
+        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
 
     networkx.all_pairs_dijkstra_path : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra_path.html#all-pairs-dijkstra-path
     """
@@ -131,8 +158,17 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"
 
 
 def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
-    """The parallel computation is implemented by computing the
-    shortest paths lengths for each node in `G` concurrently.
+    """The parallel implementation first divides the nodes into chunks and then
+    creates a generator to lazily compute shortest paths lengths for each node in
+    `node_chunk`, and then employs joblib's `Parallel` function to execute these
+    computations in parallel across all available CPU cores.
+
+    Parameters
+    ------------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in an iterable of all the nodes as input and returns
+        an iterable `node_chunks`. The default chunking is done by slicing the
+        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
 
     networkx.all_pairs_bellman_ford_path_length : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_bellman_ford_path_length.html#all-pairs-bellman-ford-path-length
     """
