@@ -35,6 +35,7 @@ def get_info():
                         try:
                             # Extracting Parallel Computation description
                             # Assuming that the first para in docstring is the function's PC desc
+                            # "par" is short for "parallel"
                             par_docs_ = docstring.split("\n\n")[0]
                             par_docs_ = par_docs_.split("\n")
                             par_docs_ = [
@@ -63,8 +64,8 @@ def get_info():
                         par_docs = None
 
                     funcs[function] = {
-                        "backend_func_url": f"https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/{file_name}.py#{func_line}",
-                        "backend_func_docs": par_docs,
+                        "url": f"https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/{file_name}.py#{func_line}",
+                        "additional_docs": par_docs,
                         "additional_parameters": par_params,
                     }
         return funcs
