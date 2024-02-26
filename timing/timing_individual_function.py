@@ -13,16 +13,18 @@ import nx_parallel
 heatmapDF = pd.DataFrame()
 number_of_nodes_list = [10, 50, 100, 300, 500]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.all_pairs_shortest_path_length
+weight = False
+currFun = nx.all_pairs_node_connectivity
 for p in pList:
     for num in number_of_nodes_list:
         # create original and parallel graphs
         G = nx.fast_gnp_random_graph(num, p, seed=42, directed=False)
 
         # for weighted graphs
-        random.seed(42)
-        for u, v in G.edges():
-            G[u][v]["weight"] = random.random()
+        if weight:
+            random.seed(42)
+            for u, v in G.edges():
+                G[u][v]["weight"] = random.random()
 
         H = nx_parallel.ParallelGraph(G)
 
@@ -41,6 +43,7 @@ for p in pList:
         stdTime = t2 - t1
         timesFaster = stdTime / parallelTime
         heatmapDF.at[num, p] = timesFaster
+        # print(num, p, timesFaster)
         print("Finished " + str(currFun))
 
 # Code to create for row of heatmap specifically for tournaments

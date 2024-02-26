@@ -34,10 +34,10 @@ def all_pairs_shortest_path_length(G, cutoff=None, get_chunks="chunks"):
     total_cores = nxp.cpu_count()
 
     if get_chunks == "chunks":
-        node_chunks = get_chunks(nodes)
-    else:
         num_in_chunk = max(len(nodes) // total_cores, 1)
         node_chunks = nxp.chunks(nodes, num_in_chunk)
+    else:
+        node_chunks = get_chunks(nodes)
 
     path_lengths_chunk_generator = (
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
@@ -69,10 +69,10 @@ def all_pairs_shortest_path(G, cutoff=None, get_chunks="chunks"):
     total_cores = nxp.cpu_count()
 
     if get_chunks == "chunks":
-        node_chunks = get_chunks(nodes)
-    else:
         num_in_chunk = max(len(nodes) // total_cores, 1)
         node_chunks = nxp.chunks(nodes, num_in_chunk)
+    else:
+        node_chunks = get_chunks(nodes)
 
     paths_chunk_generator = (
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks

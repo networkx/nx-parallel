@@ -2,13 +2,14 @@
 import itertools
 from joblib import Parallel, delayed
 from networkx.algorithms.approximation.connectivity import local_node_connectivity
+import nx_parallel as nxp
 
 __all__ = [
     "all_pairs_node_connectivity",
 ]
 
 
-def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
+def all_pairs_node_connectivity(G, nbunch=None, cutoff=None, get_chunks="chunks"):
     """The parallel computation is implemented by computing the
     `local_node_connectivity` for all nodes in `G`, concurrently
     on different cores.
@@ -32,17 +33,28 @@ def all_pairs_node_connectivity(G, nbunch=None, cutoff=None):
 
     all_pairs = {n: {} for n in nbunch}
 
-    def _compute_local_node_connectivity(u, v):
-        k = local_node_connectivity(G, u, v, cutoff=cutoff)
-        return u, v, k
+    def _process_pair_chunk(pairs_chunk):
+        return [
+            (u, v, local_node_connectivity(G, u, v, cutoff=cutoff))
+            for u, v in pairs_chunk
+        ]
 
-    results = Parallel(n_jobs=-1)(
-        delayed(_compute_local_node_connectivity)(u, v) for u, v in iter_func(nbunch, 2)
+    pairs = list(iter_func(nbunch, 2))
+    total_cores = nxp.cpu_count()
+    if get_chunks == "chunks":
+        num_in_chunk = min(len(pairs) // total_cores, 10)
+        pairs_chunks = nxp.chunks(pairs, num_in_chunk)
+    else:
+        pairs_chunks = get_chunks(pairs)
+
+    paths_chunk_generator = (
+        delayed(_process_pair_chunk)(pairs_chunk) for pairs_chunk in pairs_chunks
     )
 
-    for u, v, k in results:
-        all_pairs[u][v] = k
-        if not directed:
-            all_pairs[v][u] = k
-
+    for path_chunk in Parallel(n_jobs=total_cores)(paths_chunk_generator):
+        for path in path_chunk:
+            u, v, k = path
+            all_pairs[u][v] = k
+            if not directed:
+                all_pairs[v][u] = k
     return all_pairs
