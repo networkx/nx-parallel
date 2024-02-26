@@ -7,7 +7,7 @@ __all__ = [
 ]
 
 
-def all_pairs_bellman_ford_path(G, weight="weight", get_chunks=None):
+def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths for each node_chunk, and
     then employs joblib's `Parallel` function to execute these computations in
@@ -15,7 +15,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks=None):
 
     Parameters
     ------------
-    get_chunks : function (default = None)
+    get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
         `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
@@ -35,11 +35,11 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks=None):
     nodes = G.nodes
     total_cores = nxp.cpu_count()
 
-    if get_chunks:
-        node_chunks = get_chunks(nodes)
-    else:
+    if get_chunks == "chunks":
         num_in_chunk = max(len(nodes) // total_cores, 1)
         node_chunks = nxp.chunks(nodes, num_in_chunk)
+    else:
+        node_chunks = get_chunks(nodes)
 
     paths_chunk_generator = (
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
