@@ -7,40 +7,44 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-import nx_parallel
+import nx_parallel as nxp
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
 number_of_nodes_list = [10, 50, 100, 300, 500]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.all_pairs_bellman_ford_path
+weighted = False
+currFun = nxp.square_clustering_chunk
 for p in pList:
     for num in number_of_nodes_list:
         # create original and parallel graphs
         G = nx.fast_gnp_random_graph(num, p, seed=42, directed=False)
 
         # for weighted graphs
-        random.seed(42)
-        for u, v in G.edges():
-            G[u][v]["weight"] = random.random()
+        if weighted:
+            random.seed(42)
+            for u, v in G.edges():
+                G[u][v]["weight"] = random.random()
 
-        H = nx_parallel.ParallelGraph(G)
+        H = nxp.ParallelGraph(G)
 
         # time both versions and update heatmapDF
         t1 = time.time()
-        c = currFun(H)
-        if isinstance(c, types.GeneratorType):
-            d = dict(c)
+        c1 = nxp.square_clustering_chunk(H)
+        if isinstance(c1, types.GeneratorType):
+            d = dict(c1)
         t2 = time.time()
-        parallelTime = t2 - t1
+        newTime = t2 - t1
         t1 = time.time()
-        c = currFun(G)
-        if isinstance(c, types.GeneratorType):
-            d = dict(c)
+        c2 = nxp.square_clustering_no_chunk(H)
+        if isinstance(c2, types.GeneratorType):
+            d = dict(c2)
         t2 = time.time()
-        stdTime = t2 - t1
-        timesFaster = stdTime / parallelTime
+        oldTime = t2 - t1
+        timesFaster = oldTime / newTime
         heatmapDF.at[num, p] = timesFaster
+        print(num, p, timesFaster)
+        print(c1 == c2)
         print("Finished " + str(currFun))
 
 # Code to create for row of heatmap specifically for tournaments
@@ -73,7 +77,7 @@ hm.set_xticklabels(number_of_nodes_list)
 plt.xticks(rotation=45)
 plt.yticks(rotation=20)
 plt.title(
-    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to networkx"
+    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " - chunk vs no chunk"
 )
 plt.xlabel("Number of Vertices")
 plt.ylabel("Edge Probability")
