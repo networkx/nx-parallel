@@ -73,7 +73,7 @@ def square_clustering_chunk(G, nodes=None):
         node_iter = list(G.nbunch_iter(nodes))
 
     total_cores = nxp.cpu_count()
-    num_in_chunk = max(len(node_iter) // total_cores, 1)
+    num_in_chunk = max(min(len(node_iter) // total_cores, 10), 1)
     node_iter_chunks = nxp.chunks(node_iter, num_in_chunk)
 
     result = Parallel(n_jobs=total_cores)(
