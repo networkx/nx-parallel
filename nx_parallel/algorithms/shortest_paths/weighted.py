@@ -36,10 +36,17 @@ def all_pairs_bellman_ford_path(G, weight="weight"):
     return paths
 
 
-def johnson(G, weight="weight"):
+def johnson(G, weight="weight", get_chunks="chunks"):
     """The parallel computation is implemented by dividing the
     nodes into chunks and computing the shortest paths using Johnson's Algorithm
     for each chunk in parallel.
+
+    Parameters
+    ------------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in an iterable of all the nodes as input and returns
+        an iterable `node_chunks`. The default chunking is done by slicing the
+        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
 
     networkx.johnson : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.johnson.html#johnson
     """
@@ -67,8 +74,11 @@ def johnson(G, weight="weight"):
         return {node: dist_path(node) for node in chunk}
 
     total_cores = nxp.cpu_count()
-    num_in_chunk = max(len(G.nodes) // total_cores, 1)
-    node_chunks = nxp.chunks(G.nodes, num_in_chunk)
+    if get_chunks == "chunks":
+        num_in_chunk = max(len(G.nodes) // total_cores, 1)
+        node_chunks = nxp.chunks(G.nodes, num_in_chunk)
+    else:
+        node_chunks = get_chunks(G.nodes)
 
     results = Parallel(n_jobs=total_cores)(
         delayed(_johnson_subset)(chunk) for chunk in node_chunks
