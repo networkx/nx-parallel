@@ -14,44 +14,49 @@ heatmapDF = pd.DataFrame()
 # for bipartite graphs
 # n = [50, 100, 200, 400]
 # m = [25, 50, 100, 200]
-number_of_nodes_list = [10, 50, 100, 300, 500]
+number_of_nodes_list = [75, 150, 300, 600]
+weighted = False
 pList = [1, 0.8, 0.6, 0.4, 0.2]
 currFun = nx.bipartite.node_redundancy
 for p in pList:
     for num in range(len(number_of_nodes_list)):
         # create original and parallel graphs
-        G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
+        G = nx.fast_gnp_random_graph(
+            number_of_nodes_list[num], p, seed=42, directed=True
+        )
+
         """
         # for bipartite.node_redundancy
         G = nx.bipartite.random_graph(n[num], m[num], p, seed=42, directed=True)
         for i in G.nodes:
             l = list(G.neighbors(i))
-            if len(l)==0:
+            if len(l) == 0:
                 v = random.choice(list(G.nodes) - [i,])
                 G.add_edge(i, v)
-                G.add_edge(i, random.choice(list(G.nodes) - [i, v]))
-            elif len(l)==1:
-                G.add_edge(i, random.choice(list(G.nodes) - [i, list(G.neighbors(i))[0]]))
+                G.add_edge(i, random.choice([node for node in G.nodes if node != i]))
+            elif len(l) == 1:
+                G.add_edge(i, random.choice([node for node in G.nodes if node != i and node not in list(G.neighbors(i))]))
         """
 
         # for weighted graphs
-        random.seed(42)
-        for u, v in G.edges():
-            G[u][v]["weight"] = random.random()
+        if weighted:
+            random.seed(42)
+            for u, v in G.edges():
+                G[u][v]["weight"] = random.random()
 
         H = nx_parallel.ParallelGraph(G)
 
         # time both versions and update heatmapDF
         t1 = time.time()
-        c = currFun(H)
-        if isinstance(c, types.GeneratorType):
-            d = dict(c)
+        c1 = currFun(H)
+        if isinstance(c1, types.GeneratorType):
+            d = dict(c1)
         t2 = time.time()
         parallelTime = t2 - t1
         t1 = time.time()
-        c = currFun(G)
-        if isinstance(c, types.GeneratorType):
-            d = dict(c)
+        c2 = currFun(G)
+        if isinstance(c2, types.GeneratorType):
+            d = dict(c2)
         t2 = time.time()
         stdTime = t2 - t1
         timesFaster = stdTime / parallelTime
