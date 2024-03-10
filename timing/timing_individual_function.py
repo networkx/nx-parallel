@@ -7,7 +7,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-import nx_parallel
+import nx_parallel as nxp
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
@@ -18,6 +18,7 @@ number_of_nodes_list = [75, 150, 300, 600]
 weighted = False
 pList = [1, 0.8, 0.6, 0.4, 0.2]
 currFun = nx.bipartite.node_redundancy
+currFun = nx.square_clustering
 for p in pList:
     for num in range(len(number_of_nodes_list)):
         # create original and parallel graphs
@@ -44,7 +45,7 @@ for p in pList:
             for u, v in G.edges():
                 G[u][v]["weight"] = random.random()
 
-        H = nx_parallel.ParallelGraph(G)
+        H = nxp.ParallelGraph(G)
 
         # time both versions and update heatmapDF
         t1 = time.time()
@@ -93,7 +94,7 @@ hm.set_xticklabels(number_of_nodes_list)
 plt.xticks(rotation=45)
 plt.yticks(rotation=20)
 plt.title(
-    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to networkx"
+    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to NetworkX"
 )
 plt.xlabel("Number of Vertices")
 plt.ylabel("Edge Probability")

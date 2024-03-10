@@ -1,6 +1,9 @@
 from nx_parallel.algorithms.bipartite.redundancy import node_redundancy
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
-from nx_parallel.algorithms.shortest_paths.weighted import all_pairs_bellman_ford_path
+from nx_parallel.algorithms.shortest_paths.weighted import (
+    all_pairs_bellman_ford_path,
+    johnson,
+)
 from nx_parallel.algorithms.efficiency_measures import local_efficiency
 from nx_parallel.algorithms.isolate import number_of_isolates
 from nx_parallel.algorithms.tournament import (
@@ -8,6 +11,7 @@ from nx_parallel.algorithms.tournament import (
     tournament_is_strongly_connected,
 )
 from nx_parallel.algorithms.vitality import closeness_vitality
+from nx_parallel.algorithms.cluster import square_clustering
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 
@@ -52,6 +56,10 @@ class Dispatcher:
 
     # Shortest Paths : all pairs shortest paths(bellman_ford)
     all_pairs_bellman_ford_path = all_pairs_bellman_ford_path
+    johnson = johnson
+
+    # Clustering
+    square_clustering = square_clustering
 
     # =============================
 
