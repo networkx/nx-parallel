@@ -6,6 +6,7 @@ from nx_parallel.algorithms.shortest_paths.weighted import (
     all_pairs_dijkstra_path,
     all_pairs_bellman_ford_path_length,
     all_pairs_bellman_ford_path,
+    johnson,
 )
 from nx_parallel.algorithms.shortest_paths.unweighted import (
     all_pairs_shortest_path,
@@ -22,6 +23,7 @@ from nx_parallel.algorithms.approximation.connectivity import (
     all_pairs_node_connectivity,
 )
 from nx_parallel.algorithms.connectivity import connectivity
+from nx_parallel.algorithms.cluster import square_clustering
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 
@@ -70,6 +72,10 @@ class Dispatcher:
     all_pairs_dijkstra_path = all_pairs_dijkstra_path
     all_pairs_bellman_ford_path_length = all_pairs_bellman_ford_path_length
     all_pairs_bellman_ford_path = all_pairs_bellman_ford_path
+    johnson = johnson
+
+    # Clustering
+    square_clustering = square_clustering
 
     # Shortest Paths : unweighted graphs
     all_pairs_shortest_path = all_pairs_shortest_path

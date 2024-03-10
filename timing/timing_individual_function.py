@@ -7,36 +7,36 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-import nx_parallel
+import nx_parallel as nxp
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
 number_of_nodes_list = [10, 50, 100, 300, 500]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-weight = False
-currFun = nx.all_pairs_node_connectivity
+weighted = False
+currFun = nx.square_clustering
 for p in pList:
     for num in number_of_nodes_list:
         # create original and parallel graphs
         G = nx.fast_gnp_random_graph(num, p, seed=42, directed=False)
 
         # for weighted graphs
-        if weight:
+        if weighted:
             random.seed(42)
             for u, v in G.edges():
                 G[u][v]["weight"] = random.random()
 
-        H = nx_parallel.ParallelGraph(G)
+        H = nxp.ParallelGraph(G)
 
         # time both versions and update heatmapDF
         t1 = time.time()
-        c = currFun(H)
+        c = nx.square_clustering(H)
         if isinstance(c, types.GeneratorType):
             d = dict(c)
         t2 = time.time()
         parallelTime = t2 - t1
         t1 = time.time()
-        c = currFun(G)
+        c = nx.square_clustering(G)
         if isinstance(c, types.GeneratorType):
             d = dict(c)
         t2 = time.time()
@@ -76,7 +76,7 @@ hm.set_xticklabels(number_of_nodes_list)
 plt.xticks(rotation=45)
 plt.yticks(rotation=20)
 plt.title(
-    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to networkx"
+    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to NetworkX"
 )
 plt.xlabel("Number of Vertices")
 plt.ylabel("Edge Probability")
