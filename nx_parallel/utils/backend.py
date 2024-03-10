@@ -5,7 +5,7 @@ __all__ = ["get_info"]
 
 
 def get_info():
-    """Return a dictionary with information about the package."""
+    """Return a dict with info about the package like functions supported."""
 
     def get_funcs_info():
         """Return a dictionary with all the information about all the functions."""
