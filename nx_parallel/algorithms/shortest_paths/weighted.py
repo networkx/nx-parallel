@@ -104,4 +104,3 @@ def johnson(G, weight="weight", get_chunks="chunks"):
         delayed(_johnson_subset)(chunk) for chunk in node_chunks
     )
     return {v: d_path for result_chunk in results for v, d_path in result_chunk.items()}
-  
