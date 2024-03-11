@@ -2,37 +2,57 @@
 
 nx-parallel is a NetworkX backend that uses joblib for parallelization. This project aims to provide parallelized implementations of various NetworkX functions to improve performance.
 
-## Features
+## Algorithms in nx-parallel
 
-nx-parallel provides parallelized implementations for the following NetworkX functions:
+- [betweenness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/betweenness.py#15)
+- [square_clustering](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#10)
+- [local_efficiency](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#9)
+- [number_of_isolates](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#8)
+- [is_reachable](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#10)
+- [tournament_is_strongly_connected](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#54)
+- [closeness_vitality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#9)
+- [all_pairs_bellman_ford_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/weighted.py#16)
+- [johnson](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/weighted.py#59)
 
-- [betweeness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L17)
-- [local_efficiency](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L12)
-- [number_of_isolates](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L9)
-- [all_pairs_bellman_ford_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L9)
-- [is_reachable](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L11)
-- [tournament_is_strongly_connected](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L103)
-- [closeness_vitality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L9)
+<details>
+<summary>Script used to generate the above list</summary>
+  
+```.py
+import nx_parallel as nxp
+d = nxp.get_info()
+for func in d.get("functions", {}):
+    print(f"- [{func}]({d['functions'][func]['url']})")
+```
 
-![alt text](timing/heatmap_all_functions.png)
+</details>
 
-See the `/timing` folder for more heatmaps and code for heatmap generation!
+## Backend usage
 
-## Usage
-
-Here's an example of how to use nx-parallel:
-
-```python
+```.py
 import networkx as nx
 import nx_parallel as nxp
 
 G = nx.path_graph(4)
 H = nxp.ParallelGraph(G)
 
-nx.betweenness_centrality(G, backend="parallel") # method 1 : using the backend kwarg
-nx.betweenness_centrality(H) # method 2 : passing ParallelGraph object in networkx function
-nxp.betweenness_centrality(G) # method 3 : using nx-parallel function with networkx object
-nxp.betweenness_centrality(H) # method 4 : using nx-parallel function with ParallelGraph object
+# method 1 : passing ParallelGraph object in networkx function
+nx.betweenness_centrality(H)
+
+# method 2 : using the 'backend' kwarg
+nx.betweenness_centrality(G, backend="parallel")
+
+
+# Not recommended but possible
+
+# method 3 : using nx-parallel implementation with networkx object
+nxp.betweenness_centrality(G)
+
+# method 4 : using nx-parallel implementation with ParallelGraph object
+nxp.betweenness_centrality(H)
 
 # output : {0: 0.0, 1: 0.6666666666666666, 2: 0.6666666666666666, 3: 0.0}
 ```
+
+Feel free the contribute to nx-parallel. You can find the contributing guidelines [here](https://github.com/networkx/nx-parallel/blob/main/CONTRIBUTING.md). If you'd like to implement a feature or fix a bug, we'd be happy to review a pull request. Please make sure to explain the changes you made in the pull request description. And feel free to open issues for any problems you face, or for new features you'd like to see implemented.
+
+Thank you :)
