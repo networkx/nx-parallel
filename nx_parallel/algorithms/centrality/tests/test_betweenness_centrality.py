@@ -5,7 +5,8 @@ import math
 
 
 def test_betweenness_centrality_get_chunks():
-    def get_chunk(nodes, num_chunks):
+    def get_chunk(nodes):
+        num_chunks = 8  # number of chunks/cores
         nodes_ebc = {i: 0 for i in nodes}
         for i in ebc:
             nodes_ebc[i[0]] += ebc[i]
