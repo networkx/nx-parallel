@@ -14,10 +14,23 @@ __all__ = ["betweenness_centrality"]
 
 @py_random_state(5)
 def betweenness_centrality(
-    G, k=None, normalized=True, weight=None, endpoints=False, seed=None, get_chunks=None
+    G,
+    k=None,
+    normalized=True,
+    weight=None,
+    endpoints=False,
+    seed=None,
+    get_chunks="chunks",
 ):
-    """The parallel computation is implemented by dividing the
-    nodes into chunks and computing betweenness centrality for each chunk concurrently.
+    """The parallel computation is implemented by dividing the nodes into chunks and
+    computing betweenness centrality for each chunk concurrently.
+
+    Parameters
+    ------------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in a list of all the nodes as input and returns an
+        iterable `node_chunks`. The default chunking is done by slicing the
+        `nodes` into `n` chunks, where `n` is the number of CPU cores.
 
     networkx.betweenness_centrality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html
     """
@@ -31,10 +44,10 @@ def betweenness_centrality(
 
     total_cores = nxp.cpu_count()
 
-    if get_chunks is not None:
-        node_chunks = get_chunks(nodes, total_cores)
-    else:
+    if get_chunks == "chunks":
         node_chunks = nxp.create_iterables(G, "node", total_cores, nodes)
+    else:
+        node_chunks = get_chunks(nodes, total_cores)
 
     bt_cs = Parallel(n_jobs=total_cores)(
         delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
