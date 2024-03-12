@@ -113,7 +113,7 @@ The default chunking in nx-parallel is done by first determining the number avai
 - The algorithm that you are considering to add to nx-parallel should be in the main networkx repository and it should have the `_dispatchable` decorator. If not, you can consider adding a sequential implementation in networkx first.
 - check-list for adding a new function:
   - [ ] Add the parallel implementation(make sure API doesn't break), the file structure should be the same as that in networkx.
-  - [ ] add the function to the `Dispatcher` class in [interface.py](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/interface.py)
+  - [ ] add the function to the `Dispatcher` class in [interface.py](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/interface.py) (take care of the `name` parameter in `_dispatchable` (ref. [docs](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable)))
   - [ ] update the `__init__.py` files accordingly
   - [ ] docstring following the above format
   - [ ] run the [timing script](https://github.com/networkx/nx-parallel/blob/main/timing/timing_individual_function.py) to get the performance heatmap
