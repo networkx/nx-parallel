@@ -23,17 +23,17 @@ def test_betweenness_centrality_get_chunks():
 
         return chunks
 
-    G = nx.fast_gnp_random_graph(200, 0.8, seed=5, directed=False)
+    G = nx.bipartite.random_graph(400, 700, 0.8, seed=5, directed=False)
+    H = nxp.ParallelGraph(G)
     ebc = nx.edge_betweenness_centrality(G)
     t1 = time.time()
-    par_bc_chunk = nxp.betweenness_centrality(G, get_chunks=get_chunk)  # smoke test
+    par_bc_chunk = nxp.betweenness_centrality(H, get_chunks=get_chunk)  # smoke test
     t2 = time.time()
-    par_bc = nxp.betweenness_centrality(G)
+    par_bc = nxp.betweenness_centrality(H)
     t3 = time.time()
-    for i in range(200):
+    for i in range(len(G.nodes)):
         assert math.isclose(par_bc[i], par_bc_chunk[i], abs_tol=1e-16)
     with_chunk = t2 - t1
     without_chunk = t3 - t2
-    # assert with_chunk < without_chunk  
+    assert with_chunk < without_chunk
     # get_chunk is faster than default(for big graphs)
-    # eg - G = nx.bipartite.random_graph(400, 700, 0.8, seed=5, directed=False)
