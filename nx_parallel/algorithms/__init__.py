@@ -1,4 +1,5 @@
 # subpackages
+from .bipartite import *
 from .centrality import *
 from .shortest_paths import *
 
