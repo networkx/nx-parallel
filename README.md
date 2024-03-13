@@ -8,6 +8,7 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
 - [square_clustering](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#10)
 - [local_efficiency](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#9)
 - [number_of_isolates](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#8)
+- [node_redundancy](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/redundancy.py#11)
 - [is_reachable](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#10)
 - [tournament_is_strongly_connected](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#54)
 - [closeness_vitality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#9)
