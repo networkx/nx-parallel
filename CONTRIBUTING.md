@@ -6,7 +6,7 @@ This project is part of the larger NetworkX project. If you're interested in con
 
 ## Setting up the development environment
 
-To setup the local development environment:
+To set the local development environment:
 
 - Fork this repository.
 - Clone the forked repository locally.
@@ -70,7 +70,7 @@ For running additional tests:
 pytest nx_parallel
 ```
 
-To add any additional tests, **specific to nx_parallel**, you can follow the way tests folders are structured in networkx and add your specific test(s) accordingly.
+To add any additional tests, **specific to nx_parallel**, you can follow the way test folders are structured in networkx and add your specific test(s) accordingly.
 
 ## Documentation syntax
 
@@ -104,9 +104,9 @@ def betweenness_centrality(
 
 ## Chunking
 
-In parallel computing, "chunking" refers to dividing a large task into smaller, more manageable chunks that can be processed simultaneously by multiple computing units, such as CPU cores or distributed computing nodes. It's like breaking down a big task into smaller pieces so that multiple workers can work on different pieces at the same time, and in case of nx-parallel this usually speeds up the overall process.
+In parallel computing, "chunking" refers to dividing a large task into smaller, more manageable chunks that can be processed simultaneously by multiple computing units, such as CPU cores or distributed computing nodes. It's like breaking down a big task into smaller pieces so that multiple workers can work on different pieces at the same time, and in the case of nx-parallel, this usually speeds up the overall process.
 
-The default chunking in nx-parallel is done by first determining the number available CPU cores and then allocating the nodes (or edges or any other iterator) per each chunk by dividing the total number of nodes by the total CPU cores available. (ref. [chunk.py](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py)). This default chunking can be overridden by the user by passing a custom `get_chunks` function to the algorithm as a kwarg. You can also change the default chunking for an algorithm at the developer side, if necessary (ref. [PR](https://github.com/networkx/nx-parallel/pull/33)). Also, when [this PR](https://github.com/networkx/networkx/pull/7225) will be merged in networkx, and `config` will be added to nx-parallel, then the user would be able to control the number of CPU cores they would want to use and the chunking would be done accordingly.
+The default chunking in nx-parallel is done by first determining the number of available CPU cores and then allocating the nodes (or edges or any other iterator) per chunk by dividing the total number of nodes by the total CPU cores available. (ref. [chunk.py](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py)). This default chunking can be overridden by the user by passing a custom `get_chunks` function to the algorithm as a kwarg. While adding a new algorithm, you can change this default chunking, if necessary (ref. [PR](https://github.com/networkx/nx-parallel/pull/33)). Also, when [the `config` PR](https://github.com/networkx/networkx/pull/7225) is merged in networkx, and the `config` will be added to nx-parallel, then the user would be able to control the number of CPU cores they would want to use and then the chunking would be done accordingly.
 
 ## General guidelines on adding a new algorithm
 
