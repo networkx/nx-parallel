@@ -53,7 +53,7 @@ nxp.betweenness_centrality(H)
 
 ### Notes
 
-1. Some functions in networkx have same name but different implementations, so to avoid these name conflicts we differentiate them by the `name` parameter in `_dispatchable` at the time of dispatching (ref. [docs](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable)). So, mentioning either the full path of the implementation or the `name` parameter is recommended. For example:
+1. Some functions in networkx have the same name but different implementations, so to avoid these name conflicts we differentiate them by the `name` parameter in `_dispatchable` at the time of dispatching (ref. [docs](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable)). So, mentioning either the full path of the implementation or the `name` parameter is recommended. For example:
 
    ```.py
    # using full path
@@ -67,6 +67,6 @@ nxp.betweenness_centrality(H)
 
 2. Right now there isn't much difference between `nx.Graph` and `nxp.ParallelGraph` so `method 3` would work fine but it is not recommended because in future that might not be the case.
 
-Feel free the contribute to nx-parallel. You can find the contributing guidelines [here](https://github.com/networkx/nx-parallel/blob/main/CONTRIBUTING.md). If you'd like to implement a feature or fix a bug, we'd be happy to review a pull request. Please make sure to explain the changes you made in the pull request description. And feel free to open issues for any problems you face, or for new features you'd like to see implemented.
+Feel free to contribute to nx-parallel. You can find the contributing guidelines [here](https://github.com/networkx/nx-parallel/blob/main/CONTRIBUTING.md). If you'd like to implement a feature or fix a bug, we'd be happy to review a pull request. Please make sure to explain the changes you made in the pull request description. And feel free to open issues for any problems you face, or for new features you'd like to see implemented.
 
 Thank you :)

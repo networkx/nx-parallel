@@ -110,6 +110,7 @@ The default chunking in nx-parallel is done by first determining the number of a
 
 ## General guidelines on adding a new algorithm
 
+- To get started with adding a new algorithm, you can refer to the existing implementations in nx-parallel and also refer to the [joblib's documentation on embarrassingly parallel `for` loops](https://joblib.readthedocs.io/en/latest/parallel.html).
 - The algorithm that you are considering to add to nx-parallel should be in the main networkx repository and it should have the `_dispatchable` decorator. If not, you can consider adding a sequential implementation in networkx first.
 - check-list for adding a new function:
   - [ ] Add the parallel implementation(make sure API doesn't break), the file structure should be the same as that in networkx.
