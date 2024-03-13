@@ -1,4 +1,4 @@
-Timing Comparisons
+# Timing Comparisons
 
 ---
 
@@ -10,11 +10,11 @@ RAM: 16 GB LPDDR4X at 3733 MHz
 
 Code to generate heatmaps in timing_individual_function.py and timing_all_functions.py.
 
-### All parallelized functions at this time:
+## All parallelized functions at this time:
 
 ![alt text](heatmap_all_functions.png)
 
-### Individual functions:
+## Individual functions:
 
 betweenness_centrality
 ![alt text](heatmap_betweenness_centrality_timing.png)

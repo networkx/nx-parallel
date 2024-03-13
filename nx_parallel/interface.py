@@ -1,3 +1,4 @@
+from nx_parallel.algorithms.bipartite.redundancy import node_redundancy
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
 from nx_parallel.algorithms.shortest_paths.generic import all_pairs_all_shortest_paths
 from nx_parallel.algorithms.shortest_paths.weighted import (
@@ -46,6 +47,9 @@ class ParallelGraph:
 
 class Dispatcher:
     """Dispatcher class for parallel algorithms."""
+
+    # Bipartite
+    node_redundancy = node_redundancy
 
     # Isolates
     number_of_isolates = number_of_isolates
