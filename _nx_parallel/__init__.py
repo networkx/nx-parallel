@@ -33,7 +33,9 @@ def get_funcs_info():
                     funcs[func] = {
                         "url": get_url(path, func),
                         "additional_docs": par_docs,
-                        "additional_parameters": par_params,
+                        "additional_parameters": {
+                            par_params,
+                        },
                     }
     return funcs
 
