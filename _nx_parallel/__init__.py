@@ -33,9 +33,7 @@ def get_funcs_info():
                     funcs[func] = {
                         "url": get_url(path, func),
                         "additional_docs": par_docs,
-                        "additional_parameters": {
-                            par_params,
-                        },
+                        "additional_parameters": par_params,
                     }
     return funcs
 
@@ -82,22 +80,31 @@ def extract_from_docs(docstring):
         par_docs = "\n".join(par_docs_)
     except IndexError:
         par_docs = None
+    except Exception as e:
+        print(e)
+        par_docs = None
 
     try:
         # Extracting extra parameters
         # Assuming that the last para in docstring is the function's extra params
-        par_params_ = docstring.split("------------")[1]
+        par_params = {}
+        par_params_ = docstring.split("------------\n")[1]
 
-        par_params_ = par_params_.split("\n")
-        par_params_ = [line.strip() for line in par_params_ if line.strip()]
-        par_params = "\n".join(
-            par_params_[:-1]
-        )  # removing last line with the networkx link
+        par_params_ = par_params_.split("\n\n\n")
+        for i in par_params_:
+            j = i.split("\n")
+            par_params[j[0]] = "\n".join(
+                [line.strip() for line in j[1:] if line.strip()]
+            )
+            if i == par_params_[-1]:
+                par_params[j[0]] = "\n".join(
+                    [line.strip() for line in j[1:-1] if line.strip()]
+                )
     except IndexError:
         par_params = None
     except Exception as e:
         print(e)
-        par_docs = None
+        par_params = None
     return par_docs, par_params
 
 
