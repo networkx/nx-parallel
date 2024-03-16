@@ -74,7 +74,7 @@ To add any additional tests, **specific to nx_parallel**, you can follow the way
 
 ## Documentation syntax
 
-For displaying a small note about nx-parallel's implementation at the end of the main NetworkX documentation, we use the `backend_info` [entry_point](https://packaging.python.org/en/latest/specifications/entry-points/#entry-points) (in the `pyproject.toml` file). The [`get_info` function](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/backend.py#L8) is used to parse the docstrings of algorithms in nx-parallel and display the nx-parallel specific documentation on the NetworkX's main docs, in the "Additional Backend implementations" box, as shown in the screenshot below.
+For displaying a small note about nx-parallel's implementation at the end of the main NetworkX documentation, we use the `backend_info` [entry_point](https://packaging.python.org/en/latest/specifications/entry-points/#entry-points) (in the `pyproject.toml` file). The [`get_info` function](https://github.com/networkx/nx-parallel/blob/main/_nx_parallel/__init__.py) is used to parse the docstrings of all the algorithms in nx-parallel and display the nx-parallel specific documentation on the NetworkX's main docs, in the "Additional Backend implementations" box, as shown in the screenshot below.
 
 ![backend_box_ss](https://github.com/networkx/nx-parallel/blob/main/assets/images/backend_box_ss.png)
 
@@ -91,13 +91,15 @@ def betweenness_centrality(
     Parameters
     ------------ [EVERYTHING BELOW THIS LINE AND BEFORE THE NETWORKX LINK WILL BE DISPLAYED IN ADDITIONAL PARAMETER'S SECTION ON NETWORKX MAIN DOCS]
     get_chunks : function (default = "chunks")
-         A function that takes in nodes as input and returns node_chuncks
+        A function that takes in nodes as input and returns node_chunks...[YOU CAN MULTIPLE PARAGRAPHS FOR EACH PARAMETER, IF NEEDED, SEPARATED BY 1 BLANK LINE]
+
+    [LEAVE 2 BLANK LINES BETWEEN EACH PARAMETER]
     parameter 2 : int
         ....
     .
     .
     .
-
+    [LEAVE 1 BLANK LINE BETWEEN THE PARAMETERS SECTION AND THE LINK]
     networkx.betweenness_centrality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html
     """
 ```
