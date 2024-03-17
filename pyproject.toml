@@ -36,8 +36,8 @@ parallel = "nx_parallel.interface:Dispatcher"
 [project.entry-points."networkx.backend_info"]
 parallel = "_nx_parallel:get_info"
 
-[tool.setuptools]
-py-modules = []
+[tool.hatch.build.targets.wheel]
+packages = ["_nx_parallel", "nx_parallel",]
 
 [tool.ruff]
 line-length = 88
