@@ -7,7 +7,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-import nx_parallel
+import nx_parallel as nxp
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
@@ -15,33 +15,49 @@ number_of_nodes_list = [125, 250, 500, 1000]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
 currFun = nx.global_reaching_centrality
 for p in pList:
-    for num in number_of_nodes_list:
+    for num in range(len(number_of_nodes_list)):
         # create original and parallel graphs
-        G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
+        G = nx.fast_gnp_random_graph(
+            number_of_nodes_list[num], p, seed=42, directed=True
+        )
+
+        """
+        # for bipartite.node_redundancy
+        G = nx.bipartite.random_graph(n[num], m[num], p, seed=42, directed=True)
+        for i in G.nodes:
+            l = list(G.neighbors(i))
+            if len(l) == 0:
+                v = random.choice(list(G.nodes) - [i,])
+                G.add_edge(i, v)
+                G.add_edge(i, random.choice([node for node in G.nodes if node != i]))
+            elif len(l) == 1:
+                G.add_edge(i, random.choice([node for node in G.nodes if node != i and node not in list(G.neighbors(i))]))
+        """
 
         # for weighted graphs
-        random.seed(42)
-        for u, v in G.edges():
-            G[u][v]["weight"] = random.random()
+        if weighted:
+            random.seed(42)
+            for u, v in G.edges():
+                G[u][v]["weight"] = random.random()
 
-        H = nx_parallel.ParallelGraph(G)
+        H = nxp.ParallelGraph(G)
 
         # time both versions and update heatmapDF
         # v = random.choice(list(G.nodes()))
         t1 = time.time()
-        c = currFun(H)
-        if isinstance(c, types.GeneratorType):
-            d = dict(c)
+        c1 = currFun(H)
+        if isinstance(c1, types.GeneratorType):
+            d = dict(c1)
         t2 = time.time()
         parallelTime = t2 - t1
         t1 = time.time()
-        c = currFun(G)
-        if isinstance(c, types.GeneratorType):
-            d = dict(c)
+        c2 = currFun(G)
+        if isinstance(c2, types.GeneratorType):
+            d = dict(c2)
         t2 = time.time()
         stdTime = t2 - t1
         timesFaster = stdTime / parallelTime
-        heatmapDF.at[num, p] = timesFaster
+        heatmapDF.at[number_of_nodes_list[num], p] = timesFaster
         print("Finished " + str(currFun))
 
 # Code to create for row of heatmap specifically for tournaments
@@ -74,7 +90,7 @@ hm.set_xticklabels(number_of_nodes_list)
 plt.xticks(rotation=45)
 plt.yticks(rotation=20)
 plt.title(
-    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to networkx"
+    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to NetworkX"
 )
 plt.xlabel("Number of Vertices")
 plt.ylabel("Edge Probability")

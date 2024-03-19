@@ -1,14 +1,20 @@
+# Benchmarks
+
+These asv benchmarks are not just good to see how parallel implementations are improving over the commits but you can also compare how much better nx-parallel implementations are as compared to the networkx implementations, by switching the x-axis parameter to be `backends`. There are also heatmaps in the `/timing` folder that show the speedups of the parallel and networkx implementations of the same function.
+
 ## Preview benchmarks locally
 
-1. clone this repo
-2. `cd benchmarks`
-3. If you are working on a different branch then update the `branches` in the `asv.conf.json` file.
-4. `asv run` will run the benchmarks on the last commit
+1. clone this repo and setup the development algorithm(ref. [README](https://github.com/networkx/nx-parallel?tab=readme-ov-file#development-install))
+2. run `pip install asv`
+3. navigate using `cd benchmarks`
+4. If you are working on a different branch then update the value of `branches` in the `asv.conf.json` file.
+5. `asv run` will run the benchmarks on the last commit
    - or use `asv continuous base_commit_hash test_commit_hash` to run the benchmark to compare two commits
-   - or `asv run -b <benchmark_file_name> -k <benchmark_name>` to run a particular benchmark.
+   - or `asv run -b <benchmark_file_name> -k <benchmark_name>` to run a particular benchmark in a file.
+   - or `asv run -b BenchmarkClassName.time_benchmark_func_name` to run a specific benchmark in a benchmark class.
    - if you are running benchmarks for the first time, you will be asked to enter your machine information after this command.
-5. `asv publish` will create a `html` folder with the results
-6. `asv preview` will host the results locally at http://127.0.0.1:8080/
+6. `asv publish` will create an `html` folder with the results.
+7. `asv preview` will host the results locally at http://127.0.0.1:8080/
 
 <hr>
 
