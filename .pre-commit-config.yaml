@@ -2,6 +2,13 @@
 # pre-commit install
 
 repos:
+  - repo: local
+    hooks:
+      - id: update-get_info
+        name: Update function info
+        entry: python _nx_parallel/update_get_info.py
+        language: system
+        pass_filenames: false
   - repo: https://github.com/adamchainz/blacken-docs
     rev: 1.16.0
     hooks:
