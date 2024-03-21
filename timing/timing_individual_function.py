@@ -11,14 +11,9 @@ import nx_parallel as nxp
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
-# for bipartite graphs
-# n = [50, 100, 200, 400]
-# m = [25, 50, 100, 200]
-number_of_nodes_list = [75, 150, 300, 600]
-weighted = False
+number_of_nodes_list = [125, 250, 500, 1000]
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.bipartite.node_redundancy
-currFun = nx.square_clustering
+currFun = nx.global_reaching_centrality
 for p in pList:
     for num in range(len(number_of_nodes_list)):
         # create original and parallel graphs
@@ -48,6 +43,7 @@ for p in pList:
         H = nxp.ParallelGraph(G)
 
         # time both versions and update heatmapDF
+        # v = random.choice(list(G.nodes()))
         t1 = time.time()
         c1 = currFun(H)
         if isinstance(c1, types.GeneratorType):

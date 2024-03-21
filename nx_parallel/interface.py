@@ -1,5 +1,9 @@
 from nx_parallel.algorithms.bipartite.redundancy import node_redundancy
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
+from nx_parallel.algorithms.centrality.reaching import (
+    global_reaching_centrality,
+    local_reaching_centrality,
+)
 from nx_parallel.algorithms.shortest_paths.weighted import (
     all_pairs_bellman_ford_path,
     johnson,
@@ -50,6 +54,8 @@ class Dispatcher:
 
     # Centrality
     betweenness_centrality = betweenness_centrality
+    global_reaching_centrality = global_reaching_centrality
+    local_reaching_centrality = local_reaching_centrality
 
     # Efficiency
     local_efficiency = local_efficiency
