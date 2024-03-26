@@ -3,7 +3,7 @@ import nx_parallel as nxp
 
 __all__ = [
     "is_reachable",
-    "tournament_is_strongly_connected",
+    "is_strongly_connected",
 ]
 
 
@@ -51,7 +51,7 @@ def is_reachable(G, s, t):
     return all(results)
 
 
-def tournament_is_strongly_connected(G):
+def is_strongly_connected(G):
     """The parallel computation is implemented by dividing the
     nodes into chunks and then checking whether each node is reachable from each
     other node in parallel.
