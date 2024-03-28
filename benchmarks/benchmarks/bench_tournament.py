@@ -13,3 +13,7 @@ class Tournament(Benchmark):
     def time_is_reachable(self, backend, num_nodes):
         G = nx.tournament.random_tournament(num_nodes, seed=42)
         _ = nx.tournament.is_reachable(G, 1, num_nodes, backend=backend)
+
+    def time_tournament_is_strongly_connected(self, backend, num_nodes):
+        G = nx.tournament.random_tournament(num_nodes, seed=42)
+        _ = nx.tournament.is_strongly_connected(G, backend=backend)
