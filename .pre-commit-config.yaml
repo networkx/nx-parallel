@@ -6,7 +6,7 @@ repos:
     hooks:
       - id: update-get_info
         name: Update function info
-        entry: python _nx_parallel/update_get_info.py
+        entry: sh _nx_parallel/script.sh
         language: system
         pass_filenames: false
   - repo: https://github.com/adamchainz/blacken-docs

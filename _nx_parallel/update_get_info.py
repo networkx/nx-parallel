@@ -1,4 +1,3 @@
-import subprocess
 import os
 import ast
 
@@ -133,7 +132,5 @@ def get_info():
         "short_summary": "Parallel backend for NetworkX algorithms",
         "functions": '''
 
-with open("_nx_parallel/__init__.py", "w") as f:
+with open("_nx_parallel/temp__init__.py", "w") as f:
     f.write(string + str(get_funcs_info()) + "}\n")
-
-subprocess.call(["ruff", "format", "_nx_parallel/__init__.py"])
