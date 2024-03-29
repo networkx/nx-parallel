@@ -23,8 +23,6 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
 - [all_pairs_all_shortest_paths](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/generic.py#L10)
 - [all_pairs_shortest_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L18)
 - [all_pairs_shortest_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L62)
-- [chunks](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L7)
-- [cpu_count](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L17)
 
 <details>
 <summary>Script used to generate the above list</summary>
