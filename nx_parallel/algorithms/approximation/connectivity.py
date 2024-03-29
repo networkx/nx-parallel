@@ -5,17 +5,24 @@ from networkx.algorithms.approximation.connectivity import local_node_connectivi
 import nx_parallel as nxp
 
 __all__ = [
-    "all_pairs_node_connectivity",
+    "approximate_all_pairs_node_connectivity",
 ]
 
 
-def all_pairs_node_connectivity(G, nbunch=None, cutoff=None, get_chunks="chunks"):
+def approximate_all_pairs_node_connectivity(
+    G, nbunch=None, cutoff=None, get_chunks="chunks"
+):
     """The parallel implementation first divides the a list of all permutation (in case
     of directed graphs) and combinations (in case of undirected graphs) of `nbunch`
     into chunks and then creates a generator to lazily compute the local node
     connectivities for each chunk, and then employs joblib's `Parallel` function to
     execute these computations in parallel across all available CPU cores. At the end,
     the results are aggregated into a single dictionary and returned.
+
+    Note, this function uses the name `approximate_all_pairs_node_connectivity` while
+    dispatching to the backend in=mplementation. So, `nxp.all_pairs_node_connectivity`
+    will run the parallel implementation of `all_pairs_node_connectivity` present in the
+    `connectivity/connectivity`. Use `nxp.approximate_all_pairs_node_connectivity` instead.
 
     Parameters
     ------------

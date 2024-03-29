@@ -15,10 +15,13 @@ from nx_parallel.algorithms.shortest_paths.unweighted import (
 )
 from nx_parallel.algorithms.efficiency_measures import local_efficiency
 from nx_parallel.algorithms.isolate import number_of_isolates
-from nx_parallel.algorithms import tournament
+from nx_parallel.algorithms.tournament import (
+    is_reachable,
+    tournament_is_strongly_connected,
+)
 from nx_parallel.algorithms.vitality import closeness_vitality
 from nx_parallel.algorithms.approximation.connectivity import (
-    all_pairs_node_connectivity,
+    approximate_all_pairs_node_connectivity,
 )
 from nx_parallel.algorithms.connectivity import connectivity
 from nx_parallel.algorithms.cluster import square_clustering
@@ -55,8 +58,8 @@ class Dispatcher:
     closeness_vitality = closeness_vitality
 
     # Tournament
-    is_reachable = tournament.is_reachable
-    tournament_is_strongly_connected = tournament.is_strongly_connected
+    is_reachable = is_reachable
+    tournament_is_strongly_connected = tournament_is_strongly_connected
 
     # Centrality
     betweenness_centrality = betweenness_centrality
@@ -83,7 +86,7 @@ class Dispatcher:
     all_pairs_shortest_path_length = all_pairs_shortest_path_length
 
     # Approximation
-    approximate_all_pairs_node_connectivity = all_pairs_node_connectivity
+    approximate_all_pairs_node_connectivity = approximate_all_pairs_node_connectivity
 
     # Connectivity
     all_pairs_node_connectivity = connectivity.all_pairs_node_connectivity

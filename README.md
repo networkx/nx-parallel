@@ -10,10 +10,21 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
 - [closeness_vitality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L9)
 - [is_reachable](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L10)
 - [tournament_is_strongly_connected](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L54)
+- [all_pairs_node_connectivity](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/connectivity/connectivity.py#L17)
+- [approximate_all_pairs_node_connectivity](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/approximation/connectivity.py#L12)
 - [betweenness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L16)
 - [node_redundancy](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/bipartite/redundancy.py#L11)
-- [all_pairs_bellman_ford_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L16)
-- [johnson](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L59)
+- [all_pairs_dijkstra](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L28)
+- [all_pairs_dijkstra_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L71)
+- [all_pairs_dijkstra_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L121)
+- [all_pairs_bellman_ford_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L164)
+- [all_pairs_bellman_ford_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L209)
+- [johnson](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L252)
+- [all_pairs_all_shortest_paths](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/generic.py#L10)
+- [all_pairs_shortest_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L18)
+- [all_pairs_shortest_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L62)
+- [chunks](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L7)
+- [cpu_count](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L17)
 
 <details>
 <summary>Script used to generate the above list</summary>
@@ -53,7 +64,7 @@ nxp.betweenness_centrality(H)
 
 ### Notes
 
-1. Some functions in networkx have the same name but different implementations, so to avoid these name conflicts we differentiate them by the `name` parameter in `_dispatchable` at the time of dispatching (ref. [docs](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable)). So, mentioning either the full path of the implementation or the `name` parameter is recommended. For example:
+1. Some functions in networkx have the same name but different implementations, so to avoid these name conflicts we differentiate them by the `name` parameter in `_dispatchable` at the time of dispatching (ref. [docs](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable)). So, `method 4` is not recommended. Instead, mentioning either the full path of the algorithm or the `name` parameter is recommended. For example:
 
    ```.py
    # using full path
