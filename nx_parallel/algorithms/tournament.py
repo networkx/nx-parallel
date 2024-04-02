@@ -3,7 +3,7 @@ import nx_parallel as nxp
 
 __all__ = [
     "is_reachable",
-    "is_strongly_connected",
+    "tournament_is_strongly_connected",
 ]
 
 
@@ -51,10 +51,14 @@ def is_reachable(G, s, t):
     return all(results)
 
 
-def is_strongly_connected(G):
+def tournament_is_strongly_connected(G):
     """The parallel computation is implemented by dividing the
     nodes into chunks and then checking whether each node is reachable from each
     other node in parallel.
+
+    Note, this function uses the name `tournament_is_strongly_connected` while
+    dispatching to the backend in=mplementation. So, `nxp.tournament.is_strongly_connected`
+    will result in an error. Use `nxp.tournament_is_strongly_connected` instead.
 
     networkx.tournament.is_strongly_connected : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_strongly_connected.html#networkx.algorithms.tournament.is_strongly_connected
     """
