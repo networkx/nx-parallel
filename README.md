@@ -20,9 +20,9 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
   
 ```.py
 import _nx_parallel as nxp
-d = nxp.get_info()
-for func in d.get("functions", {}):
-    print(f"- [{func}]({d['functions'][func]['url']})")
+d = nxp.get_funcs_info() # temporarily add `from .update_get_info import *` to _nx_parallel/__init__.py
+for func in d:
+    print(f"- [{func}]({d[func]['url']})")
 ```
 
 </details>
