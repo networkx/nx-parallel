@@ -62,16 +62,20 @@ nxp.betweenness_centrality(H)
 
 ### Notes
 
-1. Some functions in networkx have the same name but different implementations, so to avoid these name conflicts we differentiate them by the `name` parameter in `_dispatchable` at the time of dispatching (ref. [docs](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable)). So, `method 4` is not recommended. Instead, mentioning either the full path of the algorithm or the `name` parameter is recommended. For example:
+1. Some functions in networkx have the same name but different implementations, so to avoid these name conflicts at the time of dispatching networkx differentiates them by specifying the `name` parameter in the [`_dispatchable`](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable) decorator of such algorithms. So, `method 3` and `method 4` are not recommended. But, you can use them if you know the correct `name`. For example:
 
    ```.py
-   # using full path
+   # using `name` parameter - nx-parallel as an independent package
+   nxp.all_pairs_node_connectivity(H) # runs the parallel implementation in `connectivity/connectivity`
+   nxp.approximate_all_pairs_node_connectivity(H) # runs the parallel implementation in `approximation/connectivity`
+   ```
+
+   Also, if you are using nx-parallel as a backend then mentioning the full path of the algorithm is recommended to ensure that networkx dispatches to the correct implementation. For example:
+
+   ```.py
+   # using full path - nx-parallel as a backend
    nx.algorithms.connectivity.connectivity.all_pairs_node_connectivity(H)
    nx.algorithms.approximation.connectivity.all_pairs_node_connectivity(H)
-
-   # using `name` parameter
-   nx.all_pairs_node_connectivity(H) # runs the parallel implementation in `connectivity/connectivity`
-   nx.approximate_all_pairs_node_connectivity(H) # runs the parallel implementation in `approximation/connectivity`
    ```
 
 2. Right now there isn't much difference between `nx.Graph` and `nxp.ParallelGraph` so `method 3` would work fine but it is not recommended because in future that might not be the case.

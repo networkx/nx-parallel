@@ -37,12 +37,19 @@ def get_info():
                 "additional_docs": "The function parallelizes the calculation of two neighborhoods of vertices in `G` and checks closure conditions for each neighborhood subset in parallel.",
                 "additional_parameters": None,
             },
-            "is_strongly_connected": {
+            "tournament_is_strongly_connected": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L54",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and then checking whether each node is reachable from each other node in parallel.",
                 "additional_parameters": None,
             },
             "all_pairs_node_connectivity": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/connectivity/connectivity.py#L17",
+                "additional_docs": "The parallel implementation first divides a list of all permutation (in case of directed graphs) and combinations (in case of undirected graphs) of `nbunch` into chunks and then creates a generator to lazily compute the local node connectivities for each chunk, and then employs joblib's `Parallel` function to execute these computations in parallel across all available CPU cores. At the end, the results are aggregated into a single dictionary and returned.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in `list(iter_func(nbunch, 2))` as input and returns an iterable `pairs_chunks`, here `iter_func` is `permutations` in case of directed graphs and `combinations` in case of undirected graphs. The default is to create chunks by slicing the list into `n` chunks, where `n` is the number of CPU cores, such that size of each chunk is atmost 10, and at least 1."
+                },
+            },
+            "approximate_all_pairs_node_connectivity": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/approximation/connectivity.py#L12",
                 "additional_docs": "The parallel implementation first divides the a list of all permutation (in case of directed graphs) and combinations (in case of undirected graphs) of `nbunch` into chunks and then creates a generator to lazily compute the local node connectivities for each chunk, and then employs joblib's `Parallel` function to execute these computations in parallel across all available CPU cores. At the end, the results are aggregated into a single dictionary and returned.",
                 "additional_parameters": {
@@ -52,7 +59,9 @@ def get_info():
             "betweenness_centrality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L16",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing betweenness centrality for each chunk concurrently.",
-                "additional_parameters": None,
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n` chunks, where `n` is the number of CPU cores."
+                },
             },
             "node_redundancy": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/bipartite/redundancy.py#L11",
