@@ -70,15 +70,15 @@ nxp.betweenness_centrality(H)
    nxp.approximate_all_pairs_node_connectivity(H) # runs the parallel implementation in `approximation/connectivity`
    ```
 
-   Also, if you are using nx-parallel as a backend then mentioning the full path of the algorithm is recommended to ensure that networkx dispatches to the correct implementation. For example:
+   Also, if you are using nx-parallel as a backend then mentioning the subpackage to which the algorithm belongs is recommended to ensure that networkx dispatches to the correct implementation. For example:
 
    ```.py
-   # using full path - nx-parallel as a backend
-   nx.algorithms.connectivity.connectivity.all_pairs_node_connectivity(H)
-   nx.algorithms.approximation.connectivity.all_pairs_node_connectivity(H)
+   # with subpackage - nx-parallel as a backend
+   nx.all_pairs_node_connectivity(H)
+   nx.approximation.all_pairs_node_connectivity(H)
    ```
 
-2. Right now there isn't much difference between `nx.Graph` and `nxp.ParallelGraph` so `method 3` would work fine but it is not recommended because in future that might not be the case.
+2. Right now there isn't much difference between `nx.Graph` and `nxp.ParallelGraph` so `method 3` would work fine but it is not recommended because in the future that might not be the case.
 
 Feel free to contribute to nx-parallel. You can find the contributing guidelines [here](https://github.com/networkx/nx-parallel/blob/main/CONTRIBUTING.md). If you'd like to implement a feature or fix a bug, we'd be happy to review a pull request. Please make sure to explain the changes you made in the pull request description. And feel free to open issues for any problems you face, or for new features you'd like to see implemented.
 
