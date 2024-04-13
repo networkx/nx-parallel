@@ -59,13 +59,13 @@ $ pip install --upgrade nx-parallel
 ### Install the development version
 
 Before installing the development version, you may need to uninstall the
-standard version of `nx-parallel` using `pip`:
+standard version of `nx-parallel` and other two dependencies using `pip`:
 
 ```sh
 $ pip uninstall nx-parallel networkx joblib
 ```
 
-Then do::
+Then do:
 
 ```sh
 $ pip install git+https://github.com/networkx/nx-parallel.git@main
@@ -125,7 +125,7 @@ nxp.betweenness_centrality(H)
 
 Feel free to contribute to nx-parallel. You can find the contributing guidelines [here](https://github.com/networkx/nx-parallel/blob/main/CONTRIBUTING.md). If you'd like to implement a feature or fix a bug, we'd be happy to review a pull request. Please make sure to explain the changes you made in the pull request description. And feel free to open issues for any problems you face, or for new features you'd like to see implemented.
 
-This project managed under the NetworkX organisation, so the [code of conduct](https://github.com/networkx/networkx/blob/main/CODE_OF_CONDUCT.rst) of NetworkX apply here as well.
+This project is managed under the NetworkX organisation, so the [code of conduct of NetworkX](https://github.com/networkx/networkx/blob/main/CODE_OF_CONDUCT.rst) applies here as well.
 
 All materials in this repository are available free of restriction under the Creative Commons CC0 1.0 universal Public Domain Dedication (see LICENSE).
 
