@@ -1,6 +1,6 @@
 # nx-parallel
 
-nx-parallel is a NetworkX backend that uses joblib for parallelization. This project aims to provide parallelized implementations of various NetworkX functions to improve performance.
+nx-parallel is a NetworkX backend that uses joblib for parallelization. This project aims to provide parallelized implementations of various NetworkX functions to improve performance. Refer [NetworkX backends documentation](https://networkx.org/documentation/latest/reference/backends.html) to learn more about the backend architecture in NetworkX.
 
 ## Algorithms in nx-parallel
 
@@ -36,7 +36,50 @@ for func in d:
 
 </details>
 
+## Installation
+
+It is recommended to first refer the [NetworkX's INSTALL.rst](https://github.com/networkx/networkx/blob/main/INSTALL.rst).
+nx-parallel requires Python >=3.10. Right now, the only dependencies of nx-parallel are networkx and joblib.
+
+### Install the released version
+
+You can install the stable version of nx-parallel using pip:
+
+```sh
+$ pip install nx-parallel
+```
+
+The above command also installs the two main dependencies of nx-parallel i.e. networkx
+and joblib. To upgrade to a newer release use the `--upgrade` flag:
+
+```sh
+$ pip install --upgrade nx-parallel
+```
+
+### Install the development version
+
+Before installing the development version, you may need to uninstall the
+standard version of `nx-parallel` using `pip`:
+
+```sh
+$ pip uninstall nx-parallel networkx joblib
+```
+
+Then do::
+
+```sh
+$ pip install git+https://github.com/networkx/nx-parallel.git@main
+```
+
 ## Backend usage
+
+You can run your networkx code by just setting the `NETWORKX_AUTOMATIC_BACKENDS` environment variable to `parallel`:
+
+```sh
+$ export NETWORKX_AUTOMATIC_BACKENDS=parallel python nx_code.py
+```
+
+Note that for this to work all the networkx functions called in the `nx_code.py` should be dispatchable and have a parallel implementation in nx-parallel otherwise you'll get the appropriate error message(s). You can also use the nx-paralel backend in your code for only some specific function calls in following ways:
 
 ```.py
 import networkx as nx
@@ -45,7 +88,7 @@ import nx_parallel as nxp
 G = nx.path_graph(4)
 H = nxp.ParallelGraph(G)
 
-# method 1 : passing ParallelGraph object in networkx function
+# method 1 : passing ParallelGraph object in networkx function (Type-based dispatching)
 nx.betweenness_centrality(H)
 
 # method 2 : using the 'backend' kwarg
@@ -62,7 +105,7 @@ nxp.betweenness_centrality(H)
 
 ### Notes
 
-1. Some functions in networkx have the same name but different implementations, so to avoid these name conflicts at the time of dispatching networkx differentiates them by specifying the `name` parameter in the [`_dispatchable`](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable) decorator of such algorithms. So, `method 3` and `method 4` are not recommended. But, you can use them if you know the correct `name`. For example:
+1. Some functions in networkx have the same name but different implementations, so to avoid these name conflicts at the time of dispatching networkx differentiates them by specifying the `name` parameter in the `_dispatchable` decorator of such algorithms. So, `method 3` and `method 4` are not recommended. But, you can use them if you know the correct `name`. For example:
 
    ```.py
    # using `name` parameter - nx-parallel as an independent package
@@ -81,5 +124,9 @@ nxp.betweenness_centrality(H)
 2. Right now there isn't much difference between `nx.Graph` and `nxp.ParallelGraph` so `method 3` would work fine but it is not recommended because in the future that might not be the case.
 
 Feel free to contribute to nx-parallel. You can find the contributing guidelines [here](https://github.com/networkx/nx-parallel/blob/main/CONTRIBUTING.md). If you'd like to implement a feature or fix a bug, we'd be happy to review a pull request. Please make sure to explain the changes you made in the pull request description. And feel free to open issues for any problems you face, or for new features you'd like to see implemented.
+
+This project managed under the NetworkX organisation, so the [code of conduct](https://github.com/networkx/networkx/blob/main/CODE_OF_CONDUCT.rst) of NetworkX apply here as well.
+
+All materials in this repository are available free of restriction under the Creative Commons CC0 1.0 universal Public Domain Dedication (see LICENSE).
 
 Thank you :)
