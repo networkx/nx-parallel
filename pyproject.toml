@@ -11,7 +11,7 @@ description = "An experimental parallel backend for NetworkX"
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["networkx", "algorithms", "parallel"]
-license = {text = "C0-1.0-Universal"}
+license = {text = "BSD-3-Clause", file = "LICENSE.md"}
 classifiers = [
     "Programming Language :: Python :: 3",
 ]

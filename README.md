@@ -127,6 +127,6 @@ Feel free to contribute to nx-parallel. You can find the contributing guidelines
 
 This project is managed under the NetworkX organisation, so the [code of conduct of NetworkX](https://github.com/networkx/networkx/blob/main/CODE_OF_CONDUCT.rst) applies here as well.
 
-All materials in this repository are available free of restriction under the Creative Commons CC0 1.0 universal Public Domain Dedication (see LICENSE).
+All code in this repository is available under the Berkeley Software Distribution (BSD) 3-Clause License (see LICENSE).
 
 Thank you :)
