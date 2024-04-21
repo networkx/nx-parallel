@@ -9,13 +9,14 @@ import nx_parallel
 
 # Code to create README heatmap for all functions in function_list
 heatmapDF = pd.DataFrame()
-function_list = [nx.betweenness_centrality, nx.closeness_vitality, nx.local_efficiency]
+function_list = [nx.betweenness_centrality, nx.edge_betweenness_centrality, nx.closeness_vitality, nx.local_efficiency]
 number_of_nodes_list = [10, 20, 50, 300, 600]
 
 for i in range(0, len(function_list)):
     currFun = function_list[i]
     for j in range(0, len(number_of_nodes_list)):
         num = number_of_nodes_list[j]
+        print(f"Starting {currFun} with {num} nodes")
 
         # create original and parallel graphs
         G = nx.fast_gnp_random_graph(num, 0.5, directed=False)
@@ -38,7 +39,7 @@ for i in range(0, len(function_list)):
 for j in range(0, len(number_of_nodes_list)):
     num = number_of_nodes_list[j]
     G = nx.tournament.random_tournament(num)
-    H = nx_parallel.ParallelDiGraph(G)
+    H = nx_parallel.ParallelGraph(G)
     t1 = time.time()
     c = nx.tournament.is_reachable(H, 1, num)
     t2 = time.time()
@@ -58,6 +59,7 @@ hm = sns.heatmap(data=heatmapDF.T, annot=True, cmap="Greens", cbar=True)
 hm.set_yticklabels(
     [
         "betweenness_centrality",
+        "edge_betweenness_centrality",
         "closeness_vitality",
         "local_efficiency",
         "tournament is_reachable",
