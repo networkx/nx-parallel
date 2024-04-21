@@ -55,7 +55,13 @@ git push origin <branch_name>
 
 ## Testing nx-parallel
 
-The following command runs all the tests in networkx with a `ParallelGraph` object and for algorithms not in nx-parallel, it falls back to networkx's sequential implementations. This is to ensure that the parallel implementation follows the same API as networkx's.
+Firstly, install the dependencies for testing:
+
+```.sh
+pip install -e ".[test]"
+```
+
+Then run the following command that executes all the tests in networkx's test suite with a `ParallelGraph` object and for algorithms not in nx-parallel, it falls back to networkx's sequential implementations. This is to ensure that the parallel backend follows the same API as networkx's.
 
 ```.sh
 PYTHONPATH=. \
@@ -64,7 +70,9 @@ NETWORKX_FALLBACK_TO_NX=True \
     pytest --pyargs networkx "$@"
 ```
 
-For running additional tests:
+Ref. [NetworkX Backend testing docs](https://networkx.org/documentation/latest/reference/backends.html#testing-the-custom-backend) to know about testing mechanisms in networkx.
+
+For running additional tests specific to nx-parallel, you can run the following command:
 
 ```.sh
 pytest nx_parallel
