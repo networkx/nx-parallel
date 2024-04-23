@@ -76,10 +76,10 @@ $ pip install git+https://github.com/networkx/nx-parallel.git@main
 You can run your networkx code by just setting the `NETWORKX_AUTOMATIC_BACKENDS` environment variable to `parallel`:
 
 ```sh
-$ export NETWORKX_AUTOMATIC_BACKENDS=parallel python nx_code.py
+$ export NETWORKX_AUTOMATIC_BACKENDS=parallel && python nx_code.py
 ```
 
-Note that for this to work all the networkx functions called in the `nx_code.py` should be dispatchable and have a parallel implementation in nx-parallel otherwise you'll get the appropriate error message(s). You can also use the nx-paralel backend in your code for only some specific function calls in following ways:
+Note that for all functions inside `nx_code.py` that do not have an nx-parallel implementation their original networkx implementation will be executed. You can also use the nx-parallel backend in your code for only some specific function calls in the following ways:
 
 ```.py
 import networkx as nx
