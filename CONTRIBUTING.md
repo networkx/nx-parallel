@@ -12,7 +12,7 @@ To set the local development environment:
 - Clone the forked repository locally.
 
 ```.sh
-git clone git@github.com:<your_username>/networkx.git
+git clone git@github.com:<your_username>/nx-parallel.git
 ```
 
 - Create a fresh conda/mamba virtualenv ([learn more](https://github.com/networkx/networkx/blob/main/CONTRIBUTING.rst#development-workflow))
@@ -55,7 +55,13 @@ git push origin <branch_name>
 
 ## Testing nx-parallel
 
-The following command runs all the tests in networkx with a `ParallelGraph` object and for algorithms not in nx-parallel, it falls back to networkx's sequential implementations. This is to ensure that the parallel implementation follows the same API as networkx's.
+Firstly, install the dependencies for testing:
+
+```.sh
+pip install -e ".[test]"
+```
+
+Then run the following command that executes all the tests in networkx's test suite with a `ParallelGraph` object and for algorithms not in nx-parallel, it falls back to networkx's sequential implementations. This is to ensure that the parallel backend follows the same API as networkx's.
 
 ```.sh
 PYTHONPATH=. \
@@ -64,7 +70,9 @@ NETWORKX_FALLBACK_TO_NX=True \
     pytest --pyargs networkx "$@"
 ```
 
-For running additional tests:
+Ref. [NetworkX Backend testing docs](https://networkx.org/documentation/latest/reference/backends.html#testing-the-custom-backend) to know about testing mechanisms in networkx.
+
+For running additional tests specific to nx-parallel, you can run the following command:
 
 ```.sh
 pytest nx_parallel
@@ -116,7 +124,7 @@ The default chunking in nx-parallel is done by first determining the number of a
 - The algorithm that you are considering to add to nx-parallel should be in the main networkx repository and it should have the `_dispatchable` decorator. If not, you can consider adding a sequential implementation in networkx first.
 - check-list for adding a new function:
   - [ ] Add the parallel implementation(make sure API doesn't break), the file structure should be the same as that in networkx.
-  - [ ] add the function to the `Dispatcher` class in [interface.py](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/interface.py) (take care of the `name` parameter in `_dispatchable` (ref. [docs](https://networkx.org/documentation/latest/reference/generated/networkx.utils.backends._dispatchable.html#dispatchable)))
+  - [ ] add the function to the `Dispatcher` class in [interface.py](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/interface.py) (take care of the `name` parameter in `_dispatchable` (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html)))
   - [ ] update the `__init__.py` files accordingly
   - [ ] docstring following the above format
   - [ ] run the [timing script](https://github.com/networkx/nx-parallel/blob/main/timing/timing_individual_function.py) to get the performance heatmap

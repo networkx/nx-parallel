@@ -27,7 +27,11 @@ path = "nx_parallel/__init__.py"
 [project.optional-dependencies]
 developer = [
     'pre-commit',
-    'pytest',
+]
+test = [
+    'pytest>=7.2',
+    'numpy>=1.23',
+    'scipy>=1.9,!=1.11.0,!=1.11.1',
 ]
 
 [project.entry-points."networkx.backends"]
