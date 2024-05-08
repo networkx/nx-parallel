@@ -6,6 +6,7 @@ import networkx as nx
 import nx_parallel as nxp
 import random
 import types
+import math
 
 
 def get_all_functions(package_name="nx_parallel"):
@@ -42,19 +43,42 @@ def test_get_chunks():
 
     get_chunks_funcs = get_functions_with_get_chunks()
     ignore_funcs = [
-        "betweenness_centrality",
+        "number_of_isolates",
         "is_reachable",
-        "local_efficiency",
+    ]
+    tournament_funcs = [
         "tournament_is_strongly_connected",
+    ]
+    chk_dict_vals = [
+        "betweenness_centrality",
     ]
     G = nx.fast_gnp_random_graph(50, 0.6, seed=42)
     H = nxp.ParallelGraph(G)
     for func in get_chunks_funcs:
+        print(func)
         if func not in ignore_funcs:
-            print(func)
-            c1 = getattr(nxp, func)(H)
-            c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
-            if isinstance(c1, types.GeneratorType):
-                assert dict(c1) == dict(c2)
-            else:
+            if func in tournament_funcs:
+                G = nx.tournament.random_tournament(50, seed=42)
+                H = nxp.ParallelGraph(G)
+                c1 = getattr(nxp, func)(H)
+                c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
                 assert c1 == c2
+            else:
+                c1 = getattr(nxp, func)(H)
+                c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
+                if isinstance(c1, types.GeneratorType):
+                    c1, c2 = dict(c1), dict(c2)
+                    if func in chk_dict_vals:
+                        for i in range(len(G.nodes)):
+                            assert math.isclose(c1[i], c2[i], abs_tol=1e-16)
+                    else:
+                        assert c1 == c2
+                else:
+                    if func in chk_dict_vals:
+                        for i in range(len(G.nodes)):
+                            assert math.isclose(c1[i], c2[i], abs_tol=1e-16)
+                    else:
+                        if isinstance(c1, float):
+                            assert math.isclose(c1, c2, abs_tol=1e-16)
+                        else:
+                            assert c1 == c2
