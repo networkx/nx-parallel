@@ -93,7 +93,7 @@ def extract_from_docs(docstring):
                 par_params[j[0]] = " ".join(
                     [line.strip() for line in j[1:-1] if line.strip()]
                 )
-                par_docs = par_docs.replace("\n", " ")
+            par_docs = par_docs.replace("\n", " ")
     except IndexError:
         par_params = None
     except Exception as e:
