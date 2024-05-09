@@ -27,7 +27,22 @@ def get_funcs_info():
                         "additional_docs": par_docs,
                         "additional_parameters": par_params,
                     }
-    return funcs
+    indent = "\n" + " " * 12
+    out = "{"
+    for func, finfo in funcs.items():
+        out += indent + f'"{func}": {{' + indent + f'    "url": "{finfo["url"]}",'
+        out += indent + f'    "additional_docs": "{finfo["additional_docs"]}",'
+        params = finfo["additional_parameters"]
+        if params is not None:
+            out += indent + '    "additional_parameters": {'
+            for key, value in params.items():
+                out += indent + f"""        '{key}': "{value}","""
+            out += indent + "    },"
+        else:
+            out += indent + '    "additional_parameters": None,'
+        out += indent + "},"
+    out += "\n        },\n    }\n"
+    return out
 
 
 def extract_docstrings_from_file(file_path):
@@ -93,7 +108,6 @@ def extract_from_docs(docstring):
                 par_params[j[0]] = " ".join(
                     [line.strip() for line in j[1:-1] if line.strip()]
                 )
-            par_docs = par_docs.replace("\n", " ")
     except IndexError:
         par_params = None
     except Exception as e:
@@ -132,5 +146,5 @@ def get_info():
         "short_summary": "Parallel backend for NetworkX algorithms",
         "functions": '''
 
-with open("_nx_parallel/temp__init__.py", "w") as f:
-    f.write(string + str(get_funcs_info()) + "}\n")
+with open("_nx_parallel/__init__.py", "w") as f:
+    f.write(string + get_funcs_info())
