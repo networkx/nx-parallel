@@ -18,18 +18,21 @@ Example `version number`
       export PREVIOUS=<previous version number>
       export ORG="networkx"
       export REPO="nx-parallel"
+      export LOG="CHANGELOG.md"
 
 - Autogenerate release notes
 
-      changelist ${ORG}/${REPO} v${PREVIOUS} main --version ${VERSION}
+      changelist ${ORG}/${REPO} v${PREVIOUS} main --version ${VERSION} --out ${VERSION}.md
 
 - Put the output of the above command at the top of `CHANGELOG.md`
+
+      cat ${VERSION}.md | cat - ${LOG} > temp && mv temp ${LOG}
 
 - Update `__version__` in `nx_parallel/__init__.py`.
 
 - Commit changes:
 
-      git add nx_parallel/__init__.py CHANGELOG.md
+      git add nx_parallel/__init__.py ${LOG}
       git commit -m "Designate ${VERSION} release"
 
 - Tag the release in git:
@@ -49,6 +52,18 @@ Example `version number`
 - Review the github release page:
 
       https://github.com/networkx/nx-parallel/tags
+
+- Create release from tag
+
+      - go to https://github.com/networkx/nx-parallel/releases/new?tag=v${VERSION}
+      - add v${VERSION} for the `Release title`
+      - paste contents (or upload) of ${VERSION}.md in the `Describe this release section`
+      - if pre-release check the box labelled `Set as a pre-release`
+
+- Update https://github.com/networkx/nx-parallel/milestones:
+
+      - close old milestone
+      - ensure new milestone exists (perhaps setting due date)
 
 - Update `__version__` in `nx_parallel/__init__.py`.
 
