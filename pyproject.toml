@@ -61,7 +61,7 @@ include-package-data = false
 packages = [
     'nx_parallel',
     '_nx_parallel',
-    'nx_parallel.algorithms`,
+    'nx_parallel.algorithms',
     'nx_parallel.algorithms.approximation',
     'nx_parallel.algorithms.bipartite',
     'nx_parallel.algorithms.centrality',
