@@ -1,30 +1,30 @@
+from nx_parallel.algorithms.approximation.connectivity import (
+    approximate_all_pairs_node_connectivity,
+)
 from nx_parallel.algorithms.bipartite.redundancy import node_redundancy
 from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
+from nx_parallel.algorithms.cluster import square_clustering
+from nx_parallel.algorithms.connectivity import connectivity
+from nx_parallel.algorithms.efficiency_measures import local_efficiency
+from nx_parallel.algorithms.isolate import number_of_isolates
 from nx_parallel.algorithms.shortest_paths.generic import all_pairs_all_shortest_paths
-from nx_parallel.algorithms.shortest_paths.weighted import (
-    all_pairs_dijkstra,
-    all_pairs_dijkstra_path_length,
-    all_pairs_dijkstra_path,
-    all_pairs_bellman_ford_path_length,
-    all_pairs_bellman_ford_path,
-    johnson,
-)
 from nx_parallel.algorithms.shortest_paths.unweighted import (
     all_pairs_shortest_path,
     all_pairs_shortest_path_length,
 )
-from nx_parallel.algorithms.efficiency_measures import local_efficiency
-from nx_parallel.algorithms.isolate import number_of_isolates
+from nx_parallel.algorithms.shortest_paths.weighted import (
+    all_pairs_bellman_ford_path,
+    all_pairs_bellman_ford_path_length,
+    all_pairs_dijkstra,
+    all_pairs_dijkstra_path,
+    all_pairs_dijkstra_path_length,
+    johnson,
+)
 from nx_parallel.algorithms.tournament import (
     is_reachable,
     tournament_is_strongly_connected,
 )
 from nx_parallel.algorithms.vitality import closeness_vitality
-from nx_parallel.algorithms.approximation.connectivity import (
-    approximate_all_pairs_node_connectivity,
-)
-from nx_parallel.algorithms.connectivity import connectivity
-from nx_parallel.algorithms.cluster import square_clustering
 
 __all__ = ["Dispatcher", "ParallelGraph"]
 

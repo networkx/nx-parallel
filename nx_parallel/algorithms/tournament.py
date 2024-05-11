@@ -1,4 +1,5 @@
 from joblib import Parallel, delayed
+
 import nx_parallel as nxp
 
 __all__ = [

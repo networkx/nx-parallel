@@ -1,6 +1,7 @@
 """Provides functions for computing the efficiency of nodes and graphs."""
 import networkx as nx
 from joblib import Parallel, delayed
+
 import nx_parallel as nxp
 
 __all__ = ["local_efficiency"]

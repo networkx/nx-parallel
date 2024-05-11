@@ -1,6 +1,8 @@
-import networkx as nx
-import nx_parallel as nxp
 import math
+
+import networkx as nx
+
+import nx_parallel as nxp
 
 
 def test_betweenness_centrality_get_chunks():

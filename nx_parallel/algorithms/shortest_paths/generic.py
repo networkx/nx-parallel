@@ -1,5 +1,6 @@
-from networkx.algorithms.shortest_paths.generic import single_source_all_shortest_paths
 from joblib import Parallel, delayed
+from networkx.algorithms.shortest_paths.generic import single_source_all_shortest_paths
+
 import nx_parallel as nxp
 
 __all__ = [

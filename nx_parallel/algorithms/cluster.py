@@ -1,5 +1,7 @@
-from itertools import combinations, chain
+from itertools import chain, combinations
+
 from joblib import Parallel, delayed
+
 import nx_parallel as nxp
 
 __all__ = [

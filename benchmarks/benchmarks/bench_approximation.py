@@ -1,12 +1,14 @@
+import networkx as nx
+
+import nx_parallel as nxp
+
 from .common import (
+    Benchmark,
     backends,
-    num_nodes,
     edge_prob,
     get_cached_gnp_random_graph,
-    Benchmark,
+    num_nodes,
 )
-import networkx as nx
-import nx_parallel as nxp
 
 
 class Connectivity(Benchmark):

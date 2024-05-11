@@ -1,9 +1,10 @@
+import networkx as nx
+
 from .common import (
+    Benchmark,
     backends,
     edge_prob,
-    Benchmark,
 )
-import networkx as nx
 
 # for an unbalanced bipartite random graph
 n = [50, 100, 200, 400, 800]

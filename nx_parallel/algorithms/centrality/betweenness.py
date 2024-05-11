@@ -7,6 +7,7 @@ from networkx.algorithms.centrality.betweenness import (
     _single_source_shortest_path_basic,
 )
 from networkx.utils import py_random_state
+
 import nx_parallel as nxp
 
 __all__ = ["betweenness_centrality"]

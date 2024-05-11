@@ -1,9 +1,10 @@
-from joblib import Parallel, delayed
-from networkx.algorithms.bipartite.redundancy import _node_redundancy
-import networkx as nx
-import nx_parallel as nxp
 from itertools import chain
 
+import networkx as nx
+from joblib import Parallel, delayed
+from networkx.algorithms.bipartite.redundancy import _node_redundancy
+
+import nx_parallel as nxp
 
 __all__ = ["node_redundancy"]
 

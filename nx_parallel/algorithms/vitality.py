@@ -1,7 +1,9 @@
 from functools import partial
-import nx_parallel as nxp
-from joblib import Parallel, delayed
+
 import networkx as nx
+from joblib import Parallel, delayed
+
+import nx_parallel as nxp
 
 __all__ = ["closeness_vitality"]
 
