@@ -84,31 +84,28 @@ To add any additional tests, **specific to nx_parallel**, you can follow the way
 
 For displaying a small note about nx-parallel's implementation at the end of the main NetworkX documentation, we use the `backend_info` [entry_point](https://packaging.python.org/en/latest/specifications/entry-points/#entry-points) (in the `pyproject.toml` file). The [`get_info` function](https://github.com/networkx/nx-parallel/blob/main/_nx_parallel/__init__.py) is used to parse the docstrings of all the algorithms in nx-parallel and display the nx-parallel specific documentation on the NetworkX's main docs, in the "Additional Backend implementations" box, as shown in the screenshot below.
 
-![backend_box_ss](https://github.com/networkx/nx-parallel/blob/main/assets/images/backend_box_ss.png)
+![backend_box_ss](./assets/images/backend_box_ss.png)
 
-Here is how the docstring should be formatted in nx-parallel:
+nx-parallel follows [sphinx docstring guidelines](https://the-ultimate-sphinx-tutorial.readthedocs.io/en/latest/_guide/_styleguides/docstrings-guidelines.html) for writing docstrings. But, while extracting the docstring to display on the main networkx docs, only the first paragraph of the function's description and the first paragraph of each parameter's description is extracted and displayed. So, make sure to include all the necessary information in the first paragraphs itself. And you only need to include the additional **backend** parameters in the `Parameters` section and not all the parameters. Also, it is recommended to include a link to the networkx function's documentation page in the docstring, at the end of the function description.
+
+Here is an example of how the docstrings should be formatted in nx-parallel:
 
 ```.py
-def betweenness_centrality(
-    G, k=None, normalized=True, weight=None, endpoints=False, seed=None, get_chunks="chunks"
-):
-"""[FIRST PARA DISPLAYED ON MAIN NETWORKX DOCS AS FUNC DESC]
-    The parallel computation is implemented by dividing the
-    nodes into chunks and computing betweenness centrality for each chunk concurrently.
+def parallel_func(G, nx_arg, additional_backend_arg_1, additional_backend_arg_2=None):
+    """The parallel computation is implemented by dividing the
+    nodes into chunks and ..... [ONLY THIS PARAGRAPH WILL BE DISPLAYED ON THE MAIN NETWORKX DOCS]
+
+    Some more additional information about the function.
+
+    networkx.func : <link to the function's networkx docs page>
 
     Parameters
-    ------------ [EVERYTHING BELOW THIS LINE AND BEFORE THE NETWORKX LINK WILL BE DISPLAYED IN ADDITIONAL PARAMETER'S SECTION ON NETWORKX MAIN DOCS]
-    get_chunks : function (default = "chunks")
-        A function that takes in nodes as input and returns node_chunks...[YOU CAN MULTIPLE PARAGRAPHS FOR EACH PARAMETER, IF NEEDED, SEPARATED BY 1 BLANK LINE]
+    ----------
+    additional_backend_arg_1 : int or float
+        [YOU CAN HAVE MULTIPLE PARAGRAPHS BUT ONLY THE FIRST PARAGRAPH WILL BE DISPLAYED ON THE MAIN NETWORKX DOCS]
 
-    [LEAVE 2 BLANK LINES BETWEEN EACH PARAMETER]
-    parameter 2 : int
+    additional_backend_arg_2 : None or str (default=None)
         ....
-    .
-    .
-    .
-    [LEAVE 1 BLANK LINE BETWEEN THE PARAMETERS SECTION AND THE LINK]
-    networkx.betweenness_centrality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.betweenness_centrality.html
     """
 ```
 

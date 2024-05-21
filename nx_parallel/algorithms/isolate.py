@@ -10,14 +10,14 @@ def number_of_isolates(G, get_chunks="chunks"):
     of isolated nodes into chunks and then finding the length of each chunk in parallel
     and then adding all the lengths at the end.
 
+    networkx.number_of_isolates : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.isolate.number_of_isolates.html
+
     Parameters
     ----------
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the isolated nodes as input and returns an
         iterable `isolate_chunks`. The default chunking is done by slicing the `isolates`
         into `n` chunks, where `n` is the total number of CPU cores available.
-
-    networkx.number_of_isolates : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.isolate.number_of_isolates.html#number-of-isolates
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

@@ -14,14 +14,14 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     neighborhoods of vertices in `G` and checks closure conditions for each
     neighborhood subset in parallel.
 
+    networkx.tournament.is_reachable : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_reachable.html
+
     Parameters
     ----------
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the `nodes`
         into `n` chunks, where `n` is the total number of CPU cores available.
-
-    networkx.tournament.is_reachable : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_reachable.html#networkx.algorithms.tournament.is_reachable
     """
 
     def two_neighborhood_close(G, chunk):
@@ -65,14 +65,14 @@ def tournament_is_strongly_connected(G, get_chunks="chunks"):
     dispatching to the backend implementation. So, `nxp.tournament.is_strongly_connected`
     will result in an error. Use `nxp.tournament_is_strongly_connected` instead.
 
+    networkx.tournament.is_strongly_connected : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_strongly_connected.html
+
     Parameters
     ----------
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the `nodes`
         into `n` chunks, where `n` is the total number of CPU cores available.
-
-    networkx.tournament.is_strongly_connected : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_strongly_connected.html#networkx.algorithms.tournament.is_strongly_connected
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

@@ -12,14 +12,14 @@ def closeness_vitality(
     """The parallel computation is implemented only when the node
     is not specified. The closeness vitality for each node is computed concurrently.
 
+    networkx.closeness_vitality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.vitality.closeness_vitality.html
+
     Parameters
     ----------
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and
         returns an iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n` chunks, where `n` is the total number of CPU cores.
-
-    networkx.closeness_vitality : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.vitality.closeness_vitality.html#closeness-vitality
     """
 
     def closeness_vitality_chunk_subset(chunk):
