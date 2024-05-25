@@ -26,6 +26,14 @@ def get_chunk_function(ebc):
     return get_chunk
 
 
+def get_chunk_edges_random(nodes):
+    num_chunks = nxp.cpu_count()
+    chunks = [[] for _ in range(num_chunks)]
+    for i, node in enumerate(nodes):
+        chunks[i % num_chunks].append(node)
+    return chunks
+
+
 def test_betweenness_centrality_get_chunks():
     G = nx.fast_gnp_random_graph(100, 0.1, directed=False)
     H = nxp.ParallelGraph(G)
@@ -44,9 +52,8 @@ def test_betweenness_centrality_get_chunks():
 def test_edge_betweenness_centrality_get_chunks():
     G = nx.fast_gnp_random_graph(100, 0.1, directed=False)
     H = nxp.ParallelGraph(G)
-    ebc = nx.edge_betweenness_centrality(G)
     par_bc_chunk = nxp.edge_betweenness_centrality(
-        H, get_chunks=get_chunk_function(ebc)
+        H, get_chunks=get_chunk_edges_random
     )  # smoke test
     par_bc = nxp.edge_betweenness_centrality(H)
 
