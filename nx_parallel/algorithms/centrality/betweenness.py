@@ -4,7 +4,10 @@ from networkx.algorithms.centrality.betweenness import (
     _accumulate_endpoints,
     _rescale,
     _single_source_dijkstra_path_basic,
-    _single_source_shortest_path_basic, _rescale_e, _add_edge_keys, _accumulate_edges,
+    _single_source_shortest_path_basic,
+    _rescale_e,
+    _add_edge_keys,
+    _accumulate_edges,
 )
 from networkx.utils import py_random_state
 import nx_parallel as nxp
@@ -14,13 +17,13 @@ __all__ = ["betweenness_centrality", "edge_betweenness_centrality"]
 
 @py_random_state(5)
 def betweenness_centrality(
-        G,
-        k=None,
-        normalized=True,
-        weight=None,
-        endpoints=False,
-        seed=None,
-        get_chunks="chunks",
+    G,
+    k=None,
+    normalized=True,
+    weight=None,
+    endpoints=False,
+    seed=None,
+    get_chunks="chunks",
 ):
     """The parallel computation is implemented by dividing the nodes into chunks and
     computing betweenness centrality for each chunk concurrently.
@@ -88,7 +91,9 @@ def _betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
 
 
 @py_random_state(4)
-def edge_betweenness_centrality(G, k=None, normalized=True, weight=None, seed=None, get_chunks="chunks"):
+def edge_betweenness_centrality(
+    G, k=None, normalized=True, weight=None, seed=None, get_chunks="chunks"
+):
     """The parallel computation is implemented by dividing the nodes into chunks and
         computing edge betweenness centrality for each chunk concurrently.
 
