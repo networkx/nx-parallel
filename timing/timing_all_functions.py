@@ -9,7 +9,12 @@ import nx_parallel
 
 # Code to create README heatmap for all functions in function_list
 heatmapDF = pd.DataFrame()
-function_list = [nx.betweenness_centrality, nx.edge_betweenness_centrality, nx.closeness_vitality, nx.local_efficiency]
+function_list = [
+    nx.betweenness_centrality,
+    nx.edge_betweenness_centrality,
+    nx.closeness_vitality,
+    nx.local_efficiency,
+]
 number_of_nodes_list = [10, 20, 50, 300, 600]
 
 for i in range(0, len(function_list)):
