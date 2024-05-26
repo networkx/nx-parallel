@@ -35,7 +35,7 @@ test = [
 ]
 
 [project.entry-points."networkx.backends"]
-parallel = "nx_parallel.interface:Dispatcher"
+parallel = "nx_parallel.interface:BackendInterface"
 
 [project.entry-points."networkx.backend_info"]
 parallel = "_nx_parallel:get_info"
