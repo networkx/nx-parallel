@@ -44,12 +44,7 @@ class ParallelGraph:
         ):
             self.graph_object = graph_object
         else:
-            try:
-                self.graph_object = nx.Graph(graph_object)
-            except Exception as e:
-                raise TypeError(
-                    f"Invalid input type {type(graph_object)} for ParallelGraph."
-                ) from e
+            self.graph_object = nx.Graph(graph_object)
 
     def is_multigraph(self):
         return self.graph_object.is_multigraph()
