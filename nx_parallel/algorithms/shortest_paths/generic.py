@@ -15,14 +15,14 @@ def all_pairs_all_shortest_paths(
     each node in `node_chunk`, and then employs joblib's `Parallel` function to
     execute these computations in parallel across all available CPU cores.
 
+    networkx.single_source_all_shortest_paths : https://networkx.org/documentation/latest/reference/algorithms/generated/networkx.algorithms.shortest_paths.generic.single_source_all_shortest_paths.html
+
     Parameters
-    ------------
+    ----------
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
         `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
-
-    networkx.single_source_all_shortest_paths : https://github.com/networkx/networkx/blob/de85e3fe52879f819e7a7924474fc6be3994e8e4/networkx/algorithms/shortest_paths/generic.py#L606
     """
 
     def _process_node_chunk(node_chunk):

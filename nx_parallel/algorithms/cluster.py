@@ -12,14 +12,14 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     coefficient for all `node_chunks` are computed in parallel over all available
     CPU cores.
 
+    networkx.square_clustering: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.square_clustering.html
+
     Parameters
-    ------------
+    ----------
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes (or nbunch) as input and
         returns an iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n` chunks, where `n` is the number of CPU cores.
-
-    networkx.square_clustering: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.square_clustering.html
     """
 
     def _compute_clustering_chunk(node_iter_chunk):
