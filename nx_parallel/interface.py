@@ -1,3 +1,5 @@
+import networkx as nx
+
 from nx_parallel.algorithms.approximation.connectivity import (
     approximate_all_pairs_node_connectivity,
 )
@@ -25,13 +27,6 @@ from nx_parallel.algorithms.tournament import (
     tournament_is_strongly_connected,
 )
 from nx_parallel.algorithms.vitality import closeness_vitality
-from nx_parallel.algorithms.approximation.connectivity import (
-    approximate_all_pairs_node_connectivity,
-)
-from nx_parallel.algorithms.connectivity import connectivity
-from nx_parallel.algorithms.cluster import square_clustering
-import networkx as nx
-
 
 __all__ = ["BackendInterface", "ParallelGraph"]
 

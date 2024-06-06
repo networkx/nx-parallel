@@ -1,6 +1,6 @@
 import random
-import types
 import time
+import types
 
 import networkx as nx
 import pandas as pd
