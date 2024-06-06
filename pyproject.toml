@@ -40,7 +40,7 @@ email = 'networkx-discuss@googlegroups.com'
 "Source Code" = 'https://github.com/networkx/nx-parallel'
 
 [project.entry-points."networkx.backends"]
-parallel = "nx_parallel.interface:Dispatcher"
+parallel = "nx_parallel.interface:BackendInterface"
 
 [project.entry-points."networkx.backend_info"]
 parallel = "_nx_parallel:get_info"
@@ -69,9 +69,6 @@ packages = [
     'nx_parallel.algorithms.shortest_paths',
     'nx_parallel.utils',
 ]
-
-[project.entry-points."networkx.backends"]
-parallel = "nx_parallel.interface:BackendInterface"
 
 platforms = [
     'Linux',
