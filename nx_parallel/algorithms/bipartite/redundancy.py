@@ -13,14 +13,15 @@ def node_redundancy(G, nodes=None, get_chunks="chunks"):
     """In the parallel implementation we divide the nodes into chunks and compute
     the node redundancy coefficients for all `node_chunk` in parallel.
 
+    networkx.bipartite.node_redundancy : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.bipartite.redundancy.node_redundancy.html
+
     Parameters
-    ------------
+    ----------
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
         `G.nodes` (or `nodes`) into `n` chunks, where `n` is the number of CPU cores.
-
-    networkx.bipartite.node_redundancy : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.bipartite.redundancy.node_redundancy.html"""
+    """
 
     if hasattr(G, "graph_object"):
         G = G.graph_object

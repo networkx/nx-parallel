@@ -1,7 +1,13 @@
 import ast
 import os
 
-__all__ = ["get_funcs_info", "extract_docstrings_from_file", "extract_from_docs"]
+__all__ = [
+    "get_funcs_info",
+    "extract_docstrings_from_file",
+    "extract_add_docs",
+    "extract_add_params",
+    "get_url",
+]
 
 # Helper functions for get_info
 
@@ -21,11 +27,10 @@ def get_funcs_info():
                 path = os.path.join(root, file)
                 d = extract_docstrings_from_file(path)
                 for func in d:
-                    par_docs, par_params = extract_from_docs(d[func])
                     funcs[func] = {
                         "url": get_url(path, func),
-                        "additional_docs": par_docs,
-                        "additional_parameters": par_params,
+                        "additional_docs": extract_add_docs(d[func]),
+                        "additional_parameters": extract_add_params(d[func]),
                     }
     return funcs
 
@@ -60,8 +65,8 @@ def extract_docstrings_from_file(file_path):
     return docstrings
 
 
-def extract_from_docs(docstring):
-    """Extract the parallel documentation and parallel parameter description from the given doctring."""
+def extract_add_docs(docstring):
+    """Extract the parallel documentation description from the given doctring."""
     try:
         # Extracting Parallel Computation description
         # Assuming that the first para in docstring is the function's PC desc
@@ -76,30 +81,38 @@ def extract_from_docs(docstring):
     except Exception as e:
         print(e)
         par_docs = None
+    return par_docs
 
+
+def extract_add_params(docstring):
+    """Extract the parallel parameter description from the given docstring."""
     try:
         # Extracting extra parameters
         # Assuming that the last para in docstring is the function's extra params
         par_params = {}
-        par_params_ = docstring.split("------------\n")[1]
+        par_params_ = docstring.split("----------\n")[1]
+        par_params_ = par_params_.split("\n")
 
-        par_params_ = par_params_.split("\n\n\n")
-        for i in par_params_:
-            j = i.split("\n")
-            par_params[j[0]] = "\n".join(
-                [line.strip() for line in j[1:] if line.strip()]
-            )
-            if i == par_params_[-1]:
-                par_params[j[0]] = " ".join(
-                    [line.strip() for line in j[1:-1] if line.strip()]
-                )
-            par_docs = par_docs.replace("\n", " ")
+        i = 0
+        while i < len(par_params_):
+            line = par_params_[i]
+            if " : " in line:
+                key = line.strip()
+                n = par_params_.index(key) + 1
+                par_desc = ""
+                while n < len(par_params_) and par_params_[n] != "":
+                    par_desc += par_params_[n].strip() + " "
+                    n += 1
+                par_params[key] = par_desc.strip()
+                i = n + 1
+            else:
+                i += 1
     except IndexError:
         par_params = None
     except Exception as e:
         print(e)
         par_params = None
-    return par_docs, par_params
+    return par_params
 
 
 def get_url(file_path, function_name):

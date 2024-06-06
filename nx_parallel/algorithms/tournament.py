@@ -1,6 +1,8 @@
 from joblib import Parallel, delayed
 
 import nx_parallel as nxp
+from networkx.algorithms.simple_paths import is_simple_path as is_path
+import networkx as nx
 
 __all__ = [
     "is_reachable",
@@ -8,71 +10,84 @@ __all__ = [
 ]
 
 
-def is_reachable(G, s, t):
+def is_reachable(G, s, t, get_chunks="chunks"):
     """The function parallelizes the calculation of two
     neighborhoods of vertices in `G` and checks closure conditions for each
     neighborhood subset in parallel.
 
-    networkx.tournament.is_reachable : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_reachable.html#networkx.algorithms.tournament.is_reachable
+    networkx.tournament.is_reachable : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_reachable.html
+
+    Parameters
+    ----------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in a list of all the nodes as input and returns an
+        iterable `node_chunks`. The default chunking is done by slicing the `nodes`
+        into `n` chunks, where `n` is the total number of CPU cores available.
     """
+
+    def two_neighborhood_close(G, chunk):
+        tnc = []
+        for v in chunk:
+            S = {
+                x
+                for x in G
+                if x == v or x in G[v] or any(is_path(G, [v, z, x]) for z in G)
+            }
+            tnc.append(not (is_closed(G, S) and s in S and t not in S))
+        return all(tnc)
+
+    def is_closed(G, nodes):
+        return all(v in G[u] for u in set(G) - nodes for v in nodes)
+
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    G_adj = G._adj
-    setG = set(G)
-
     cpu_count = nxp.cpu_count()
 
-    def two_nbrhood_subset(G, chunk):
-        result = []
-        for v in chunk:
-            v_nbrs = G_adj[v].keys()
-            result.append(v_nbrs | {x for nbr in v_nbrs for x in G_adj[nbr]})
-        return result
+    if get_chunks == "chunks":
+        num_in_chunk = max(len(G) // cpu_count, 1)
+        node_chunks = nxp.chunks(G, num_in_chunk)
+    else:
+        node_chunks = get_chunks(G)
 
-    def is_closed(G, nodes):
-        return all(v in G_adj[u] for u in setG - nodes for v in nodes)
-
-    def check_closure_subset(chunk):
-        return all(not (s in S and t not in S and is_closed(G, S)) for S in chunk)
-
-    # send chunk of vertices to each process (calculating neighborhoods)
-    num_in_chunk = max(len(G) // cpu_count, 1)
-
-    # neighborhoods = [two_neighborhood_subset(G, chunk) for chunk in node_chunks]
-    neighborhoods = Parallel(n_jobs=cpu_count)(
-        delayed(two_nbrhood_subset)(G, chunk) for chunk in nxp.chunks(G, num_in_chunk)
+    return all(
+        Parallel(n_jobs=cpu_count)(
+            delayed(two_neighborhood_close)(G, chunk) for chunk in node_chunks
+        )
     )
 
-    # send chunk of neighborhoods to each process (checking closure conditions)
-    nbrhoods = (nhood for nh_chunk in neighborhoods for nhood in nh_chunk)
-    results = Parallel(n_jobs=cpu_count)(
-        delayed(check_closure_subset)(ch) for ch in nxp.chunks(nbrhoods, num_in_chunk)
-    )
-    return all(results)
 
-
-def tournament_is_strongly_connected(G):
+def tournament_is_strongly_connected(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the
     nodes into chunks and then checking whether each node is reachable from each
     other node in parallel.
 
     Note, this function uses the name `tournament_is_strongly_connected` while
-    dispatching to the backend in=mplementation. So, `nxp.tournament.is_strongly_connected`
+    dispatching to the backend implementation. So, `nxp.tournament.is_strongly_connected`
     will result in an error. Use `nxp.tournament_is_strongly_connected` instead.
 
-    networkx.tournament.is_strongly_connected : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_strongly_connected.html#networkx.algorithms.tournament.is_strongly_connected
+    networkx.tournament.is_strongly_connected : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.tournament.is_strongly_connected.html
+
+    Parameters
+    ----------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in a list of all the nodes as input and returns an
+        iterable `node_chunks`. The default chunking is done by slicing the `nodes`
+        into `n` chunks, where `n` is the total number of CPU cores available.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    # Subset version of is_reachable
     def is_reachable_subset(G, chunk):
-        return all(is_reachable(G, u, v) for v in chunk for u in G)
+        return all(nx.tournament.is_reachable(G, u, v) for v in chunk for u in G)
 
     cpu_count = nxp.cpu_count()
-    num_in_chunk = max(len(G) // cpu_count, 1)
-    node_chunks = nxp.chunks(G, num_in_chunk)
+
+    if get_chunks == "chunks":
+        num_in_chunk = max(min(len(G) // cpu_count, 10), 1)
+        node_chunks = nxp.chunks(G, num_in_chunk)
+    else:
+        node_chunks = get_chunks(G)
 
     results = Parallel(n_jobs=cpu_count)(
         delayed(is_reachable_subset)(G, chunk) for chunk in node_chunks

@@ -70,6 +70,9 @@ packages = [
     'nx_parallel.utils',
 ]
 
+[project.entry-points."networkx.backends"]
+parallel = "nx_parallel.interface:BackendInterface"
+
 platforms = [
     'Linux',
     'Mac OSX',
