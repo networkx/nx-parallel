@@ -1,11 +1,12 @@
+import networkx as nx
+
 from .common import (
+    Benchmark,
     backends,
-    num_nodes,
     edge_prob,
     get_cached_gnp_random_graph,
-    Benchmark,
+    num_nodes,
 )
-import networkx as nx
 
 
 class Vitality(Benchmark):

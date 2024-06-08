@@ -1,9 +1,10 @@
+import networkx as nx
+
 from .common import (
+    Benchmark,
     backends,
     num_nodes,
-    Benchmark,
 )
-import networkx as nx
 
 
 class Tournament(Benchmark):

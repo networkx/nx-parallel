@@ -1,5 +1,5 @@
-import os
 import ast
+import os
 
 __all__ = [
     "get_funcs_info",

@@ -1,7 +1,8 @@
-from joblib import Parallel, delayed
-import nx_parallel as nxp
-from networkx.algorithms.simple_paths import is_simple_path as is_path
 import networkx as nx
+from joblib import Parallel, delayed
+from networkx.algorithms.simple_paths import is_simple_path as is_path
+
+import nx_parallel as nxp
 
 __all__ = [
     "is_reachable",

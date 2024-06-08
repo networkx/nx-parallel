@@ -3,11 +3,12 @@ Shortest path parallel algorithms for unweighted graphs.
 """
 
 from joblib import Parallel, delayed
-import nx_parallel as nxp
 from networkx.algorithms.shortest_paths.unweighted import (
-    single_source_shortest_path_length,
     single_source_shortest_path,
+    single_source_shortest_path_length,
 )
+
+import nx_parallel as nxp
 
 __all__ = [
     "all_pairs_shortest_path",

@@ -1,12 +1,14 @@
 # smoke tests for all functions supporting `get_chunks` kwarg
 
-import inspect
 import importlib
-import networkx as nx
-import nx_parallel as nxp
+import inspect
+import math
 import random
 import types
-import math
+
+import networkx as nx
+
+import nx_parallel as nxp
 
 
 def get_all_functions(package_name="nx_parallel"):
