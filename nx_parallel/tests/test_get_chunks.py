@@ -28,7 +28,7 @@ def get_all_functions(package_name="nx_parallel"):
 
 
 def get_functions_with_get_chunks():
-    """Returns a list of functions with the `get_chunks` kwarg."""
+    """Returns a list of function names with the `get_chunks` kwarg."""
     all_funcs = get_all_functions()
     get_chunks_funcs = []
     for func in all_funcs:
