@@ -10,7 +10,12 @@ import math
 
 
 def get_all_functions(package_name="nx_parallel"):
-    """Returns a dictionary where the keys are the function names in a given Python package, and the values are dictionaries containing the function's keyword arguments and positional arguments."""
+    """Returns a dict keyed by function names to its arguments.
+
+    This function constructs a dictionary keyed by the function
+    names in the package `package_name` to dictionaries containing
+    the function's keyword arguments and positional arguments.
+    """
     package = importlib.import_module(package_name)
     functions = {}
 
