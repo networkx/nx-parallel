@@ -49,7 +49,10 @@ def test_get_chunks():
     tournament_funcs = [
         "tournament_is_strongly_connected",
     ]
-    chk_dict_vals = ["betweenness_centrality", "edge_betweenness_centrality"]
+    chk_dict_vals = [
+        "betweenness_centrality",
+        "edge_betweenness_centrality",
+    ]
     G = nx.fast_gnp_random_graph(50, 0.6, seed=42)
     H = nxp.ParallelGraph(G)
     for func in get_chunks_funcs:
