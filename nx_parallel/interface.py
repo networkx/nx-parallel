@@ -1,5 +1,8 @@
 from nx_parallel.algorithms.bipartite.redundancy import node_redundancy
-from nx_parallel.algorithms.centrality.betweenness import betweenness_centrality
+from nx_parallel.algorithms.centrality.betweenness import (
+    betweenness_centrality,
+    edge_betweenness_centrality,
+)
 from nx_parallel.algorithms.shortest_paths.generic import all_pairs_all_shortest_paths
 from nx_parallel.algorithms.shortest_paths.weighted import (
     all_pairs_dijkstra,
@@ -74,6 +77,7 @@ class BackendInterface:
 
     # Centrality
     betweenness_centrality = betweenness_centrality
+    edge_betweenness_centrality = edge_betweenness_centrality
 
     # Efficiency
     local_efficiency = local_efficiency

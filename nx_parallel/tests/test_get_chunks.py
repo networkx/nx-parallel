@@ -51,6 +51,7 @@ def test_get_chunks():
     ]
     chk_dict_vals = [
         "betweenness_centrality",
+        "edge_betweenness_centrality",
     ]
     G = nx.fast_gnp_random_graph(50, 0.6, seed=42)
     H = nxp.ParallelGraph(G)
