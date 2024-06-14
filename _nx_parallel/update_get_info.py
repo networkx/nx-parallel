@@ -13,7 +13,9 @@ __all__ = [
 
 
 def get_funcs_info():
-    """Return a dictionary with information about all the functions."""
+    """Return a dictionary with function names as keys and function's details as values.
+    The function's details include the URL to the function in the source code, the parallel
+    computation description, and the additional parameters description."""
     funcs = {}
 
     nx_parallel_dir = os.path.join(os.getcwd(), "nx_parallel")
