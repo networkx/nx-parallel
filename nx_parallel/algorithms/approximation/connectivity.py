@@ -24,16 +24,16 @@ def approximate_all_pairs_node_connectivity(
     will run the parallel implementation of `all_pairs_node_connectivity` present in the
     `connectivity/connectivity`. Use `nxp.approximate_all_pairs_node_connectivity` instead.
 
+    networkx.all_pairs_node_connectivity : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.approximation.connectivity.all_pairs_node_connectivity.html
+
     Parameters
-    ------------
+    ----------
     get_chunks : str, function (default = "chunks")
         A function that takes in `list(iter_func(nbunch, 2))` as input and returns
         an iterable `pairs_chunks`, here `iter_func` is `permutations` in case of
         directed graphs and `combinations` in case of undirected graphs. The default
         is to create chunks by slicing the list into `n` chunks, where `n` is the
         number of CPU cores, such that size of each chunk is atmost 10, and at least 1.
-
-    networkx.all_pairs_node_connectivity : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.approximation.connectivity.all_pairs_node_connectivity.html
     """
 
     if hasattr(G, "graph_object"):

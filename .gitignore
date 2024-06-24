@@ -132,3 +132,6 @@ dmypy.json
 # asv 
 results/
 html/
+
+# get_info update script
+temp__init__.py
