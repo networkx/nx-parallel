@@ -1,10 +1,12 @@
 from networkx.utils.configs import Config
 from typing import Union
 from dataclasses import asdict
+import networkx as nx
 
 __all__ = [
     "NxpConfig",
     "_configs",
+    "get_curr_configs",
 ]
 
 
@@ -44,3 +46,17 @@ class NxpConfig(Config):
 
 
 _configs = NxpConfig()
+
+
+def get_curr_configs(config=None):
+    """Returns the current configuration settings for nx_parallel."""
+    config_dict = dict(nx.config.backends.parallel)
+    if config is None:
+        return config_dict
+    elif isinstance(config, list):
+        new_config = {k: config_dict[k] for k in config if k in config_dict}
+        return new_config
+    elif config in config_dict:
+        return config_dict[config]
+    else:
+        raise KeyError(f"Invalid config: {config}")
