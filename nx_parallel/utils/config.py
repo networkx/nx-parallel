@@ -11,25 +11,21 @@ __all__ = [
 
 
 class NxpConfig(Config):
-    n_jobs: int = None
     backend: str = None
-    return_as: str = "list"
+    n_jobs: int = None
     verbose: int = 0
-    timeout: float = None
-    pre_dispatch: str = "2 * n_jobs"
-    batch_size: int = "auto"
     temp_folder: str = None
     max_nbytes: Union[int, str] = "1M"
     mmap_mode: str = "r"
     prefer: str = None
     require: str = None
-
-    """
-    todo: use something like this instead:
-    for param_name, param in parallel_params.items():
-        if param_name not in ["self", "args", "kwargs"]:  # Exclude non-configurable params
-            param_name = param.default
-    """
+    return_as: str = "list"
+    timeout: float = None
+    pre_dispatch: str = "2 * n_jobs"
+    batch_size: int = "auto"
+    inner_max_num_threads: int = None
+    parameters: dict = None
+    backend_params: dict = None
 
     def get_config_dict(self, config=None):
         """Return the default configuration as a dictionary."""
