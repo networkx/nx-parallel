@@ -23,9 +23,6 @@ class NxpConfig(Config):
     timeout: float = None
     pre_dispatch: str = "2 * n_jobs"
     batch_size: int = "auto"
-    inner_max_num_threads: int = None
-    parameters: dict = None
-    backend_params: dict = None
 
     def get_config_dict(self, config=None):
         """Return the default configuration as a dictionary."""

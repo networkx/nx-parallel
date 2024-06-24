@@ -22,9 +22,6 @@ def get_info():
             "timeout": None,
             "pre_dispatch": "2 * n_jobs",
             "batch_size": "auto",
-            "inner_max_num_threads": None,
-            "parameters": None,
-            "backend_params": None,
         },
         "functions": {
             "number_of_isolates": {
@@ -168,7 +165,7 @@ def get_info():
                 },
             },
             "get_curr_configs": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/config.py#L47",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/config.py#L44",
                 "additional_docs": "Returns the current configuration settings for nx_parallel.",
                 "additional_parameters": None,
             },
