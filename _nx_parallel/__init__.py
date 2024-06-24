@@ -9,6 +9,20 @@ def get_info():
         "package": "nx_parallel",
         "url": "https://github.com/networkx/nx-parallel",
         "short_summary": "Parallel backend for NetworkX algorithms",
+        "default_config": {
+            "backend": None,
+            "n_jobs": None,
+            "verbose": 0,
+            "temp_folder": None,
+            "max_nbytes": "1M",
+            "mmap_mode": "r",
+            "prefer": None,
+            "require": None,
+            "return_as": "list",
+            "timeout": None,
+            "pre_dispatch": "2 * n_jobs",
+            "batch_size": "auto",
+        },
         "functions": {
             "number_of_isolates": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L8",
@@ -150,18 +164,23 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in an iterable of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `G.nodes` into `n` chunks, where `n` is the number of CPU cores."
                 },
             },
+            "get_curr_configs": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/config.py#L44",
+                "additional_docs": "Returns the current configuration settings for nx_parallel.",
+                "additional_parameters": None,
+            },
             "chunks": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L8",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L9",
                 "additional_docs": "Divides an iterable into chunks of size n",
                 "additional_parameters": None,
             },
             "cpu_count": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L18",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L19",
                 "additional_docs": "Returns the number of logical CPUs or cores",
                 "additional_parameters": None,
             },
             "create_iterables": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L26",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L28",
                 "additional_docs": "Creates an iterable of function inputs for parallel computation based on the provided iterator type.",
                 "additional_parameters": {
                     "G : NetworkX graph": "iterator : str Type of iterator. Valid values are 'node', 'edge', 'isolate'",

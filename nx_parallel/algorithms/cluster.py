@@ -47,7 +47,10 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     else:
         node_iter = list(G.nbunch_iter(nodes))
 
-    total_cores = nxp.cpu_count()
+    configs = nxp.get_curr_configs()
+    cores = nxp.cpu_count()
+    total_cores = cores if cores is not None else -1
+    configs["n_jobs"] = total_cores
 
     if get_chunks == "chunks":
         num_in_chunk = max(len(node_iter) // total_cores, 1)
@@ -55,7 +58,7 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     else:
         node_iter_chunks = get_chunks(node_iter)
 
-    result = Parallel(n_jobs=total_cores)(
+    result = Parallel(**configs)(
         delayed(_compute_clustering_chunk)(node_iter_chunk)
         for node_iter_chunk in node_iter_chunks
     )
