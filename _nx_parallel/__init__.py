@@ -9,6 +9,20 @@ def get_info():
         "package": "nx_parallel",
         "url": "https://github.com/networkx/nx-parallel",
         "short_summary": "Parallel backend for NetworkX algorithms",
+        "default_config": {
+            "n_jobs": None,
+            "backend": None,
+            "return_as": "list",
+            "verbose": 0,
+            "timeout": None,
+            "pre_dispatch": "2 * n_jobs",
+            "batch_size": "auto",
+            "temp_folder": None,
+            "max_nbytes": "1M",
+            "mmap_mode": "r",
+            "prefer": None,
+            "require": None,
+        },
         "functions": {
             "number_of_isolates": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L8",
@@ -151,17 +165,17 @@ def get_info():
                 },
             },
             "chunks": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L8",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L9",
                 "additional_docs": "Divides an iterable into chunks of size n",
                 "additional_parameters": None,
             },
             "cpu_count": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L18",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L19",
                 "additional_docs": "Returns the number of logical CPUs or cores",
                 "additional_parameters": None,
             },
             "create_iterables": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L26",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L27",
                 "additional_docs": "Creates an iterable of function inputs for parallel computation based on the provided iterator type.",
                 "additional_parameters": {
                     "G : NetworkX graph": "iterator : str Type of iterator. Valid values are 'node', 'edge', 'isolate'",

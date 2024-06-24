@@ -1,7 +1,7 @@
 import itertools
 import os
 import networkx as nx
-import nx_parallel as nxp
+from nx_parallel.utils.config import _configs
 
 __all__ = ["chunks", "cpu_count", "create_iterables"]
 
@@ -22,7 +22,7 @@ def cpu_count():
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
     else:
-        return nxp.get_configs("n_jobs")
+        return _configs.get_config_dict("n_jobs")
 
 
 def create_iterables(G, iterator, n_cores, list_of_iterator=None):

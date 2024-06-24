@@ -1,6 +1,7 @@
 from itertools import combinations, chain
 from joblib import Parallel, delayed
 import nx_parallel as nxp
+from nx_parallel.utils.config import _configs
 
 __all__ = [
     "square_clustering",
@@ -47,8 +48,10 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     else:
         node_iter = list(G.nbunch_iter(nodes))
 
-    configs = nxp.get_configs()
-    total_cores = nxp.cpu_count()
+    configs = _configs.get_config_dict()
+    cores = nxp.cpu_count()
+    total_cores = cores if cores is not None else -1
+    configs["n_jobs"] = total_cores
 
     if get_chunks == "chunks":
         num_in_chunk = max(len(node_iter) // total_cores, 1)

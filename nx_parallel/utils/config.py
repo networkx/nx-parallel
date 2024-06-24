@@ -1,10 +1,11 @@
 from networkx.utils.configs import Config
-import joblib
-import inspect
-import networkx as nx
 from typing import Union
+from dataclasses import asdict
 
-__all__ = ["NxpConfig", "get_configs"]
+__all__ = [
+    "NxpConfig",
+    "_configs",
+]
 
 
 class NxpConfig(Config):
@@ -28,21 +29,18 @@ class NxpConfig(Config):
             param_name = param.default
     """
 
+    def get_config_dict(self, config=None):
+        """Return the default configuration as a dictionary."""
+        config_dict = asdict(self)
+        if config is None:
+            return config_dict
+        elif isinstance(config, list):
+            new_config = {k: config_dict[k] for k in config if k in config_dict}
+            return new_config
+        elif config in config_dict:
+            return config_dict[config]
+        else:
+            raise KeyError(f"Invalid config: {config}")
 
-def get_configs(config=None):
-    parallel_params = inspect.signature(joblib.Parallel).parameters
-    configs = {
-        k: nx.config["backends"]["parallel"][str(k)] for k, v in parallel_params.items()
-    }
-    if config is None:
-        return configs
-    elif isinstance(config, list):
-        new_configs = {k: configs[k] for k in config if k in configs}
-        return new_configs
-    return configs[config]
 
-
-nx.config.backend_priority = [
-    "parallel",
-]
-nx.config["backends"]["parallel"] = NxpConfig()
+_configs = NxpConfig()
