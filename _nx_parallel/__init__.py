@@ -18,10 +18,8 @@ def get_info():
             "mmap_mode": "r",
             "prefer": None,
             "require": None,
-            "return_as": "list",
-            "timeout": None,
-            "pre_dispatch": "2 * n_jobs",
-            "batch_size": "auto",
+            "inner_max_num_threads": None,
+            "backend_params": None,
         },
         "functions": {
             "number_of_isolates": {
@@ -165,7 +163,7 @@ def get_info():
                 },
             },
             "get_curr_configs": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/config.py#L44",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/config.py#L43",
                 "additional_docs": "Returns the current configuration settings for nx_parallel.",
                 "additional_parameters": None,
             },
@@ -180,7 +178,7 @@ def get_info():
                 "additional_parameters": None,
             },
             "create_iterables": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L28",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L35",
                 "additional_docs": "Creates an iterable of function inputs for parallel computation based on the provided iterator type.",
                 "additional_parameters": {
                     "G : NetworkX graph": "iterator : str Type of iterator. Valid values are 'node', 'edge', 'isolate'",

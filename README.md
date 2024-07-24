@@ -104,6 +104,8 @@ nxp.betweenness_centrality(H)
 # output : {0: 0.0, 1: 0.6666666666666666, 2: 0.6666666666666666, 3: 0.0}
 ```
 
+For more on how to play with configs refer [Config.md](./Config.md)!
+
 ### Notes
 
 1. Some functions in networkx have the same name but different implementations, so to avoid these name conflicts at the time of dispatching networkx differentiates them by specifying the `name` parameter in the `_dispatchable` decorator of such algorithms. So, `method 3` and `method 4` are not recommended. But, you can use them if you know the correct `name`. For example:
