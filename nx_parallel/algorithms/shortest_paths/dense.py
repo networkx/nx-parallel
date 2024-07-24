@@ -39,32 +39,44 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
     )
     n, m = A.shape
     matrix_len = m * n
-    # TODO: chunking in submatrix and assign k i j iterable for sub block that are not primary
+
+    # TODO: handle graph with a prime number of node, as the matrix is not divisible
     total_cores = nxp.cpu_count()
     if blocking_factor is None:
         blocking_factor = _find_nearest_divisor(n, total_cores)
 
     no_of_primary = matrix_len / blocking_factor
-    # TODO: write a more specific chunking for spliting non dividable matrix
-    for it in range(no_of_primary):
-        # Phase 1: Compute Primary block
-        k_start = (it * matrix_len) // no_of_primary
+
+    for primary_block in range(no_of_primary):
+        k_start = (primary_block * matrix_len) // no_of_primary
         k_end = k_start + (matrix_len // no_of_primary) - 1
         k = (k_start, k_end)
+        # Phase 1: Compute Primary block
         # Execute Normal floyd warshall for the primary block submatrix
         A = _partial_floyd_warshall_numpy(A, k, k, k)
         # Phase 2: Compute Cross block
-        i, j = 0
+        params = []
+        for block in range(no_of_primary):
+            # skip the primary block computed in phase 1
+            if block != primary_block:
+                # append the actual indices of the matrix by multiply the block number with the blocking factor
+                block_coord = _block_range(blocking_factor, block)
+                params.append((block_coord, k))
+                params.append((k, block_coord))
         Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
-            delayed(_partial_floyd_warshall_numpy)(A, k, i, j)
-            for i_start in range(
-                k_start,
-                k_end,
-            )
+            delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
         # Phase 3: Compute remaining
+        params.clear()
+        for block_i in range(no_of_primary):
+            for block_j in range(no_of_primary):
+                # skip all block previously computed, so skip every block with primary block value
+                if block_i != primary_block and block_j != primary_block:
+                    i_range = _block_range(blocking_factor, block_i)
+                    j_range = _block_range(blocking_factor, block_j)
+                    params.append((i_range, j_range))
         Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
-            delayed(_partial_floyd_warshall_numpy)(A, k, i, j)
+            delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
 
     return A
@@ -102,6 +114,10 @@ def _partial_floyd_warshall_numpy(A, k_iteration, i_iteration, j_iteration):
     return A
 
 
+def _block_range(blocking_factor, block):
+    return (block * blocking_factor, (block + 1) * blocking_factor)
+
+
 def _calculate_divisor(i, x, y):
     if x % i == 0:
         divisor1 = i
@@ -119,6 +135,7 @@ def _calculate_divisor(i, x, y):
     return None
 
 
+# TODO add side case for prime number
 def _find_nearest_divisor(x, y):
     """
     find the optimal value for the blocking factor parameter
