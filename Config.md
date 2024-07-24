@@ -14,12 +14,12 @@ Example usage:
 >>> get_active_backend()
 (<joblib._parallel_backends.LokyBackend object at 0x10348a3c0>, None)
 >>> with parallel_config(n_jobs=-1):
-... get_active_backend()
-... nx.square_clustering(G, backend="parallel")
-... with parallel_config(n_jobs=3):
-... get_active_backend()
-... nx.square_clustering(G, backend="parallel")
-... get_active_backend()
+...     get_active_backend()
+...     nx.square_clustering(G, backend="parallel")
+...     with parallel_config(n_jobs=3):
+...         get_active_backend()
+...         nx.square_clustering(G, backend="parallel")
+...     get_active_backend()
 ...
 (<joblib._parallel_backends.LokyBackend object at 0x104a24b30>, -1)
 {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0}
@@ -67,7 +67,7 @@ get_active_backend()
 
 - Don't recommend changing global configuration within a context manager, but you can obviously do whatever you want! (Changes made to any global configurations inside a context manager will be lost after exiting that context manager?)
 
-## Resources:
+## Resources
 
 - [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html)
 - [`joblib.parallel_config`](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html)
