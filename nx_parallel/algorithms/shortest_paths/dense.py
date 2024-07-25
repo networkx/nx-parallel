@@ -43,7 +43,7 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
     # TODO: handle graph with a prime number of node, as the matrix is not divisible
     total_cores = nxp.cpu_count()
     if blocking_factor is None:
-        blocking_factor = _find_nearest_divisor(n, total_cores)
+        blocking_factor, is_prime = _find_nearest_divisor(n, total_cores)
 
     no_of_primary = matrix_len / blocking_factor
 
@@ -60,7 +60,10 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
             # skip the primary block computed in phase 1
             if block != primary_block:
                 # append the actual indices of the matrix by multiply the block number with the blocking factor
-                block_coord = _block_range(blocking_factor, block)
+                if is_prime and block == no_of_primary - 1:
+                    block_coord = (block * blocking_factor, n)
+                else:
+                    block_coord = _block_range(blocking_factor, block)
                 params.append((block_coord, k))
                 params.append((k, block_coord))
         Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
@@ -72,6 +75,14 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
             for block_j in range(no_of_primary):
                 # skip all block previously computed, so skip every block with primary block value
                 if block_i != primary_block and block_j != primary_block:
+                    if is_prime:
+                        if block_i == no_of_primary - 1:
+                            i_range = (block * blocking_factor, n)
+                            j_range = _block_range(blocking_factor, block_j)
+                        if block_j == no_of_primary - 1:
+                            j_range = (block * blocking_factor, n)
+                            i_range = _block_range(blocking_factor, block_i)
+                else:
                     i_range = _block_range(blocking_factor, block_i)
                     j_range = _block_range(blocking_factor, block_j)
                     params.append((i_range, j_range))
@@ -157,7 +168,11 @@ def _find_nearest_divisor(x, y):
     # Filter out None results
     results = [r for r in results if r is not None]
 
+    if len(results) <= 1:
+        # This check if a number is prime, although repeat process with a non prime number
+        best_divisor, _ = _find_nearest_divisor(x - 1, y)
+        return best_divisor, True
     # Find the best divisor
-    best_divisor, best_result, min_difference = min(results, key=lambda x: x[2])
+    best_divisor, _, _ = min(results, key=lambda x: x[2])
 
-    return best_divisor
+    return best_divisor, False
