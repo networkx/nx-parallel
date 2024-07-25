@@ -20,7 +20,7 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
     Parameters
     ----------
     blocking_factor : number
-        The number used for divinding the adjacency matrix in block.
+        The number used for divinding the adjacency matrix in sub-matrix.
         The default blocking factor is get by finding the optimal value
         for the core available
     """
@@ -40,7 +40,6 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
     n, m = A.shape
     matrix_len = m * n
 
-    # TODO: handle graph with a prime number of node, as the matrix is not divisible
     total_cores = nxp.cpu_count()
     if blocking_factor is None:
         blocking_factor, is_prime = _find_nearest_divisor(n, total_cores)
@@ -146,7 +145,6 @@ def _calculate_divisor(i, x, y):
     return None
 
 
-# TODO add side case for prime number
 def _find_nearest_divisor(x, y):
     """
     find the optimal value for the blocking factor parameter

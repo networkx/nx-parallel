@@ -2,7 +2,7 @@ __all__ = ["closeness_centrality"]
 
 
 def closeness_centrality(
-    G, u=None, distance=None, wf_improved=True, get_chunks="chunks"
+    G, u=None, distance=None, wf_improved=True, blocking_factor=None
 ):
     """The parallel implementation first divide the nodes into chunks and
 
@@ -10,8 +10,8 @@ def closeness_centrality(
 
     Parameters
     ----------
-    get_chunks : str, function (default = "chunks")
-        A function that takes in a list of all the nodes as input and returns an
-        iterable `node_chunks`. The default chunking is done by slicing the
-        `nodes` into `n` chunks, where `n` is the number of CPU cores.
+    blocking_factor : number
+        The number used for divinding the adjacency matrix in sub-matrix.
+        The default blocking factor is get by finding the optimal value
+        for the core available
     """
