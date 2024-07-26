@@ -131,9 +131,8 @@ nxp.betweenness_centrality(H)
 
    ```py
    # using `name` parameter - nx-parallel as an independent package
-   nxp.all_pairs_node_connectivity(
-       H
-   )  # runs the parallel implementation in `connectivity/connectivity`
+   # run the parallel implementation in `connectivity/connectivity`
+   nxp.all_pairs_node_connectivity(H)
    nxp.approximate_all_pairs_node_connectivity(
        H
    )  # runs the parallel implementation in `approximation/connectivity`
