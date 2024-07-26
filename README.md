@@ -28,9 +28,10 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
 <details>
 <summary>Script used to generate the above list</summary>
   
-```
+```py
 import _nx_parallel as nxp
-d = nxp.get_funcs_info() # temporarily add `from .update_get_info import *` to _nx_parallel/__init__.py
+# temporarily add `from .update_get_info import *` to _nx_parallel/__init__.py
+d = nxp.get_funcs_info()
 for func in d:
     print(f"- [{func}]({d[func]['url']})")
 ```
@@ -131,11 +132,12 @@ nxp.betweenness_centrality(H)
 
    ```py
    # using `name` parameter - nx-parallel as an independent package
+
    # run the parallel implementation in `connectivity/connectivity`
    nxp.all_pairs_node_connectivity(H)
-   nxp.approximate_all_pairs_node_connectivity(
-       H
-   )  # runs the parallel implementation in `approximation/connectivity`
+
+   # runs the parallel implementation in `approximation/connectivity`
+   nxp.approximate_all_pairs_node_connectivity(H)
    ```
 
    Also, if you are using nx-parallel as a backend then mentioning the subpackage to which the algorithm belongs is recommended to ensure that networkx dispatches to the correct implementation. For example:
