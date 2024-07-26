@@ -15,7 +15,7 @@ def chunks(iterable, n):
         yield x
 
 
-def cpu_count():
+def cpu_count():  # todo : rename cpu_count to get_n_jobs
     """Returns the number of logical CPUs or cores"""
     # Check if we are running under pytest
     if "PYTEST_CURRENT_TEST" in os.environ:
@@ -29,6 +29,8 @@ def cpu_count():
             return n_cpus + n_jobs + 1
         if n_jobs == 0:
             raise ValueError("n_jobs == 0 in Parallel has no meaning")
+        if n_jobs is None:
+            return 1
         return int(n_jobs)
 
 
