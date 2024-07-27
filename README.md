@@ -86,6 +86,11 @@ Note that for all functions inside `nx_code.py` that do not have an nx-parallel 
 import networkx as nx
 import nx_parallel as nxp
 
+nxp_config = nx.config.backends.parallel
+nxp_config.backend = "loky"
+nxp_config.n_jobs = 4
+nxp_config.verbose = 15
+
 G = nx.path_graph(4)
 H = nxp.ParallelGraph(G)
 

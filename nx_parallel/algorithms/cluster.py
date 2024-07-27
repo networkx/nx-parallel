@@ -1,5 +1,5 @@
 from itertools import combinations, chain
-from joblib import Parallel, delayed
+from joblib import Parallel, delayed, parallel_config
 import nx_parallel as nxp
 
 __all__ = [
@@ -47,7 +47,8 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     else:
         node_iter = list(G.nbunch_iter(nodes))
 
-    n_jobs = nxp.cpu_count()
+    configs = nxp.get_configs()
+    n_jobs = configs["n_jobs"]
 
     if get_chunks == "chunks":
         num_in_chunk = max(len(node_iter) // n_jobs, 1)
@@ -55,10 +56,11 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     else:
         node_iter_chunks = get_chunks(node_iter)
 
-    result = Parallel()(
-        delayed(_compute_clustering_chunk)(node_iter_chunk)
-        for node_iter_chunk in node_iter_chunks
-    )
+    with parallel_config(**configs):
+        result = Parallel()(
+            delayed(_compute_clustering_chunk)(node_iter_chunk)
+            for node_iter_chunk in node_iter_chunks
+        )
     clustering = dict(chain.from_iterable(result))
 
     if nodes in G:

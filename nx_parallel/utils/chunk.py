@@ -1,8 +1,16 @@
 import itertools
 import os
 import networkx as nx
+from dataclasses import asdict
+from _nx_parallel.config import ParallelConfig
 
-__all__ = ["chunks", "cpu_count", "create_iterables"]
+__all__ = [
+    "chunks",
+    "get_n_jobs",
+    "create_iterables",
+    "get_configs",
+    "get_default_configs",
+]
 
 
 def chunks(iterable, n):
@@ -15,22 +23,19 @@ def chunks(iterable, n):
         yield x
 
 
-def cpu_count():  # todo : rename cpu_count to get_n_jobs
-    """Returns the number of logical CPUs or cores"""
-    # Check if we are running under pytest
+def get_n_jobs(n_jobs):
+    """Returns the positive value of `n_jobs` using
+    `joblib.parallel.get_active_backend()`."""
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
     else:
-        from joblib.parallel import get_active_backend
-
-        n_jobs = get_active_backend()[1]
         n_cpus = os.cpu_count()
+        if n_jobs is None:
+            return 1
         if n_jobs < 0:
             return n_cpus + n_jobs + 1
         if n_jobs == 0:
             raise ValueError("n_jobs == 0 in Parallel has no meaning")
-        if n_jobs is None:
-            return 1
         return int(n_jobs)
 
 
@@ -62,3 +67,30 @@ def create_iterables(G, iterator, n_cores, list_of_iterator=None):
         return chunks(list_of_iterator, num_in_chunk)
     else:
         raise ValueError("Invalid iterator type.")
+
+
+def _get_configs(configs):
+    config_dict = asdict(configs)
+    config_dict.update(config_dict["backend_params"])
+    del config_dict["backend_params"]
+    config_dict["n_jobs"] = get_n_jobs(config_dict["n_jobs"])
+    return config_dict
+
+
+def get_configs(config=None):
+    """Returns the current configuration settings for nx_parallel."""
+    config_dict = _get_configs(nx.config.backends.parallel)
+    if config is None:
+        return config_dict
+    elif isinstance(config, list):
+        new_config = {k: config_dict[k] for k in config if k in config_dict}
+        return new_config
+    elif config in config_dict:
+        return config_dict[config]
+    else:
+        raise KeyError(f"Invalid config: {config}")
+
+
+def get_default_configs():
+    c = ParallelConfig()
+    return _get_configs(c)

@@ -1,74 +1,48 @@
-# [WIP] Using Configs
+# Using Configs
 
-## Current state
-
-All nx-parallel functions implement a `joblib.Parallel` internally, and you change the parameters of that using the `joblib.parallel_config` context manager. We recommend using the `joblib.parallel_config` context manager throughout your code.
-
-Example usage:
+nx-parallel algorithms have a `joblib.parallel_config` context manager which has the `joblib.Parallel` instance. You change the config parameters of the internal `joblib.parallel_config` context manager using networkx's context manager, like this:
 
 ```
 >>> import networkx as nx
->>> from joblib import parallel_config
->>> from joblib.parallel import get_active_backend
->>> G = nx.complete_graph(4)
->>> get_active_backend()
-(<joblib._parallel_backends.LokyBackend object at 0x10348a3c0>, None)
->>> with parallel_config(n_jobs=-1):
-...     get_active_backend()
+>>> nx.config # default configs
+NetworkXConfig(backend_priority=[], backends=Config(parallel=ParallelConfig(backend=None, n_jobs=None, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})), cache_converted_graphs=True)
+>>>
+>>> nxp_config = nx.config.backends.parallel
+>>> nxp_config.backend = "loky" # global config
+>>>
+>>> G = nx.complete_graph(20)
+>>> # using context manager
+>>> with nxp_config(n_jobs=4): # backend -> loky , n_jobs -> 4 , verbose -> 0
 ...     nx.square_clustering(G, backend="parallel")
-...     with parallel_config(n_jobs=3):
-...         get_active_backend()
+...     nxp_config
+...     print()
+...     with nxp_config(n_jobs=3, verbose=15): # backend -> loky , n_jobs -> 3 , verbose -> 15
 ...         nx.square_clustering(G, backend="parallel")
-...     get_active_backend()
+...         nxp_config
+...         print()
+...         with nxp_config(verbose=0): # backend -> loky , n_jobs -> 3 , verbose -> 0
+...             nx.square_clustering(G, backend="parallel")
+...             nxp_config
 ...
-(<joblib._parallel_backends.LokyBackend object at 0x104a24b30>, -1)
-{0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0}
-(<joblib._parallel_backends.LokyBackend object at 0x102a99a60>, 3)
-{0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0}
-(<joblib._parallel_backends.LokyBackend object at 0x10348a3c0>, -1)
->>> get_active_backend()
-(<joblib._parallel_backends.LokyBackend object at 0x102a37920>, None)
+{0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0}
+ParallelConfig(backend='loky', n_jobs=4, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})
+
+[Parallel(n_jobs=3)]: Using backend LokyBackend with 3 concurrent workers.
+[Parallel(n_jobs=3)]: Done   1 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=3)]: Batch computation too fast (0.09458684921264648s.) Setting batch_size=2.
+[Parallel(n_jobs=3)]: Done   2 out of   4 | elapsed:    0.1s remaining:    0.1s
+[Parallel(n_jobs=3)]: Done   4 out of   4 | elapsed:    0.1s finished
+{0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0}
+ParallelConfig(backend='loky', n_jobs=3, verbose=15, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})
+
+{0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0}
+ParallelConfig(backend='loky', n_jobs=3, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})
+>>>
 ```
-
-## WIP
-
-- Sync `nx.config.backends.parallel` with default configs in `joblib.parallel_config`, so, something like this is possible. Note that here `nx_parallel_config` is a context manager that behaves almost like `joblib.parallel_config` except that its default configs (only for the outermost config manager) are the configs passed in by the user in the `nx.config.backends.parallel` dataclass.
-
-```py
-nx.config.backends.parallel.n_jobs = 3
-nx.config.backends.parallel.backend = "loky"
-nx.config.backends.parallel.verbose = 15
-
-nx.square_clustering(
-    G, backend="parallel"
-)  # n_jobs --> 3, backend --> loky, verbose --> 15
-
-with nx_parallel_config(n_jobs=4):
-    get_active_backend()
-    nx.square_clustering(
-        G, backend="parallel"
-    )  # n_jobs --> 4, backend --> loky, verbose --> 15
-    with nx_parallel_config(verbose=0):
-        get_active_backend()
-        nx.square_clustering(
-            G, backend="parallel"
-        )  # n_jobs --> 4, backend --> loky, verbose --> 0
-        with nx_parallel_config(n_jobs=5):
-            get_active_backend()
-            nx.square_clustering(
-                G, backend="parallel"
-            )  # n_jobs --> 5, backend --> loky, verbose --> 0
-        get_active_backend()
-    get_active_backend()
-get_active_backend()
-```
-
-## Notes
-
-- Don't recommend changing global configuration within a context manager, but you can obviously do whatever you want! (Changes made to any global configurations inside a context manager will be lost after exiting that context manager?)
 
 ## Resources
 
+- [NetworkX's Config docs](https://networkx.org/documentation/latest/reference/backends.html#module-networkx.utils.configs)
 - [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html)
 - [`joblib.parallel_config`](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html)
-- Using a distributed backend - [docs](https://joblib.readthedocs.io/en/latest/auto_examples/parallel/distributed_backend_simple.html#sphx-glr-auto-examples-parallel-distributed-backend-simple-py)
+- Using a distributed backends - [docs](https://joblib.readthedocs.io/en/latest/auto_examples/parallel/distributed_backend_simple.html#sphx-glr-auto-examples-parallel-distributed-backend-simple-py)
