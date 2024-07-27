@@ -5,7 +5,7 @@ from dataclasses import asdict
 
 __all__ = [
     "chunks",
-    "get_n_jobs",
+    "cpu_count",
     "create_iterables",
     "get_configs",
 ]
@@ -21,7 +21,7 @@ def chunks(iterable, n):
         yield x
 
 
-def get_n_jobs(n_jobs):
+def cpu_count(n_jobs):
     """Returns the positive value of `n_jobs` using
     `joblib.parallel.get_active_backend()`."""
     if "PYTEST_CURRENT_TEST" in os.environ:
@@ -71,7 +71,7 @@ def _get_configs(configs):
     config_dict = asdict(configs)
     config_dict.update(config_dict["backend_params"])
     del config_dict["backend_params"]
-    config_dict["n_jobs"] = get_n_jobs(config_dict["n_jobs"])
+    config_dict["n_jobs"] = cpu_count(config_dict["n_jobs"])
     return config_dict
 
 

@@ -158,7 +158,7 @@ def get_info():
                 "additional_docs": "Divides an iterable into chunks of size n",
                 "additional_parameters": None,
             },
-            "get_n_jobs": {
+            "cpu_count": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L25",
                 "additional_docs": "Returns the positive value of `n_jobs` using `joblib.parallel.get_active_backend()`.",
                 "additional_parameters": None,
