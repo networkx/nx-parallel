@@ -72,6 +72,8 @@ def _get_configs(configs):
     config_dict.update(config_dict["backend_params"])
     del config_dict["backend_params"]
     config_dict["n_jobs"] = cpu_count(config_dict["n_jobs"])
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        config_dict["backend"] = "loky"
     return config_dict
 
 
