@@ -154,17 +154,17 @@ def get_info():
                 },
             },
             "chunks": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L16",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L15",
                 "additional_docs": "Divides an iterable into chunks of size n",
                 "additional_parameters": None,
             },
             "get_n_jobs": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L26",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L25",
                 "additional_docs": "Returns the positive value of `n_jobs` using `joblib.parallel.get_active_backend()`.",
                 "additional_parameters": None,
             },
             "create_iterables": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L42",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L41",
                 "additional_docs": "Creates an iterable of function inputs for parallel computation based on the provided iterator type.",
                 "additional_parameters": {
                     "G : NetworkX graph": "iterator : str Type of iterator. Valid values are 'node', 'edge', 'isolate'",
@@ -172,13 +172,8 @@ def get_info():
                 },
             },
             "get_configs": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L80",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L79",
                 "additional_docs": "Returns the current configuration settings for nx_parallel.",
-                "additional_parameters": None,
-            },
-            "get_default_configs": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L94",
-                "additional_docs": "No docstring found.",
                 "additional_parameters": None,
             },
         },

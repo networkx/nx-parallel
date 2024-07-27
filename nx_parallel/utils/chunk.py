@@ -2,14 +2,12 @@ import itertools
 import os
 import networkx as nx
 from dataclasses import asdict
-from _nx_parallel.config import ParallelConfig
 
 __all__ = [
     "chunks",
     "get_n_jobs",
     "create_iterables",
     "get_configs",
-    "get_default_configs",
 ]
 
 
@@ -89,8 +87,3 @@ def get_configs(config=None):
         return config_dict[config]
     else:
         raise KeyError(f"Invalid config: {config}")
-
-
-def get_default_configs():
-    c = ParallelConfig()
-    return _get_configs(c)
