@@ -12,8 +12,8 @@ __all__ = [
 
 def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None):
     """
-    Parallel implementation of Floyd warshall using the tiled floyd warshall algorithm from
-    'All-Pairs Shortest-Paths for Large Graphs on the GPU, Authors: Gary J. Katz and Joseph T. Kider Jr'
+    Parallel implementation of Floyd warshall using the tiled floyd warshall algorithm  [1]_.
+
 
     networkx.floyd_warshall_numpy : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.dense.floyd_warshall_numpy.html
 
@@ -23,6 +23,12 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
         The number used for divinding the adjacency matrix in sub-matrix.
         The default blocking factor is get by finding the optimal value
         for the core available
+
+    References
+    ----------
+    .. [1] Gary J. Katz and Joseph T. Kider Jr:
+    All-Pairs Shortest-Paths for Large Graphs on the GPU, 2008.
+
     """
 
     if nodelist is not None:
@@ -65,7 +71,7 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
                     block_coord = _block_range(blocking_factor, block)
                 params.append((block_coord, k))
                 params.append((k, block_coord))
-        Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
+        A = Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
         # Phase 3: Compute remaining
@@ -85,7 +91,7 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
                     i_range = _block_range(blocking_factor, block_i)
                     j_range = _block_range(blocking_factor, block_j)
                     params.append((i_range, j_range))
-        Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
+        A = Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
 
@@ -130,12 +136,10 @@ def _block_range(blocking_factor, block):
 
 def _calculate_divisor(i, x, y):
     if x % i == 0:
-        divisor1 = i
-        result1 = x // i
+        divisor1, result2 = i
+        result1, divisor2 = x // i
         difference1 = abs((result1 - 1) ** 2 - y)
 
-        divisor2 = x // i
-        result2 = i
         difference2 = abs((result2 - 1) ** 2 - y)
 
         if difference1 < difference2:
