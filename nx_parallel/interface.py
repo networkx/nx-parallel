@@ -3,6 +3,7 @@ from nx_parallel.algorithms.centrality.betweenness import (
     betweenness_centrality,
     edge_betweenness_centrality,
 )
+from nx_parallel.algorithms.centrality.closeness import closeness_centrality
 from nx_parallel.algorithms.shortest_paths.generic import all_pairs_all_shortest_paths
 from nx_parallel.algorithms.shortest_paths.weighted import (
     all_pairs_dijkstra,
@@ -16,6 +17,7 @@ from nx_parallel.algorithms.shortest_paths.unweighted import (
     all_pairs_shortest_path,
     all_pairs_shortest_path_length,
 )
+from nx_parallel.algorithms.shortest_paths.dense import floyd_warshall_numpy
 from nx_parallel.algorithms.efficiency_measures import local_efficiency
 from nx_parallel.algorithms.isolate import number_of_isolates
 from nx_parallel.algorithms.tournament import (
@@ -78,6 +80,7 @@ class BackendInterface:
     # Centrality
     betweenness_centrality = betweenness_centrality
     edge_betweenness_centrality = edge_betweenness_centrality
+    closeness_centrality = closeness_centrality
 
     # Efficiency
     local_efficiency = local_efficiency
@@ -92,6 +95,9 @@ class BackendInterface:
     all_pairs_bellman_ford_path_length = all_pairs_bellman_ford_path_length
     all_pairs_bellman_ford_path = all_pairs_bellman_ford_path
     johnson = johnson
+
+    # Shortest Paths : dense
+    floyd_warshall_numpy = floyd_warshall_numpy
 
     # Clustering
     square_clustering = square_clustering
