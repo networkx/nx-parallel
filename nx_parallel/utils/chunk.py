@@ -80,9 +80,6 @@ def get_config(config=None):
     config_dict = _get_config(nx.config.backends.parallel)
     if config is None:
         return config_dict
-    elif isinstance(config, list):
-        new_config = {k: config_dict[k] for k in config if k in config_dict}
-        return new_config
     elif config in config_dict:
         return config_dict[config]
     else:
