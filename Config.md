@@ -1,48 +1,83 @@
 # Using Configurations in nx-parallel
 
-nx-parallel algorithms have a `joblib.parallel_config` context manager which has the `joblib.Parallel` instance. You change the config parameters of the internal `joblib.parallel_config` context manager using networkx's context manager, like this:
+nx-parallel algorithms internally use the [`joblib.parallel_config`](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) context manager. You can change the configuration parameters of this internal `joblib.parallel_config` context manager using [NetworkX's config](https://networkx.org/documentation/latest/reference/backends.html#module-networkx.utils.configs) context manager. The internal `joblib.parallel_config` context manager uses the [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html) call, which is responsible for all the parallel process creation.
 
-```
->>> import networkx as nx
->>> nx.config # default config
-NetworkXConfig(backend_priority=[], backends=Config(parallel=ParallelConfig(backend=None, n_jobs=None, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})), cache_converted_graphs=True)
->>>
->>> nxp_config = nx.config.backends.parallel
->>> nxp_config.backend = "loky" # global config
->>>
->>> G = nx.complete_graph(20)
->>> # using context manager
->>> with nxp_config(n_jobs=4): # backend -> loky , n_jobs -> 4 , verbose -> 0
-...     nx.square_clustering(G, backend="parallel")
-...     nxp_config
-...     print()
-...     with nxp_config(n_jobs=3, verbose=15): # backend -> loky , n_jobs -> 3 , verbose -> 15
-...         nx.square_clustering(G, backend="parallel")
-...         nxp_config
-...         print()
-...         with nxp_config(verbose=0): # backend -> loky , n_jobs -> 3 , verbose -> 0
-...             nx.square_clustering(G, backend="parallel")
-...             nxp_config
-...
-{0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0}
-ParallelConfig(backend='loky', n_jobs=4, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})
+## Default Configuration
 
-[Parallel(n_jobs=3)]: Using backend LokyBackend with 3 concurrent workers.
-[Parallel(n_jobs=3)]: Done   1 tasks      | elapsed:    0.1s
-[Parallel(n_jobs=3)]: Batch computation too fast (0.09458684921264648s.) Setting batch_size=2.
-[Parallel(n_jobs=3)]: Done   2 out of   4 | elapsed:    0.1s remaining:    0.1s
-[Parallel(n_jobs=3)]: Done   4 out of   4 | elapsed:    0.1s finished
-{0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0}
-ParallelConfig(backend='loky', n_jobs=3, verbose=15, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})
+When you import NetworkX, the default configurations for all the installed backends are set as shown below:
 
-{0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0}
-ParallelConfig(backend='loky', n_jobs=3, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})
->>>
+```python
+import networkx as nx
+
+nx.config
 ```
 
-## Resources
+Output:
 
-- [NetworkX's Config docs](https://networkx.org/documentation/latest/reference/backends.html#module-networkx.utils.configs)
-- [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html)
-- [`joblib.parallel_config`](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html)
-- Using a distributed backends - [docs](https://joblib.readthedocs.io/en/latest/auto_examples/parallel/distributed_backend_simple.html#sphx-glr-auto-examples-parallel-distributed-backend-simple-py)
+```
+NetworkXConfig(backend_priority=[], backends=Config(parallel=ParallelConfig(backend='loky', n_jobs=None, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})), cache_converted_graphs=True)
+```
+
+### Note
+
+The default settings of `joblib.parallel_config` are the same as the default configs in the `ParallelConfig` class, except for the `backend` config, which is `None` in `joblib.parallel_config` and `"loky"` in `ParallelConfig`. This prevents errors when using the NetworkX config, as the internal `joblib.Parallel`'s `backend` default is `"loky"` when not specified. This consistency in user experience is maintained for ease of use.
+
+## Modifying Configuration
+
+The `ParallelConfig` class inherits from NetworkX's `Config` class. You can use this as a `dataclass` or as a context manager to change the nx-parallel configurations.
+
+### As a config variable
+
+You can directly set the desired parameters:
+
+```python
+nxp_config = nx.config.backends.parallel
+nxp_config.n_jobs = 6
+nxp_config.verbose = 15
+
+G = nx.complete_graph(20)
+
+# backend -> loky, n_jobs -> 6, verbose -> 15
+nx.square_clustering(G, backend="parallel")
+```
+
+### As a Context Manager
+
+You can use the context manager to temporarily change configuration parameters for specific code blocks:
+
+```python
+# in continuation with the above code block
+
+with nxp_config(n_jobs=4):
+    # backend -> loky, n_jobs -> 4, verbose -> 15
+    nx.square_clustering(G, backend="parallel")
+    with nxp_config(backend="threading", verbose=0):
+        # backend -> threading, n_jobs -> 4, verbose -> 0
+        nx.betweenness_centrality(G, backend="parallel")
+        with nxp_config(n_jobs=8):
+            # backend -> threading, n_jobs -> 8, verbose -> 0
+            nx.number_of_isolates(G, backend="parallel")
+```
+
+From the comments, you can observe how the context managers acquire the configurations from the outer context manager or the global configurations when the context manager is not inside any context manager.
+
+Note that using `joblib.parallel_config` will output unexpected results. We recommend using the NetworkX's config context manager, as it is the same as the `joblib.parallel_config` context manager because it only provides the configurations to the internal `joblib.parallel_config` context manager.
+
+Also, modifying the global config inside a context manager will update the configuration inside as well as outside the context manager permanently, as shown below:
+
+```python
+nxp_config.n_jobs = 6
+
+nx.square_clustering(G, backend="parallel")  # n_jobs -> 6
+
+with nxp_config(n_jobs=4):
+    nx.square_clustering(G, backend="parallel")  # n_jobs -> 4
+    nxp_config.n_jobs = 8
+    nx.square_clustering(G, backend="parallel")  # n_jobs -> 8
+
+nx.square_clustering(G, backend="parallel")  # n_jobs -> 8
+```
+
+Please feel free to create issues or PRs if you want to improve this documentation or if you have any feedback.
+
+Thank you :)
