@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class ParallelConfig(Config):
-    backend: str = None
+    backend: str = "loky"
     n_jobs: int = None
     verbose: int = 0
     temp_folder: str = None
