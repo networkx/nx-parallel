@@ -1,8 +1,14 @@
 import itertools
 import os
 import networkx as nx
+from dataclasses import asdict
 
-__all__ = ["chunks", "cpu_count", "create_iterables"]
+__all__ = [
+    "chunks",
+    "cpu_count",
+    "create_iterables",
+    "get_config",
+]
 
 
 def chunks(iterable, n):
@@ -15,12 +21,20 @@ def chunks(iterable, n):
         yield x
 
 
-def cpu_count():
-    """Returns the number of logical CPUs or cores"""
-    # Check if we are running under pytest
+def cpu_count(n_jobs=None):
+    """Returns the positive value of `n_jobs` using
+    `joblib.parallel.get_active_backend()`."""
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
-    return os.cpu_count()
+    else:
+        n_cpus = os.cpu_count()
+        if n_jobs is None:
+            return 1
+        if n_jobs < 0:
+            return n_cpus + n_jobs + 1
+        if n_jobs == 0:
+            raise ValueError("n_jobs == 0 in Parallel has no meaning")
+        return int(n_jobs)
 
 
 def create_iterables(G, iterator, n_cores, list_of_iterator=None):
@@ -51,3 +65,22 @@ def create_iterables(G, iterator, n_cores, list_of_iterator=None):
         return chunks(list_of_iterator, num_in_chunk)
     else:
         raise ValueError("Invalid iterator type.")
+
+
+def _get_config(config):
+    config_dict = asdict(config)
+    config_dict.update(config_dict["backend_params"])
+    del config_dict["backend_params"]
+    config_dict["n_jobs"] = cpu_count(config_dict["n_jobs"])
+    return config_dict
+
+
+def get_config(config=None):
+    """Returns the current configuration settings for nx_parallel."""
+    config_dict = _get_config(nx.config.backends.parallel)
+    if config is None:
+        return config_dict
+    elif config in config_dict:
+        return config_dict[config]
+    else:
+        raise KeyError(f"Invalid config: {config}")
