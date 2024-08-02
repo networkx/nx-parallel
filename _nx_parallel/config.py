@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 __all__ = [
     "ParallelConfig",
-    "_configs",
+    "_config",
 ]
 
 
@@ -22,4 +22,4 @@ class ParallelConfig(Config):
     backend_params: dict = field(default_factory=dict)
 
 
-_configs = ParallelConfig()
+_config = ParallelConfig()

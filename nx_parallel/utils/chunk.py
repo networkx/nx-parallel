@@ -7,7 +7,7 @@ __all__ = [
     "chunks",
     "cpu_count",
     "create_iterables",
-    "get_configs",
+    "get_config",
 ]
 
 
@@ -67,8 +67,8 @@ def create_iterables(G, iterator, n_cores, list_of_iterator=None):
         raise ValueError("Invalid iterator type.")
 
 
-def _get_configs(configs):
-    config_dict = asdict(configs)
+def _get_config(config):
+    config_dict = asdict(config)
     config_dict.update(config_dict["backend_params"])
     del config_dict["backend_params"]
     config_dict["n_jobs"] = cpu_count(config_dict["n_jobs"])
@@ -77,9 +77,9 @@ def _get_configs(configs):
     return config_dict
 
 
-def get_configs(config=None):
+def get_config(config=None):
     """Returns the current configuration settings for nx_parallel."""
-    config_dict = _get_configs(nx.config.backends.parallel)
+    config_dict = _get_config(nx.config.backends.parallel)
     if config is None:
         return config_dict
     elif isinstance(config, list):

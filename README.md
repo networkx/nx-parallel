@@ -130,7 +130,7 @@ nxp.betweenness_centrality(H)
 # output : {0: 0.0, 1: 0.6666666666666666, 2: 0.6666666666666666, 3: 0.0}
 ```
 
-For more on how to play with configs refer [Config.md](./Config.md)!
+For more on how to play with configurations in nx-parallel refer [Config.md](./Config.md)!
 
 ### Notes
 

@@ -1,10 +1,10 @@
-# Using Configs
+# Using Configurations in nx-parallel
 
 nx-parallel algorithms have a `joblib.parallel_config` context manager which has the `joblib.Parallel` instance. You change the config parameters of the internal `joblib.parallel_config` context manager using networkx's context manager, like this:
 
 ```
 >>> import networkx as nx
->>> nx.config # default configs
+>>> nx.config # default config
 NetworkXConfig(backend_priority=[], backends=Config(parallel=ParallelConfig(backend=None, n_jobs=None, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})), cache_converted_graphs=True)
 >>>
 >>> nxp_config = nx.config.backends.parallel
