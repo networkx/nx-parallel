@@ -1,47 +1,91 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+build-backend = 'setuptools.build_meta'
+requires = ['setuptools>=61.2']
 
 [project]
 name = "nx-parallel"
-authors = [
-    {name = "NetworkX Devs", email = "networkx-core@discuss.scientific-python.org"},
-]
-description = "An experimental parallel backend for NetworkX"
+description = "A parallel backend for NetworkX. It uses joblib to run NetworkX algorithms on multiple CPU cores."
 readme = "README.md"
 requires-python = ">=3.10"
-keywords = ["networkx", "algorithms", "parallel"]
+dynamic = ['version']
+keywords = ["networkx", "graphs", "algorithms", "parallel"]
 license = {text = "BSD-3-Clause"}
 classifiers = [
-    "Programming Language :: Python :: 3",
+    'Intended Audience :: Developers',
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3 :: Only',
 ]
+
 dependencies = [
-    "networkx",
-    "joblib"
+    "networkx>=3.3",
+    "joblib>=1.4.2"
 ]
-dynamic = ["version"]
 
-[tool.hatch.version]
-path = "nx_parallel/__init__.py"
+[[project.authors]]
+name = "NetworkX Devs"
+email = "networkx-core@discuss.scientific-python.org"
 
-[project.optional-dependencies]
-developer = [
-    'pre-commit',
-    'pytest',
-]
+[[project.maintainers]]
+name = 'NetworkX Developers'
+email = 'networkx-discuss@googlegroups.com'
+
+[project.urls]
+"Bug Tracker" = 'https://github.com/networkx/nx-parallel/issues'
+"Source Code" = 'https://github.com/networkx/nx-parallel'
 
 [project.entry-points."networkx.backends"]
-parallel = "nx_parallel.interface:Dispatcher"
+parallel = "nx_parallel.interface:BackendInterface"
 
 [project.entry-points."networkx.backend_info"]
 parallel = "_nx_parallel:get_info"
 
-[tool.hatch.build.targets.wheel]
-packages = ["_nx_parallel", "nx_parallel",]
+[project.optional-dependencies]
+developer = [
+    'pre-commit',
+]
+test = [
+    'pytest>=7.2',
+    'numpy>=1.23',
+    'scipy>=1.9,!=1.11.0,!=1.11.1',
+]
+
+[tool.setuptools]
+zip-safe = false
+include-package-data = false
+packages = [
+    'nx_parallel',
+    '_nx_parallel',
+    'nx_parallel.algorithms',
+    'nx_parallel.algorithms.approximation',
+    'nx_parallel.algorithms.bipartite',
+    'nx_parallel.algorithms.centrality',
+    'nx_parallel.algorithms.connectivity',
+    'nx_parallel.algorithms.shortest_paths',
+    'nx_parallel.utils',
+]
+
+platforms = [
+    'Linux',
+    'Mac OSX',
+    'Windows',
+    'Unix',
+]
+
+[tool.setuptools.dynamic.version]
+attr = 'nx_parallel.__version__'
 
 [tool.ruff]
 line-length = 88
 target-version = 'py310'
 
-[tool.ruff.lint]
-per-file-ignores = { "__init__.py" = ['I', 'F403'] }
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ['I', 'F403']
+
+[tool.ruff.format]
+docstring-code-format = true
