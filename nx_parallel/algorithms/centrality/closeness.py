@@ -23,6 +23,9 @@ def closeness_centrality(
         The default blocking factor is get by finding the optimal value
         for the core available
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     if G.is_directed():
         G = G.reverse()  # create a reversed graph view
 

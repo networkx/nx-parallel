@@ -38,6 +38,9 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
                 "If you wanted a subgraph of G use G.subgraph(nodelist)"
             )
 
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     # To handle cases when an edge has weight=0, we must make sure that
     # nonedges are not given the value 0 as well.
     A = nx.to_numpy_array(
