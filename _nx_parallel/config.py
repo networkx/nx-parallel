@@ -2,11 +2,6 @@ from networkx.utils.configs import Config
 from typing import Union
 from dataclasses import dataclass, field
 
-__all__ = [
-    "ParallelConfig",
-    "_config",
-]
-
 
 @dataclass
 class ParallelConfig(Config):
