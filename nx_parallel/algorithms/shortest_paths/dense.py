@@ -30,6 +30,8 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
     All-Pairs Shortest-Paths for Large Graphs on the GPU, 2008.
 
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
     if nodelist is not None:
         if not (len(nodelist) == len(G) == len(set(nodelist))):
@@ -38,26 +40,21 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
                 "If you wanted a subgraph of G use G.subgraph(nodelist)"
             )
 
-    if hasattr(G, "graph_object"):
-        G = G.graph_object
-
     # To handle cases when an edge has weight=0, we must make sure that
     # nonedges are not given the value 0 as well.
     A = nx.to_numpy_array(
         G, nodelist, multigraph_weight=min, weight=weight, nonedge=np.inf
     )
-    n, m = A.shape
-    matrix_len = m * n
+    n, _ = A.shape
 
     total_cores = nxp.cpu_count()
     if blocking_factor is None:
         blocking_factor, is_prime = _find_nearest_divisor(n, total_cores)
-
-    no_of_primary = matrix_len / blocking_factor
+    no_of_primary = n // blocking_factor
 
     for primary_block in range(no_of_primary):
-        k_start = (primary_block * matrix_len) // no_of_primary
-        k_end = k_start + (matrix_len // no_of_primary) - 1
+        k_start = (primary_block * n) // no_of_primary
+        k_end = k_start + (n // no_of_primary) - 1
         k = (k_start, k_end)
         # Phase 1: Compute Primary block
         # Execute Normal floyd warshall for the primary block submatrix
@@ -134,13 +131,13 @@ def _partial_floyd_warshall_numpy(A, k_iteration, i_iteration, j_iteration):
 
 
 def _block_range(blocking_factor, block):
-    return (block * blocking_factor, (block + 1) * blocking_factor)
+    return (block * blocking_factor, (block + 1) * blocking_factor - 1)
 
 
 def _calculate_divisor(i, x, y):
     if x % i == 0:
-        divisor1, result2 = i
-        result1, divisor2 = x // i
+        divisor1 = result2 = i
+        result1 = divisor2 = x // i
         difference1 = abs((result1 - 1) ** 2 - y)
 
         difference2 = abs((result2 - 1) ** 2 - y)
