@@ -24,7 +24,7 @@ jobs:
       - name: Install packages
         run: |
           pip install --upgrade pip
-          pip install pre-commit joblib networkx ruff==0.1.8
+          pip install pre-commit joblib networkx ruff==0.1.8 black=1.16.0
           pre-commit install
 
       - name: Lint
