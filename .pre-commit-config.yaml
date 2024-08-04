@@ -6,19 +6,23 @@ repos:
     rev: 1.16.0
     hooks:
       - id: blacken-docs
+        exclude: _nx_parallel/__init__.py
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.1.0
     hooks:
       - id: prettier
         files: \.(html|md|toml|yml|yaml)
         args: [--prose-wrap=preserve]
+        exclude: _nx_parallel/__init__.py
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.1.8
     hooks:
       - id: ruff
         args:
           - --fix
+        exclude: _nx_parallel/__init__.py
       - id: ruff-format
+        exclude: _nx_parallel/__init__.py
   - repo: local
     hooks:
       - id: update-get_info
