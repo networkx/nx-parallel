@@ -8,7 +8,7 @@ __all__ = [
 
 
 def square_clustering(G, nodes=None, get_chunks="chunks"):
-    """The nodes are chunked into `node_chunks` and then the square clustering
+    """blah The nodes are chunked into `node_chunks` and then the square clustering
     coefficient for all `node_chunks` are computed in parallel over all available
     CPU cores.
 
