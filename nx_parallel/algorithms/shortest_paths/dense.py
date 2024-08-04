@@ -58,7 +58,8 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
         k = (k_start, k_end)
         # Phase 1: Compute Primary block
         # Execute Normal floyd warshall for the primary block submatrix
-        A = _partial_floyd_warshall_numpy(A, k, k, k)
+        _partial_floyd_warshall_numpy(A, k, k, k)
+        print(A.shape)
         # Phase 2: Compute Cross block
         params = []
         for block in range(no_of_primary):
@@ -71,7 +72,8 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
                     block_coord = _block_range(blocking_factor, block)
                 params.append((block_coord, k))
                 params.append((k, block_coord))
-        A = Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
+        print(params)
+        Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
         # Phase 3: Compute remaining
@@ -91,7 +93,7 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
                     i_range = _block_range(blocking_factor, block_i)
                     j_range = _block_range(blocking_factor, block_j)
                     params.append((i_range, j_range))
-        A = Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
+        Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
 
@@ -122,12 +124,10 @@ def _partial_floyd_warshall_numpy(A, k_iteration, i_iteration, j_iteration):
     A : 2D numpy.ndarray
         adjacency matrix updated after floyd warshall
     """
-
-    for k in range(k_iteration[0], k_iteration[1] + 1):
-        for i in range(i_iteration[0], i_iteration[1] + 1):
-            for j in range(j_iteration[0], j_iteration[1] + 1):
+    for k in range(k_iteration[0], k_iteration[1]):
+        for i in range(i_iteration[0], i_iteration[1]):
+            for j in range(j_iteration[0], j_iteration[1]):
                 A[i][j] = np.minimum(A[i][j], (A[i][k] + A[k][j]))
-    return A
 
 
 def _block_range(blocking_factor, block):
