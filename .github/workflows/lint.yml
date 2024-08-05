@@ -28,5 +28,6 @@ jobs:
 
       - name: Lint
         run: |
+          pip install ruff==0.1.8
           pre-commit install
           pre-commit run --all-files --show-diff-on-failure --color always
