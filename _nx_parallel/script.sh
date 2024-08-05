@@ -3,7 +3,6 @@
 python3 _nx_parallel/update_get_info.py
 
 ruff format "_nx_parallel/temp__init__.py"
-black "_nx_parallel/temp__init__.py"
 
 # Check if there's any difference between the original file and the formatted one
 if diff -q "_nx_parallel/__init__.py" "_nx_parallel/temp__init__.py" >/dev/null; then
