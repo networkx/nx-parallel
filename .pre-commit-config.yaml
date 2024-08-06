@@ -8,16 +8,13 @@ repos:
       - id: prettier
         files: \.(html|md|toml|yml|yaml)
         args: [--prose-wrap=preserve]
-        exclude: _nx_parallel/__init__.py
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.1.8
     hooks:
       - id: ruff
         args:
           - --fix
-        exclude: _nx_parallel/__init__.py
       - id: ruff-format
-        exclude: _nx_parallel/__init__.py
   - repo: local
     hooks:
       - id: update-get_info
