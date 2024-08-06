@@ -20,7 +20,7 @@ def get_funcs_info():
 
     nx_parallel_dir = os.path.join(os.getcwd(), "nx_parallel")
     for root, dirs, files in os.walk(nx_parallel_dir):
-        for file in files:
+        for file in sorted(files):
             if (
                 file.endswith(".py")
                 and file != "__init__.py"
@@ -28,7 +28,7 @@ def get_funcs_info():
             ):
                 path = os.path.join(root, file)
                 d = extract_docstrings_from_file(path)
-                for func in d:
+                for func in sorted(d):
                     funcs[func] = {
                         "url": get_url(path, func),
                         "additional_docs": extract_add_docs(d[func]),
