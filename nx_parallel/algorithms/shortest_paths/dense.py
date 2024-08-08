@@ -35,7 +35,7 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
 
     if nodelist is not None:
         if not (len(nodelist) == len(G) == len(set(nodelist))):
-            raise nxp.NetworkXError(
+            raise nx.NetworkXError(
                 "nodelist must contain every node in G with no repeats."
                 "If you wanted a subgraph of G use G.subgraph(nodelist)"
             )
@@ -46,6 +46,7 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
         G, nodelist, multigraph_weight=min, weight=weight, nonedge=np.inf
     )
     n, _ = A.shape
+    np.fill_diagonal(A, 0)  # diagonal elements should be zero
 
     total_cores = nxp.cpu_count()
     if blocking_factor is None:
@@ -55,24 +56,27 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
     for primary_block in range(no_of_primary):
         k_start = (primary_block * n) // no_of_primary
         k_end = k_start + (n // no_of_primary) - 1
+        if is_prime and primary_block == no_of_primary - 1:
+            k_end = k_end + (n % no_of_primary)
         k = (k_start, k_end)
         # Phase 1: Compute Primary block
         # Execute Normal floyd warshall for the primary block submatrix
         _partial_floyd_warshall_numpy(A, k, k, k)
-        print(A.shape)
+
         # Phase 2: Compute Cross block
+
         params = []
         for block in range(no_of_primary):
             # skip the primary block computed in phase 1
             if block != primary_block:
                 # append the actual indices of the matrix by multiply the block number with the blocking factor
                 if is_prime and block == no_of_primary - 1:
-                    block_coord = (block * blocking_factor, n)
+                    block_coord = (block * blocking_factor, n - 1)
                 else:
                     block_coord = _block_range(blocking_factor, block)
                 params.append((block_coord, k))
                 params.append((k, block_coord))
-        print(params)
+
         Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
@@ -81,18 +85,16 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
         for block_i in range(no_of_primary):
             for block_j in range(no_of_primary):
                 # skip all block previously computed, so skip every block with primary block value
-                if block_i != primary_block and block_j != primary_block:
-                    if is_prime:
-                        if block_i == no_of_primary - 1:
-                            i_range = (block * blocking_factor, n)
-                            j_range = _block_range(blocking_factor, block_j)
-                        if block_j == no_of_primary - 1:
-                            j_range = (block * blocking_factor, n)
-                            i_range = _block_range(blocking_factor, block_i)
-                else:
+                if block_i != primary_block or block_j != primary_block:
                     i_range = _block_range(blocking_factor, block_i)
                     j_range = _block_range(blocking_factor, block_j)
+                    if is_prime:
+                        if block_i == no_of_primary - 1:
+                            i_range = (block * blocking_factor, n - 1)
+                        if block_j == no_of_primary - 1:
+                            j_range = (block * blocking_factor, n - 1)
                     params.append((i_range, j_range))
+
         Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
@@ -124,9 +126,9 @@ def _partial_floyd_warshall_numpy(A, k_iteration, i_iteration, j_iteration):
     A : 2D numpy.ndarray
         adjacency matrix updated after floyd warshall
     """
-    for k in range(k_iteration[0], k_iteration[1]):
-        for i in range(i_iteration[0], i_iteration[1]):
-            for j in range(j_iteration[0], j_iteration[1]):
+    for k in range(k_iteration[0], k_iteration[1] + 1):
+        for i in range(i_iteration[0], i_iteration[1] + 1):
+            for j in range(j_iteration[0], j_iteration[1] + 1):
                 A[i][j] = np.minimum(A[i][j], (A[i][k] + A[k][j]))
 
 
