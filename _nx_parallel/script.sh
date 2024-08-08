@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python _nx_parallel/update_get_info.py
+python3 _nx_parallel/update_get_info.py
 
 ruff format "_nx_parallel/temp__init__.py"
 
