@@ -108,7 +108,6 @@ import networkx as nx
 import nx_parallel as nxp
 
 nxp_config = nx.config.backends.parallel
-nxp_config.backend = "loky"
 nxp_config.n_jobs = 4
 nxp_config.verbose = 15
 
@@ -126,11 +125,9 @@ nxp.betweenness_centrality(G)
 
 # method 4 : using nx-parallel implementation with ParallelGraph object
 nxp.betweenness_centrality(H)
-
-# output : {0: 0.0, 1: 0.6666666666666666, 2: 0.6666666666666666, 3: 0.0}
 ```
 
-For more on how to play with configurations in nx-parallel refer [Config.md](./Config.md)!
+In nx-parallel, by default the `loky` backend is used and all the CPU cores are used. For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md)!
 
 ### Notes
 

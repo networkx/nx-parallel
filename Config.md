@@ -20,7 +20,7 @@ NetworkXConfig(backend_priority=[], backends=Config(parallel=ParallelConfig(back
 
 ### Note
 
-The default settings of `joblib.parallel_config` are the same as the default configs in the `ParallelConfig` class, except for the `backend` config, which is `None` in `joblib.parallel_config` and `"loky"` in `ParallelConfig`. This prevents errors when using the NetworkX config, as the internal `joblib.Parallel`'s `backend` default is `"loky"` when not specified. This consistency in user experience is maintained for ease of use.
+The default settings of `joblib.parallel_config` are the same as the default configs in the `ParallelConfig` class, except for the `backend` config, which is `None` in `joblib.parallel_config` and `"loky"` in `ParallelConfig`. This prevents errors when using the NetworkX config, as the internal `joblib.Parallel`'s `backend` default is `"loky"` when not specified. This consistency in user experience is maintained for ease of use. Additinally, by default the `n_jobs` value is `-1`.
 
 ## Modifying Configuration
 

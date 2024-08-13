@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 @dataclass
 class ParallelConfig(Config):
     backend: str = "loky"
-    n_jobs: int = None
+    n_jobs: int = -1
     verbose: int = 0
     temp_folder: str = None
     max_nbytes: Union[int, str] = "1M"

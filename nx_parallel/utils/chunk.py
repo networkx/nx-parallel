@@ -21,9 +21,8 @@ def chunks(iterable, n):
         yield x
 
 
-def cpu_count(n_jobs=None):
-    """Returns the positive value of `n_jobs` using
-    `joblib.parallel.get_active_backend()`."""
+def cpu_count(n_jobs=None):  # todo: rename to get_n_jobs
+    """Returns the positive value of `n_jobs`."""
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
     else:
