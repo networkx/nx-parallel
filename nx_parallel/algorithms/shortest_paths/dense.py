@@ -1,16 +1,14 @@
 """Floyd-Warshall algorithm for shortest paths."""
 from joblib import Parallel, delayed
 import nx_parallel as nxp
-import networkx as nx
-import numpy as np
 import math
 
 __all__ = [
-    "floyd_warshall_numpy",
+    "floyd_warshall",
 ]
 
 
-def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None):
+def floyd_warshall(G, weight="weight", blocking_factor=None):
     """
     Parallel implementation of Floyd warshall using the tiled floyd warshall algorithm  [1]_.
 
@@ -24,6 +22,11 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
         The default blocking factor is get by finding the optimal value
         for the core available
 
+    Returns
+    -------
+    A : 2D array
+        All pairs shortest paths Graph adjacency matrix
+
     References
     ----------
     .. [1] Gary J. Katz and Joseph T. Kider Jr:
@@ -32,27 +35,26 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
-
-    if nodelist is not None:
-        if not (len(nodelist) == len(G) == len(set(nodelist))):
-            raise nx.NetworkXError(
-                "nodelist must contain every node in G with no repeats."
-                "If you wanted a subgraph of G use G.subgraph(nodelist)"
-            )
-
-    # To handle cases when an edge has weight=0, we must make sure that
-    # nonedges are not given the value 0 as well.
-    A = nx.to_numpy_array(
-        G, nodelist, multigraph_weight=min, weight=weight, nonedge=np.inf
-    )
-    n, _ = A.shape
-    np.fill_diagonal(A, 0)  # diagonal elements should be zero
+    undirected = not G.is_directed()
+    nodelist = list(G)
+    A = _adjacency_matrix(G, weight, nodelist, undirected)
+    n = G.number_of_nodes()
 
     total_cores = nxp.cpu_count()
     if blocking_factor is None:
         blocking_factor, is_prime = _find_nearest_divisor(n, total_cores)
     no_of_primary = n // blocking_factor
 
+    if no_of_primary <= 1:
+        return floyd_simple(G, weight)
+    print(
+        "blocking factor: ",
+        blocking_factor,
+        " number of block: ",
+        no_of_primary,
+        " number of core: ",
+        total_cores,
+    )
     for primary_block in range(no_of_primary):
         k_start = (primary_block * n) // no_of_primary
         k_end = k_start + (n // no_of_primary) - 1
@@ -90,16 +92,18 @@ def floyd_warshall_numpy(G, nodelist=None, weight="weight", blocking_factor=None
                     j_range = _block_range(blocking_factor, block_j)
                     if is_prime:
                         if block_i == no_of_primary - 1:
-                            i_range = (block * blocking_factor, n - 1)
+                            i_range = (block_i * blocking_factor, n - 1)
                         if block_j == no_of_primary - 1:
-                            j_range = (block * blocking_factor, n - 1)
+                            j_range = (block_j * blocking_factor, n - 1)
                     params.append((i_range, j_range))
-
+        #
         Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
+    print("Matrice di adiacenza \n", A)
+    dist = _matrix_to_dict(A, nodelist)
 
-    return A
+    return dist
 
 
 def _partial_floyd_warshall_numpy(A, k_iteration, i_iteration, j_iteration):
@@ -129,7 +133,7 @@ def _partial_floyd_warshall_numpy(A, k_iteration, i_iteration, j_iteration):
     for k in range(k_iteration[0], k_iteration[1] + 1):
         for i in range(i_iteration[0], i_iteration[1] + 1):
             for j in range(j_iteration[0], j_iteration[1] + 1):
-                A[i][j] = np.minimum(A[i][j], (A[i][k] + A[k][j]))
+                A[i][j] = min(A[i][j], (A[i][k] + A[k][j]))
 
 
 def _block_range(blocking_factor, block):
@@ -140,9 +144,10 @@ def _calculate_divisor(i, x, y):
     if x % i == 0:
         divisor1 = result2 = i
         result1 = divisor2 = x // i
-        difference1 = abs((result1 - 1) ** 2 - y)
-
-        difference2 = abs((result2 - 1) ** 2 - y)
+        # difference1 = abs((result1 - 1) ** 2 - y)
+        difference1 = abs(result1 - y)
+        # difference2 = abs((result2 - 1) ** 2 - y)
+        difference2 = abs(result2 - y)
 
         if difference1 < difference2:
             return divisor1, result1, difference1
@@ -161,6 +166,8 @@ def _find_nearest_divisor(x, y):
 
     y : cpu core available
     """
+    if x < y:
+        return 1, False
     # Find the square root of x
     sqrt_x = int(math.sqrt(x)) + 1
 
@@ -180,3 +187,93 @@ def _find_nearest_divisor(x, y):
     best_divisor, _, _ = min(results, key=lambda x: x[2])
 
     return best_divisor, False
+
+
+def _adjacency_matrix(G, weight, nodelist, undirected):
+    """
+    Generate an adjacency python matrix
+
+    Parameters
+    ----------
+    G : graph
+        The NetworkX graph used to construct the array.
+
+    weight : string or None optional (default = 'weight')
+        The edge attribute that holds the numerical value used for
+        the edge weight. If an edge does not have that attribute, then the
+        value 1 is used instead.
+
+    Returns
+    -------
+    A : 2D array
+        Graph adjacency matrix
+    """
+
+    n = len(nodelist)
+    # Initialize the adjacency matrix with infinity values
+    A = [[float("inf") for _ in range(n)] for _ in range(n)]
+
+    # Set diagonal elements to 0 (distance from node to itself)
+    for i in range(n):
+        A[i][i] = 0
+
+    def process_edge(src, dest, attribute, undirected):
+        src_idx = nodelist.index(src)
+        dest_idx = nodelist.index(dest)
+        A[src_idx][dest_idx] = attribute.get(weight, 1.0)
+        if undirected:
+            A[dest_idx][src_idx] = attribute.get(weight, 1.0)
+
+    # Parallel processing of edges, modifying A directly
+    Parallel(n_jobs=-1, require="sharedmem")(
+        delayed(process_edge)(src, dest, attribute, undirected)
+        for src, dest, attribute in G.edges(data=True)
+    )
+    return A
+
+
+def _matrix_to_dict(A, nodelist):
+    """
+    Convert a matrix (list of lists) to a dictionary of dictionaries.
+
+    Parameters
+    ----------
+    A : list of lists
+        The adjacency matrix to be converted.
+
+    Returns
+    -------
+    dist : dict
+        The resulting dictionary of distance.
+    """
+    dist = {i: {} for i in nodelist}
+
+    def process_row(row, i):
+        for column, j in enumerate(nodelist):
+            dist[i][j] = A[row][column]
+
+    # Parallel processing of rows, modifying dist directly
+    Parallel(n_jobs=-1, require="sharedmem")(
+        delayed(process_row)(row, i) for row, i in enumerate(nodelist)
+    )
+
+    return dist
+
+
+# TODO to remove for floyd warshall serial networkx
+def floyd_simple(G, weight="weight"):
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+    undirected = not G.is_directed()
+    nodelist = list(G)
+    A = _adjacency_matrix(G, weight, nodelist, undirected)
+    n = G.number_of_nodes()
+
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                A[i][j] = min(A[i][j], (A[i][k] + A[k][j]))
+
+    dist = _matrix_to_dict(A, nodelist)
+
+    return dist

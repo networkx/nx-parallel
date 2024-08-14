@@ -29,20 +29,24 @@ def closeness_centrality(
     if G.is_directed():
         G = G.reverse()  # create a reversed graph view
 
-    A = nxp.floyd_warshall_numpy(G, blocking_factor=blocking_factor)
-
+    A = nxp.floyd_warshall(G, blocking_factor=blocking_factor)
     len_G = len(G)
-
-    closeness_dict = Parallel(n_jobs=-1)(
-        delayed(_closeness_measure(n, wf_improved, len_G))(A) for n in A
+    if wf_improved:
+        print("Matrice con wf improved: \n", A)
+    else:
+        print("Matrice: \n", A)
+    key_value_pair = Parallel(n_jobs=-1)(
+        delayed(_closeness_measure)(k, n, wf_improved, len_G) for k, n in A.items()
     )
-
+    closeness_dict = {}
+    for key, value in key_value_pair:
+        closeness_dict[key] = value
     if u is not None:
         return closeness_dict[u]
     return closeness_dict
 
 
-def _closeness_measure(n, wf_improved, len_G):
+def _closeness_measure(k, v, wf_improved, len_G):
     """calculate the closeness centrality measure of one node using the row of edges i
 
     Parameters
@@ -55,13 +59,15 @@ def _closeness_measure(n, wf_improved, len_G):
     k : numebr
         the closeness value for the selected node
     """
-    totsp = sum(n)
+    n = v.values()
+    n_reachable = [x for x in n if x != float("inf")]
+    totsp = sum(n_reachable)
     closeness_value = 0.0
     if totsp > 0.0 and len_G > 1:
-        closeness_value = (len(n) - 1.0) / totsp
+        closeness_value = (len(n_reachable) - 1.0) / totsp
         # normalize to number of nodes-1 in connected part
         if wf_improved:
-            s = (len(n) - 1.0) / (len_G - 1)
+            s = (len(n_reachable) - 1.0) / (len_G - 1)
             closeness_value *= s
 
-    return closeness_value
+    return k, closeness_value

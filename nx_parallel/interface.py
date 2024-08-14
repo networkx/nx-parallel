@@ -17,7 +17,7 @@ from nx_parallel.algorithms.shortest_paths.unweighted import (
     all_pairs_shortest_path,
     all_pairs_shortest_path_length,
 )
-from nx_parallel.algorithms.shortest_paths.dense import floyd_warshall_numpy
+from nx_parallel.algorithms.shortest_paths.dense import floyd_warshall
 from nx_parallel.algorithms.efficiency_measures import local_efficiency
 from nx_parallel.algorithms.isolate import number_of_isolates
 from nx_parallel.algorithms.tournament import (
@@ -97,7 +97,7 @@ class BackendInterface:
     johnson = johnson
 
     # Shortest Paths : dense
-    floyd_warshall_numpy = floyd_warshall_numpy
+    floyd_warshall = floyd_warshall
 
     # Clustering
     square_clustering = square_clustering
