@@ -56,6 +56,6 @@ def colliders(G, get_chunks="chunks"):
 
     collider_chunk_generator = (delayed(_process_chunk)(chunk) for chunk in node_chunks)
 
-    for collider_chunk in Parallel(n_jobs=n_jobs, verbose=50)(collider_chunk_generator):
+    for collider_chunk in Parallel(n_jobs=n_jobs)(collider_chunk_generator):
         for collider in collider_chunk:
             yield collider
