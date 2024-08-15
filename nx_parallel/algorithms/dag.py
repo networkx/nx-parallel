@@ -18,9 +18,10 @@ def v_structures(G, get_chunks="chunks"):
         returns an iterable `node_chunks`. The default chunking is done
         by slicing the nodes into `n_jobs` number of chunks.
     """
-    for p1, c, p2 in nxp.dag.colliders(G, get_chunks=get_chunks):
-        if hasattr(G, "graph_object"):
-            G = G.graph_object
+    colliders = nxp.dag.colliders(G, get_chunks=get_chunks)
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+    for p1, c, p2 in colliders:
         if not (G.has_edge(p1, p2) or G.has_edge(p2, p1)):
             yield (p1, c, p2)
 
