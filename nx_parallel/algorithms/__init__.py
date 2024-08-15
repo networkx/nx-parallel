@@ -12,3 +12,4 @@ from .tournament import *
 from .vitality import *
 from .cluster import *
 from .link_prediction import *
+from .dag import *
