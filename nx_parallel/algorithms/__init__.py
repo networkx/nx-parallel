@@ -2,6 +2,8 @@
 from .bipartite import *
 from .centrality import *
 from .shortest_paths import *
+from .approximation import *
+from .connectivity import *
 
 # modules
 from .efficiency_measures import *

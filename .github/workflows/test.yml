@@ -19,20 +19,17 @@ jobs:
         python-version: ["3.10", "3.11", "3.12"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Conda
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
         with:
-          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-          channels: conda-forge
-          activate-environment: testing
       - name: Install dependencies
         run: |
-          conda install -c conda-forge joblib scipy pandas pytest-cov pytest-randomly
-            # matplotlib lxml pygraphviz pydot sympy  # Extra networkx deps we don't need yet
+          python -m pip install scipy numpy pytest-randomly
+            # pandas pytest-cov matplotlib lxml pygraphviz pydot sympy  # Extra networkx deps we don't need yet
           python -m pip install git+https://github.com/networkx/networkx.git@main
           python -m pip install .
           echo "Done with installing"
@@ -41,3 +38,6 @@ jobs:
           NETWORKX_TEST_BACKEND=parallel \
           NETWORKX_FALLBACK_TO_NX=True \
                 python -m pytest --pyargs networkx
+      - name: Additional Tests for nx-parallel
+        run: |
+          pytest nx_parallel

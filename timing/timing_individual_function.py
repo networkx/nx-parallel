@@ -1,6 +1,4 @@
 import time
-import random
-import types
 
 import networkx as nx
 import pandas as pd
@@ -11,9 +9,14 @@ import nx_parallel as nxp
 
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
-number_of_nodes_list = [125, 250, 500, 1000]
+# for bipartite graphs
+# n = [50, 100, 200, 400]
+# m = [25, 50, 100, 200]
+number_of_nodes_list = [200, 400, 800, 1600]
+weighted = False
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.global_reaching_centrality
+currFun = nx.tournament.is_reachable
+"""
 for p in pList:
     for num in range(len(number_of_nodes_list)):
         # create original and parallel graphs
@@ -21,7 +24,7 @@ for p in pList:
             number_of_nodes_list[num], p, seed=42, directed=True
         )
 
-        """
+
         # for bipartite.node_redundancy
         G = nx.bipartite.random_graph(n[num], m[num], p, seed=42, directed=True)
         for i in G.nodes:
@@ -32,7 +35,6 @@ for p in pList:
                 G.add_edge(i, random.choice([node for node in G.nodes if node != i]))
             elif len(l) == 1:
                 G.add_edge(i, random.choice([node for node in G.nodes if node != i and node not in list(G.neighbors(i))]))
-        """
 
         # for weighted graphs
         if weighted:
@@ -43,7 +45,6 @@ for p in pList:
         H = nxp.ParallelGraph(G)
 
         # time both versions and update heatmapDF
-        # v = random.choice(list(G.nodes()))
         t1 = time.time()
         c1 = currFun(H)
         if isinstance(c1, types.GeneratorType):
@@ -59,29 +60,37 @@ for p in pList:
         timesFaster = stdTime / parallelTime
         heatmapDF.at[number_of_nodes_list[num], p] = timesFaster
         print("Finished " + str(currFun))
+"""
 
 # Code to create for row of heatmap specifically for tournaments
-# for p in pList:
-#     for num in number_of_nodes_list):
-#         G = nx.tournament.random_tournament(num)
-#         H = nx_parallel.ParallelDiGraph(G)
-#         t1 = time.time()
-#         c = nx.tournament.is_reachable(H, 1, num)
-#         t2 = time.time()
-#         parallelTime = t2-t1
-#         t1 = time.time()
-#         c = nx.tournament.is_reachable(G, 1, num)
-#         t2 = time.time()
-#         stdTime = t2-t1
-#         timesFaster = stdTime/parallelTime
-#         heatmapDF.at[num, 3] = timesFaster
+for num in number_of_nodes_list:
+    print(num)
+    G = nx.tournament.random_tournament(num, seed=42)
+    H = nxp.ParallelGraph(G)
+    t1 = time.time()
+    c = currFun(H, 1, num)
+    t2 = time.time()
+    parallelTime = t2 - t1
+    print(parallelTime)
+    t1 = time.time()
+    c = currFun(G, 1, num)
+    t2 = time.time()
+    stdTime = t2 - t1
+    print(stdTime)
+    timesFaster = stdTime / parallelTime
+    heatmapDF.at[num, 3] = timesFaster
+    print("Finished " + str(currFun))
 
 # plotting the heatmap with numbers and a green color scheme
 plt.figure(figsize=(20, 4))
 hm = sns.heatmap(data=heatmapDF.T, annot=True, cmap="Greens", cbar=True)
 
 # Remove the tick labels on both axes
-hm.set_yticklabels(pList)
+hm.set_yticklabels(
+    [
+        3,
+    ]
+)
 
 # Adding x-axis labels
 hm.set_xticklabels(number_of_nodes_list)
