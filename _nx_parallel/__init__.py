@@ -10,6 +10,20 @@ def get_info():
         "url": "https://github.com/networkx/nx-parallel",
         "short_summary": "Parallel backend for NetworkX algorithms",
         "functions": {
+            "v_structures": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L7",
+                "additional_docs": "Yields 3-node tuples that represent the v-structures in `G` in parallel.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
+                },
+            },
+            "colliders": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L24",
+                "additional_docs": "Yields 3-node tuples that represent the colliders in `G` in parallel.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
+                },
+            },
             "number_of_isolates": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L8",
                 "additional_docs": "The parallel computation is implemented by dividing the list of isolated nodes into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",

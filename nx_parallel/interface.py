@@ -27,6 +27,7 @@ from nx_parallel.algorithms.approximation.connectivity import (
     approximate_all_pairs_node_connectivity,
 )
 from nx_parallel.algorithms.connectivity import connectivity
+from nx_parallel.algorithms.dag import v_structures, colliders
 from nx_parallel.algorithms.cluster import square_clustering
 import networkx as nx
 
@@ -105,6 +106,10 @@ class BackendInterface:
 
     # Connectivity
     all_pairs_node_connectivity = connectivity.all_pairs_node_connectivity
+
+    # DAG
+    v_structures = v_structures
+    colliders = colliders
 
     # =============================
 
