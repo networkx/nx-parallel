@@ -31,10 +31,7 @@ def closeness_centrality(
 
     A = nxp.floyd_warshall(G, blocking_factor=blocking_factor)
     len_G = len(G)
-    if wf_improved:
-        print("Matrice con wf improved: \n", A)
-    else:
-        print("Matrice: \n", A)
+
     key_value_pair = Parallel(n_jobs=-1)(
         delayed(_closeness_measure)(k, n, wf_improved, len_G) for k, n in A.items()
     )
@@ -60,8 +57,11 @@ def _closeness_measure(k, v, wf_improved, len_G):
         the closeness value for the selected node
     """
     n = v.values()
+    # print(n)
     n_reachable = [x for x in n if x != float("inf")]
+    # print(n_reachable,len(n_reachable))
     totsp = sum(n_reachable)
+    # print(totsp)
     closeness_value = 0.0
     if totsp > 0.0 and len_G > 1:
         closeness_value = (len(n_reachable) - 1.0) / totsp

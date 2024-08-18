@@ -41,12 +41,16 @@ def floyd_warshall(G, weight="weight", blocking_factor=None):
     n = G.number_of_nodes()
 
     total_cores = nxp.cpu_count()
+    print(
+        "number of nodes: ",
+        n,
+        " number of core: ",
+        total_cores,
+    )
     if blocking_factor is None:
         blocking_factor, is_prime = _find_nearest_divisor(n, total_cores)
     no_of_primary = n // blocking_factor
 
-    if no_of_primary <= 1:
-        return floyd_simple(G, weight)
     print(
         "blocking factor: ",
         blocking_factor,
@@ -62,9 +66,10 @@ def floyd_warshall(G, weight="weight", blocking_factor=None):
             k_end = k_end + (n % no_of_primary)
         k = (k_start, k_end)
         # Phase 1: Compute Primary block
+        # print("\n\niteration:",primary_block,"\n\n")
         # Execute Normal floyd warshall for the primary block submatrix
         _partial_floyd_warshall_numpy(A, k, k, k)
-
+        # print("After phase 1 - it",primary_block,":\n",A)
         # Phase 2: Compute Cross block
 
         params = []
@@ -82,6 +87,8 @@ def floyd_warshall(G, weight="weight", blocking_factor=None):
         Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
+        # print("phase 2, coordinate", params)
+        # print("After phase 2 - it",primary_block,":\n",A)
         # Phase 3: Compute remaining
         params.clear()
         for block_i in range(no_of_primary):
@@ -96,11 +103,12 @@ def floyd_warshall(G, weight="weight", blocking_factor=None):
                         if block_j == no_of_primary - 1:
                             j_range = (block_j * blocking_factor, n - 1)
                     params.append((i_range, j_range))
-        #
         Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
-    print("Matrice di adiacenza \n", A)
+        # print("phase 3, coordinate", params)
+        # print("After phase 3 - it",primary_block,":\n",A)
+    # print("Matrice di adiacenza \n", A)
     dist = _matrix_to_dict(A, nodelist)
 
     return dist
@@ -173,13 +181,13 @@ def _find_nearest_divisor(x, y):
 
     # Execute the calculation in parallel
     results = Parallel(n_jobs=-1)(
-        delayed(_calculate_divisor)(i, x, y) for i in range(1, sqrt_x)
+        delayed(_calculate_divisor)(i, x, y) for i in range(2, sqrt_x)
     )
 
     # Filter out None results
     results = [r for r in results if r is not None]
 
-    if len(results) <= 1:
+    if len(results) <= 0:
         # This check if a number is prime, although repeat process with a non prime number
         best_divisor, _ = _find_nearest_divisor(x - 1, y)
         return best_divisor, True
@@ -256,24 +264,5 @@ def _matrix_to_dict(A, nodelist):
     Parallel(n_jobs=-1, require="sharedmem")(
         delayed(process_row)(row, i) for row, i in enumerate(nodelist)
     )
-
-    return dist
-
-
-# TODO to remove for floyd warshall serial networkx
-def floyd_simple(G, weight="weight"):
-    if hasattr(G, "graph_object"):
-        G = G.graph_object
-    undirected = not G.is_directed()
-    nodelist = list(G)
-    A = _adjacency_matrix(G, weight, nodelist, undirected)
-    n = G.number_of_nodes()
-
-    for k in range(n):
-        for i in range(n):
-            for j in range(n):
-                A[i][j] = min(A[i][j], (A[i][k] + A[k][j]))
-
-    dist = _matrix_to_dict(A, nodelist)
 
     return dist
