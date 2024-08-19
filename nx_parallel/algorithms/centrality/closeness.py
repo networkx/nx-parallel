@@ -29,7 +29,7 @@ def closeness_centrality(
     if G.is_directed():
         G = G.reverse()  # create a reversed graph view
 
-    A = nxp.floyd_warshall(G, blocking_factor=blocking_factor)
+    A = nxp.floyd_warshall(G, weight=distance, blocking_factor=blocking_factor)
     len_G = len(G)
 
     key_value_pair = Parallel(n_jobs=-1)(
