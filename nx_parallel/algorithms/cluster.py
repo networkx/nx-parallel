@@ -1,12 +1,14 @@
 from itertools import combinations, chain
 from joblib import Parallel, delayed
 import nx_parallel as nxp
+from _nx_parallel.config import _set_nx_config
 
 __all__ = [
     "square_clustering",
 ]
 
 
+@_set_nx_config()
 def square_clustering(G, nodes=None, get_chunks="chunks"):
     """The nodes are chunked into `node_chunks` and then the square clustering
     coefficient for all `node_chunks` are computed in parallel over all available
@@ -47,15 +49,15 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     else:
         node_iter = list(G.nbunch_iter(nodes))
 
-    total_cores = nxp.cpu_count()
+    n_jobs = nxp.cpu_count()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(node_iter) // total_cores, 1)
+        num_in_chunk = max(len(node_iter) // n_jobs, 1)
         node_iter_chunks = nxp.chunks(node_iter, num_in_chunk)
     else:
         node_iter_chunks = get_chunks(node_iter)
 
-    result = Parallel(n_jobs=total_cores)(
+    result = Parallel()(
         delayed(_compute_clustering_chunk)(node_iter_chunk)
         for node_iter_chunk in node_iter_chunks
     )

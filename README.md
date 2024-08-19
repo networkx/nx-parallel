@@ -107,6 +107,13 @@ Note that for all functions inside `nx_code.py` that do not have an nx-parallel 
 import networkx as nx
 import nx_parallel as nxp
 
+# enabling networkx's config for nx-parallel
+nx.config.backends.parallel.nx_config = True
+
+# setting configs
+nx.config.backends.parallel.n_jobs = 4
+nx.config.backends.parallel.verbose = 15
+
 G = nx.path_graph(4)
 H = nxp.ParallelGraph(G)
 
@@ -124,6 +131,8 @@ nxp.betweenness_centrality(H)
 
 # output : {0: 0.0, 1: 0.6666666666666666, 2: 0.6666666666666666, 3: 0.0}
 ```
+
+For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md)! Additionally, refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more on functionalities provided by networkx for backends and configs like logging, `backend_priority`, etc.
 
 ### Notes
 
