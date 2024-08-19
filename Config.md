@@ -4,7 +4,7 @@ In `nx-parallel`, you can control parallel computing settings like `backend`, `n
 
 ## 1. Using `joblib`
 
-`nx-parallel` relies on `joblib.Parallel` for parallel computing. You can adjust its settings through the `parallel_config` function provided by `joblib`. For more details, check out the official [joblib documentation](https://joblib.readthedocs.io/en/latest/parallel.html).
+`nx-parallel` relies on [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html) for parallel computing. You can adjust its settings through the [`parallel_config`](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) class provided by `joblib`. For more details, check out the official [joblib documentation](https://joblib.readthedocs.io/en/latest/parallel.html).
 
 ### 1.1 Usage
 
@@ -19,6 +19,8 @@ nx.square_clustering(H)
 with parallel_config(n_jobs=7, verbose=0):
     nx.square_clustering(H)
 ```
+
+Please refer the [official joblib's documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand the config options.
 
 ## 2. Using `networkx`
 
@@ -42,6 +44,8 @@ NetworkXConfig(backend_priority=[], backends=Config(parallel=ParallelConfig(nx_c
 
 Setting `nx_config` to `True` tells `nx-parallel` to use NetworkX's configurations instead of `joblib`'s. By default, `nx_config` is set to `False`.
 
+Please refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
+
 ### 2.2 Usage
 
 ```python
@@ -60,7 +64,7 @@ with nxp_config(n_jobs=7, verbose=0):
     nx.square_clustering(H)
 ```
 
-The configuration options are the same as `joblib`, so you can refer to the [joblib documentation](https://joblib.readthedocs.io/en/latest/parallel.html) for more details.
+The configuration options are the same as `joblib.parallel_config`, so you can refer to the [official documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand the config options.
 
 ### 2.3 How Does NetworkX's Configuration Work in nx-parallel?
 
