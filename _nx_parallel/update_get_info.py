@@ -34,7 +34,8 @@ def get_funcs_info():
                         "additional_docs": extract_add_docs(d[func]),
                         "additional_parameters": extract_add_params(d[func]),
                     }
-    return funcs
+    sorted_funcs = dict(sorted(funcs.items()))
+    return sorted_funcs
 
 
 def extract_docstrings_from_file(file_path):
@@ -58,7 +59,9 @@ def extract_docstrings_from_file(file_path):
                     and node.targets[0].id == "__all__"
                 ):
                     all_list = [
-                        expr.s for expr in node.value.elts if isinstance(expr, ast.Str)
+                        expr.value
+                        for expr in node.value.elts
+                        if isinstance(expr, ast.Constant)
                     ]
             elif isinstance(node, ast.FunctionDef):
                 if all_list and node.name in all_list:
