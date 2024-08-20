@@ -1,14 +1,13 @@
 from itertools import combinations, chain
 from joblib import Parallel, delayed
 import nx_parallel as nxp
-from _nx_parallel.config import _set_nx_config
 
 __all__ = [
     "square_clustering",
 ]
 
 
-@_set_nx_config()
+@nxp.utils._set_nx_config()
 def square_clustering(G, nodes=None, get_chunks="chunks"):
     """The nodes are chunked into `node_chunks` and then the square clustering
     coefficient for all `node_chunks` are computed in parallel over all available

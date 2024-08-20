@@ -13,6 +13,11 @@ def get_info():
         "short_summary": "Parallel backend for NetworkX algorithms",
         "default_config": _config,
         "functions": {
+            "_set_nx_config": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/decorators.py#L12",
+                "additional_docs": "Decorator to set the configuration for the parallel computation of the nx-parallel algorithms.",
+                "additional_parameters": None,
+            },
             "all_pairs_all_shortest_paths": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/generic.py#L10",
                 "additional_docs": "The parallel implementation first divides the nodes into chunks and then creates a generator to lazily compute all shortest paths between all nodes for each node in `node_chunk`, and then employs joblib's `Parallel` function to execute these computations in parallel across all available CPU cores.",
@@ -158,7 +163,7 @@ def get_info():
                 },
             },
             "square_clustering": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L12",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L11",
                 "additional_docs": "The nodes are chunked into `node_chunks` and then the square clustering coefficient for all `node_chunks` are computed in parallel over all available CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n` chunks, where `n` is the number of CPU cores."
