@@ -20,7 +20,7 @@ def cpu_count(n_jobs=None):  # todo: rename to get_n_jobs
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
     else:
-        if nx.config.backends.parallel.nx_config:
+        if nx.config.backends.parallel.active:
             n_jobs = nx.config.backends.parallel.n_jobs
         else:
             from joblib.parallel import get_active_backend

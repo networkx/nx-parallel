@@ -9,7 +9,7 @@ __all__ = [
 
 @dataclass
 class ParallelConfig(Config):
-    nx_config: bool = False
+    active: bool = False
     backend: str = "loky"
     n_jobs: int = None
     verbose: int = 0

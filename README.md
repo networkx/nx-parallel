@@ -108,7 +108,7 @@ import networkx as nx
 import nx_parallel as nxp
 
 # enabling networkx's config for nx-parallel
-nx.config.backends.parallel.nx_config = True
+nx.config.backends.parallel.active = True
 
 # setting configs
 nx.config.backends.parallel.n_jobs = 4
