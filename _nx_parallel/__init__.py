@@ -104,11 +104,11 @@ def get_info():
             },
             "cpu_count": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L18",
-                "additional_docs": "Returns the number of logical CPUs or cores",
+                "additional_docs": "Returns the positive value of `n_jobs`.",
                 "additional_parameters": None,
             },
             "create_iterables": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L26",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L39",
                 "additional_docs": "Creates an iterable of function inputs for parallel computation based on the provided iterator type.",
                 "additional_parameters": {
                     "G : NetworkX graph": "iterator : str Type of iterator. Valid values are 'node', 'edge', 'isolate'",
@@ -158,7 +158,7 @@ def get_info():
                 },
             },
             "square_clustering": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L10",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L12",
                 "additional_docs": "The nodes are chunked into `node_chunks` and then the square clustering coefficient for all `node_chunks` are computed in parallel over all available CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n` chunks, where `n` is the number of CPU cores."
@@ -173,4 +173,3 @@ def get_info():
             },
         },
     }
-  
