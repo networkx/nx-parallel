@@ -20,6 +20,8 @@ def get_funcs_info():
 
     nx_parallel_dir = os.path.join(os.getcwd(), "nx_parallel")
     for root, dirs, files in os.walk(nx_parallel_dir):
+        if root[-29:] == "nx-parallel/nx_parallel/utils":
+            continue
         for file in files:
             if (
                 file.endswith(".py")
