@@ -87,11 +87,6 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n` chunks, where `n` is the number of CPU cores."
                 },
             },
-            "chunks": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L8",
-                "additional_docs": "Divides an iterable into chunks of size n",
-                "additional_parameters": None,
-            },
             "closeness_vitality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L9",
                 "additional_docs": "The parallel computation is implemented only when the node is not specified. The closeness vitality for each node is computed concurrently.",
@@ -104,19 +99,6 @@ def get_info():
                 "additional_docs": "Yields 3-node tuples that represent the colliders in `G` in parallel.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
-                },
-            },
-            "cpu_count": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L18",
-                "additional_docs": "Returns the number of logical CPUs or cores",
-                "additional_parameters": None,
-            },
-            "create_iterables": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L26",
-                "additional_docs": "Creates an iterable of function inputs for parallel computation based on the provided iterator type.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "iterator : str Type of iterator. Valid values are 'node', 'edge', 'isolate'",
-                    "iterable : Iterable": "An iterable of function inputs.",
                 },
             },
             "edge_betweenness_centrality": {
