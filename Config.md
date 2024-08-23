@@ -1,6 +1,6 @@
 # Configuring nx-parallel
 
-In `nx-parallel`, you can control parallel computing settings like `backend`, `n_jobs`, `verbose`, etc. using two configuration systems: `joblib` and `networkx`. Let's break down how to use each of them.
+`nx-parallel` provides flexible parallel computing capabilities, allowing you to control settings like `backend`, `n_jobs`, `verbose`, and more. This can be done through two configuration systems: `joblib` and `NetworkX`. This guide explains how to configure `nx-parallel` using both systems.
 
 ## 1. Using `joblib`
 
@@ -20,17 +20,17 @@ with parallel_config(n_jobs=7, verbose=0):
     nx.square_clustering(H)
 ```
 
-Please refer the [official joblib's documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand the config options.
+Please refer the [official joblib's documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand the config parameters.
 
-Note: Please ensure that `nx.config.backends.parallel.active=False` when you are using joblib to configure nx-parallel. Otherwise, configurations in `joblib.parallel_config` will be overwritten by the configurations in networkx's config(i.e. `nx.config.backends.parallel`).
+Note: Ensure that `nx.config.backends.parallel.active = False` when using `joblib` for configuration, as NetworkX configurations will override `joblib.parallel_config` settings if `active` is `True`.
 
 ## 2. Using `networkx`
 
-To enable networkx's config system in nx-parallel you will need to set the `active` configuration to `True`.
+To use NetworkX’s configuration system in `nx-parallel`, you must set the `active` flag (in `nx.config.backends.parallel`) to `True`.
 
 ### 2.1 Configs in NetworkX for backends
 
-When you import NetworkX, it sets default configurations for all installed backends, including `nx-parallel`:
+When you import NetworkX, it automatically sets default configurations for all installed backends, including `nx-parallel`.
 
 ```python
 import networkx as nx
@@ -44,9 +44,7 @@ Output:
 NetworkXConfig(backend_priority=[], backends=Config(parallel=ParallelConfig(active=False, backend='loky', n_jobs=None, verbose=0, temp_folder=None, max_nbytes='1M', mmap_mode='r', prefer=None, require=None, inner_max_num_threads=None, backend_params={})), cache_converted_graphs=True)
 ```
 
-Setting `active` to `True` tells `nx-parallel` to use NetworkX's configurations instead of `joblib`'s. By default, `active` is set to `False`.
-
-Please refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
+As you can see in the above output, by default, `active` is set to `False`. So, to enable NetworkX configurations for `nx-parallel`, set `active` to `True`. Please refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more on networkx configuration system.
 
 ### 2.2 Usage
 
@@ -66,7 +64,7 @@ with nxp_config(n_jobs=7, verbose=0):
     nx.square_clustering(H)
 ```
 
-The configuration options are the same as `joblib.parallel_config`, so you can refer to the [official documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand the config options.
+The configuration parameters are the same as `joblib.parallel_config`, so you can refer to the [official documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand these config parameters.
 
 ### 2.3 How Does NetworkX's Configuration Work in nx-parallel?
 
@@ -74,32 +72,29 @@ In `nx-parallel`, there's a `_configure_if_nx_active` decorator applied to all a
 
 ## 3. Comparing NetworkX and Joblib Configuration Systems
 
-### 3.1 Using Both of the systems together
+### 3.1 Using Both Systems Simultaneously
 
-In `nx-parallel`, it's possible to leverage both NetworkX's configuration system and Joblib's `parallel_config` simultaneously. However, when doing so, it's important to understand how these configurations interact.
+You can use both NetworkX’s configuration system and `joblib.parallel_config` together in `nx-parallel`. However, it’s important to understand their interaction.
 
-Consider the following example where NetworkX's configuration is activated (`active=True`) while also using Joblib's `parallel_config` within a specific context:
+Example:
 
 ```py
-# Enable and set NetworkX configuration globally
+# Enable NetworkX configuration
 nx.config.backends.parallel.active = True
 nx.config.backends.parallel.n_jobs = 6
 
-# Set Joblib configuration globally
+# Global Joblib configuration
 joblib.parallel_config(backend="threading")
 
-
 with joblib.parallel_config(n_jobs=4, verbose=55):
-    # Calls to nx-parallel functions will use NetworkX's configuration:
+    # NetworkX config for nx-parallel
     # backend="loky", n_jobs=6, verbose=0
     nx.square_clustering(G, backend="parallel")
 
-    # Joblib's configuration will be used for all the other code:
+    # Joblib config for other parallel tasks
     # backend="threading", n_jobs=4, verbose=55
     joblib.Parallel()(joblib.delayed(sqrt)(i**2) for i in range(10))
 ```
-
-In this setup:
 
 - **NetworkX Configurations for nx-parallel**: When calling functions within `nx-parallel`, NetworkX’s configurations will override those specified by Joblib. For example, the `nx.square_clustering` function will use the `n_jobs=6` setting from `nx.config.backends.parallel`, regardless of any Joblib settings within the same context.
 
@@ -111,19 +106,25 @@ This behavior ensures that `nx-parallel` functions consistently use NetworkX’s
 
 ### 3.2 Key Differences
 
-- **Usage**: The main difference is how `backend_params` are passed. In `nx.config` you need to pass them as a dictionary, whereas in `joblib.parallel_config` you can just pass them along with the other configurations.
-- **Default Settings**: By default, `nx-parallel` looks for configs set by `joblib.parallel_config`, and NetworkX's config system needs to be enabled explicitly by making the `nx.config.backends.parallel.active` configuration `True`.
+- **Parameter Handling**: The main difference is how `backend_params` are passed. Since, in networkx configurations are stored as a [`@dataclass`](https://docs.python.org/3/library/dataclasses.html), we need to pass them as a dictionary, whereas in `joblib.parallel_config` you can just pass them along with the other configurations, as shown below:
+
+  ```py
+  nx.config.backends.parallel.backend_params = {"max_nbytes": None}
+  joblib.parallel_config(backend="loky", max_nbytes=None)
+  ```
+
+- **Default Behavior**: By default, `nx-parallel` looks for configs in `joblib.parallel_config` unless `nx.config.backends.parallel.active` is set to `True`.
 
 ### 3.3 When Should You Use Which System?
 
-- When you're working with multiple NetworkX backends, using networkx to configure nx-parallel would be more well suited.
-- If you're using `nx-parallel` independently, you can choose either of the ways to configure nx-parallel, based on your preference.
+- When you're working with multiple NetworkX backends, then to avoid having any conflicts with other backends' code, using networkx to configure nx-parallel would be well suited.
+- If using `nx-parallel` independently, either system can be used based on your preference.
 
-## 4. Important Notes
+## 4. Important Considerations
 
-- **What if you use both systems together?** If you try to use both config systems, NetworkX's configuration will take priority, and `joblib`'s settings will be ignored. To avoid this, make sure `networkx.config.backends.parallel.active` is set to `False` when using `joblib` to set configs, and `True` when using `networkx`.
-- **Why are there two config systems?** We're working towards syncing both systems in the future so that updating one will automatically update the other. An attempt to move towards a unified configuration system in nx-parallel was made by the PR#68, which introduced a custom context manager for `nx-parallel`.
+- **Avoiding Conflicts:** To prevent conflicts, ensure that `networkx.config.backends.parallel.active` is set to `False` when using `joblib`, and `True` when using NetworkX configurations.
+- **Future Synchronization:** We are working on synchronizing both systems so that changes in one automatically reflect in the other. This effort began with [PR#68](https://github.com/networkx/nx-parallel/pull/68), which introduced a unified context manager for `nx-parallel`.
 
-Feel free to create issues or pull requests if you have any feedback or suggestions to improve this documentation.
+If you have feedback or suggestions, feel free to open an issue or submit a pull request.
 
 Thank you :)
