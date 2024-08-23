@@ -1,3 +1,4 @@
+from .utils.decorators import _set_nx_config
 from .utils import *
 from .algorithms import *
 from .interface import *
