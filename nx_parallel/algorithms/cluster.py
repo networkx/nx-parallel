@@ -7,7 +7,7 @@ __all__ = [
 ]
 
 
-@nxp._set_nx_config()
+@nxp._configure_if_nx_active()
 def square_clustering(G, nodes=None, get_chunks="chunks"):
     """The nodes are chunked into `node_chunks` and then the square clustering
     coefficient for all `node_chunks` are computed in parallel over all available

@@ -68,7 +68,7 @@ The configuration options are the same as `joblib.parallel_config`, so you can r
 
 ### 2.3 How Does NetworkX's Configuration Work in nx-parallel?
 
-In `nx-parallel`, there's a `_set_nx_config` decorator applied to all algorithms. This decorator checks the value of `active`(in `nx.config.backends.parallel`) and then accordingly uses the appropriate configuration system (`joblib` or `networkx`). If `active=True`, it extracts the configs from `nx.config.backends.parallel` and passes them in a `joblib.parallel_config` context manager and calls the function in this context. Otherwise, it simply calls the function.
+In `nx-parallel`, there's a `_configure_if_nx_active` decorator applied to all algorithms. This decorator checks the value of `active`(in `nx.config.backends.parallel`) and then accordingly uses the appropriate configuration system (`joblib` or `networkx`). If `active=True`, it extracts the configs from `nx.config.backends.parallel` and passes them in a `joblib.parallel_config` context manager and calls the function in this context. Otherwise, it simply calls the function.
 
 ## 3. Comparing NetworkX and Joblib Configuration Systems
 

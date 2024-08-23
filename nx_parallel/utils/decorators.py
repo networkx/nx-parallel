@@ -5,11 +5,11 @@ from functools import wraps
 import os
 
 __all__ = [
-    "_set_nx_config",
+    "_configure_if_nx_active",
 ]
 
 
-def _set_nx_config():
+def _configure_if_nx_active():
     """Decorator to set the configuration for the parallel computation
     of the nx-parallel algorithms."""
 
