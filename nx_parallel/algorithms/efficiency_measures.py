@@ -6,6 +6,7 @@ import nx_parallel as nxp
 __all__ = ["local_efficiency"]
 
 
+@nxp._configure_if_nx_active()
 def local_efficiency(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the
     nodes into chunks and then computing and adding global efficiencies of all node

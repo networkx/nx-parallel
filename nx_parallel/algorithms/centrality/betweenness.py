@@ -15,6 +15,7 @@ import nx_parallel as nxp
 __all__ = ["betweenness_centrality", "edge_betweenness_centrality"]
 
 
+@nxp._configure_if_nx_active()
 @py_random_state(5)
 def betweenness_centrality(
     G,
@@ -90,6 +91,7 @@ def _betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
     return betweenness
 
 
+@nxp._configure_if_nx_active()
 @py_random_state(4)
 def edge_betweenness_centrality(
     G, k=None, normalized=True, weight=None, seed=None, get_chunks="chunks"

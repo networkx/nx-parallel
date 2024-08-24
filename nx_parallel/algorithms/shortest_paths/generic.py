@@ -7,6 +7,7 @@ __all__ = [
 ]
 
 
+@nxp._configure_if_nx_active()
 def all_pairs_all_shortest_paths(
     G, weight=None, method="dijkstra", get_chunks="chunks"
 ):

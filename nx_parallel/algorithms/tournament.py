@@ -9,6 +9,7 @@ __all__ = [
 ]
 
 
+@nxp._configure_if_nx_active()
 def is_reachable(G, s, t, get_chunks="chunks"):
     """The function parallelizes the calculation of two
     neighborhoods of vertices in `G` and checks closure conditions for each
@@ -56,6 +57,7 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     )
 
 
+@nxp._configure_if_nx_active()
 def tournament_is_strongly_connected(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the
     nodes into chunks and then checking whether each node is reachable from each

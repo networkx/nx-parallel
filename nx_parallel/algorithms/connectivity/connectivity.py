@@ -14,6 +14,7 @@ __all__ = [
 ]
 
 
+@nxp._configure_if_nx_active()
 def all_pairs_node_connectivity(G, nbunch=None, flow_func=None, get_chunks="chunks"):
     """The parallel implementation first divides a list of all permutation (in case
     of directed graphs) and combinations (in case of undirected graphs) of `nbunch`

@@ -25,6 +25,7 @@ __all__ = [
 ]
 
 
+@nxp._configure_if_nx_active()
 def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths and lengths for each
@@ -68,6 +69,7 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
             yield path
 
 
+@nxp._configure_if_nx_active()
 def all_pairs_dijkstra_path_length(
     G, cutoff=None, weight="weight", get_chunks="chunks"
 ):
@@ -118,6 +120,7 @@ def all_pairs_dijkstra_path_length(
             yield path
 
 
+@nxp._configure_if_nx_active()
 def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths for each `node_chunk`, and
@@ -161,6 +164,7 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"
             yield path
 
 
+@nxp._configure_if_nx_active()
 def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths lengths for each node in
@@ -206,6 +210,7 @@ def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
             yield path_length
 
 
+@nxp._configure_if_nx_active()
 def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths for each node_chunk, and
@@ -249,6 +254,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
             yield path
 
 
+@nxp._configure_if_nx_active()
 def johnson(G, weight="weight", get_chunks="chunks"):
     """The parallel computation is implemented by dividing the
     nodes into chunks and computing the shortest paths using Johnson's Algorithm

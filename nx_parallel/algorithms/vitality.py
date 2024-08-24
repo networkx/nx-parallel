@@ -6,6 +6,7 @@ import networkx as nx
 __all__ = ["closeness_vitality"]
 
 
+@nxp._configure_if_nx_active()
 def closeness_vitality(
     G, node=None, weight=None, wiener_index=None, get_chunks="chunks"
 ):

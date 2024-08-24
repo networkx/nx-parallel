@@ -8,6 +8,7 @@ from itertools import chain
 __all__ = ["node_redundancy"]
 
 
+@nxp._configure_if_nx_active()
 def node_redundancy(G, nodes=None, get_chunks="chunks"):
     """In the parallel implementation we divide the nodes into chunks and compute
     the node redundancy coefficients for all `node_chunk` in parallel.

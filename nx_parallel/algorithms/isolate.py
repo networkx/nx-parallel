@@ -5,6 +5,7 @@ import nx_parallel as nxp
 __all__ = ["number_of_isolates"]
 
 
+@nxp._configure_if_nx_active()
 def number_of_isolates(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the list
     of isolated nodes into chunks and then finding the length of each chunk in parallel

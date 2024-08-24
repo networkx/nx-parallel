@@ -9,6 +9,7 @@ __all__ = [
 ]
 
 
+@nxp._configure_if_nx_active()
 def approximate_all_pairs_node_connectivity(
     G, nbunch=None, cutoff=None, get_chunks="chunks"
 ):
