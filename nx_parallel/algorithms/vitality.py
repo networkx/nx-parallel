@@ -36,10 +36,10 @@ def closeness_vitality(
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
 
-    total_cores = nxp.get_n_jobs()
+    n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(G) // total_cores, 1)
+        num_in_chunk = max(len(G) // n_jobs, 1)
         node_chunks = nxp.chunks(G.nodes, num_in_chunk)
     else:
         node_chunks = get_chunks(G.nodes)
