@@ -18,7 +18,7 @@ def number_of_isolates(G, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the isolated nodes as input and returns an
         iterable `isolate_chunks`. The default chunking is done by slicing the `isolates`
-        into `n` chunks, where `n` is the total number of CPU cores available.
+        into `n_jobs` number of chunks.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

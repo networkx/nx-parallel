@@ -20,7 +20,7 @@ def all_pairs_shortest_path_length(G, cutoff=None, get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths lengths for each node in
     `node_chunk`, and then employs joblib's `Parallel` function to execute these
-    computations in parallel across all available CPU cores.
+    computations in parallel across `n_jobs` number of CPU cores.
 
     networkx.single_source_shortest_path_length : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.unweighted.all_pairs_shortest_path_length.html
 
@@ -29,7 +29,7 @@ def all_pairs_shortest_path_length(G, cutoff=None, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
 
     def _process_node_chunk(node_chunk):
@@ -64,7 +64,7 @@ def all_pairs_shortest_path(G, cutoff=None, get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths for each `node_chunk`, and
     then employs joblib's `Parallel` function to execute these computations in
-    parallel across all available CPU cores.
+    parallel across `n_jobs` number of CPU cores.
 
     networkx.single_source_shortest_path : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.unweighted.all_pairs_shortest_path.html
 
@@ -73,7 +73,7 @@ def all_pairs_shortest_path(G, cutoff=None, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
 
     def _process_node_chunk(node_chunk):

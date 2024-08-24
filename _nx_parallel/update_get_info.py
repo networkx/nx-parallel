@@ -150,7 +150,7 @@ def get_info():
         "project": "nx-parallel",
         "package": "nx_parallel",
         "url": "https://github.com/networkx/nx-parallel",
-        "short_summary": "Parallel backend for NetworkX algorithms",
+        "short_summary": "A networkx backend that uses joblib to run graph algorithms in parallel. Find the nx-parallel's configuration guide `here <https://github.com/networkx/nx-parallel/blob/main/Config.md>`_",
         "default_config": _config,
         "functions": '''
 

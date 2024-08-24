@@ -20,7 +20,7 @@ def node_redundancy(G, nodes=None, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` (or `nodes`) into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` (or `nodes`) into `n_jobs` number of chunks.
     """
 
     if hasattr(G, "graph_object"):

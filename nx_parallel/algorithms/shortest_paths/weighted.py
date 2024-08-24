@@ -30,7 +30,7 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths and lengths for each
     `node_chunk`, and then employs joblib's `Parallel` function to execute these
-    computations in parallel across all available CPU cores.
+    computations in parallel across `n_jobs` number of CPU cores.
 
     networkx.all_pairs_dijkstra : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra.html#all-pairs-dijkstra
 
@@ -39,7 +39,7 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
 
     def _process_node_chunk(node_chunk):
@@ -76,7 +76,7 @@ def all_pairs_dijkstra_path_length(
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths lengths for each node in
     `node_chunk`, and then employs joblib's `Parallel` function to execute these
-    computations in parallel across all available CPU cores.
+    computations in parallel across `n_jobs` number of CPU cores.
 
     networkx.all_pairs_dijkstra_path_length : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra_path_length.html
 
@@ -85,7 +85,7 @@ def all_pairs_dijkstra_path_length(
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
 
     def _process_node_chunk(node_chunk):
@@ -125,7 +125,7 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths for each `node_chunk`, and
     then employs joblib's `Parallel` function to execute these computations in
-    parallel across all available CPU cores.
+    parallel across `n_jobs` number of CPU cores.
 
     networkx.all_pairs_dijkstra_path : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_dijkstra_path.html
 
@@ -134,7 +134,7 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
 
     def _process_node_chunk(node_chunk):
@@ -169,7 +169,7 @@ def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths lengths for each node in
     `node_chunk`, and then employs joblib's `Parallel` function to execute these
-    computations in parallel across all available CPU cores.
+    computations in parallel across `n_jobs` number of CPU cores.
 
     networkx.all_pairs_bellman_ford_path_length : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_bellman_ford_path_length.html
 
@@ -178,7 +178,7 @@ def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
 
     def _process_node_chunk(node_chunk):
@@ -213,7 +213,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths for each node_chunk, and
     then employs joblib's `Parallel` function to execute these computations in
-    parallel across all available CPU cores.
+    parallel across `n_jobs` number of CPU cores.
 
     networkx.all_pairs_bellman_ford_path : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.all_pairs_bellman_ford_path.html
 
@@ -222,7 +222,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
 
     def _process_node_chunk(node_chunk):
@@ -265,7 +265,7 @@ def johnson(G, weight="weight", get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

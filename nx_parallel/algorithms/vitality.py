@@ -20,7 +20,7 @@ def closeness_vitality(
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and
         returns an iterable `node_chunks`. The default chunking is done by slicing the
-        `nodes` into `n` chunks, where `n` is the total number of CPU cores.
+        `nodes` into `n_jobs` number of chunks.
     """
 
     def closeness_vitality_chunk_subset(chunk):

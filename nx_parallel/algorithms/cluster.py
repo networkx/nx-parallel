@@ -10,8 +10,8 @@ __all__ = [
 @nxp._configure_if_nx_active()
 def square_clustering(G, nodes=None, get_chunks="chunks"):
     """The nodes are chunked into `node_chunks` and then the square clustering
-    coefficient for all `node_chunks` are computed in parallel over all available
-    CPU cores.
+    coefficient for all `node_chunks` are computed in parallel over `n_jobs` number
+    of CPU cores.
 
     networkx.square_clustering: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.square_clustering.html
 
@@ -20,7 +20,7 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes (or nbunch) as input and
         returns an iterable `node_chunks`. The default chunking is done by slicing the
-        `nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `nodes` into `n_jobs` number of chunks.
     """
 
     def _compute_clustering_chunk(node_iter_chunk):

@@ -17,8 +17,8 @@ def approximate_all_pairs_node_connectivity(
     of directed graphs) and combinations (in case of undirected graphs) of `nbunch`
     into chunks and then creates a generator to lazily compute the local node
     connectivities for each chunk, and then employs joblib's `Parallel` function to
-    execute these computations in parallel across all available CPU cores. At the end,
-    the results are aggregated into a single dictionary and returned.
+    execute these computations in parallel across `n_jobs` number of CPU cores. At the
+    end, the results are aggregated into a single dictionary and returned.
 
     Note, this function uses the name `approximate_all_pairs_node_connectivity` while
     dispatching to the backend in=mplementation. So, `nxp.all_pairs_node_connectivity`
@@ -33,8 +33,8 @@ def approximate_all_pairs_node_connectivity(
         A function that takes in `list(iter_func(nbunch, 2))` as input and returns
         an iterable `pairs_chunks`, here `iter_func` is `permutations` in case of
         directed graphs and `combinations` in case of undirected graphs. The default
-        is to create chunks by slicing the list into `n` chunks, where `n` is the
-        number of CPU cores, such that size of each chunk is atmost 10, and at least 1.
+        is to create chunks by slicing the list into `n_jobs` chunks, such that size
+        of each chunk is atmost 10, and at least 1.
     """
 
     if hasattr(G, "graph_object"):

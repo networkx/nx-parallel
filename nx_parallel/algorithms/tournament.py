@@ -22,7 +22,7 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the `nodes`
-        into `n` chunks, where `n` is the total number of CPU cores available.
+        into `n_jobs` number of chunks.
     """
 
     def two_neighborhood_close(G, chunk):
@@ -72,7 +72,7 @@ def tournament_is_strongly_connected(G, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the `nodes`
-        into `n` chunks, where `n` is the total number of CPU cores available.
+        into `n_jobs` number of chunks.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

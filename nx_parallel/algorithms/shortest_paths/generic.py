@@ -14,7 +14,7 @@ def all_pairs_all_shortest_paths(
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute all shortest paths between all nodes for
     each node in `node_chunk`, and then employs joblib's `Parallel` function to
-    execute these computations in parallel across all available CPU cores.
+    execute these computations in parallel across `n_jobs` number of CPU cores.
 
     networkx.single_source_all_shortest_paths : https://networkx.org/documentation/latest/reference/algorithms/generated/networkx.algorithms.shortest_paths.generic.single_source_all_shortest_paths.html
 
@@ -23,7 +23,7 @@ def all_pairs_all_shortest_paths(
     get_chunks : str, function (default = "chunks")
         A function that takes in an iterable of all the nodes as input and returns
         an iterable `node_chunks`. The default chunking is done by slicing the
-        `G.nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `G.nodes` into `n_jobs` number of chunks.
     """
 
     def _process_node_chunk(node_chunk):

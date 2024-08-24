@@ -36,7 +36,7 @@ def betweenness_centrality(
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the
-        `nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `nodes` into `n_jobs` number of chunks.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
@@ -106,7 +106,7 @@ def edge_betweenness_centrality(
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the
-        `nodes` into `n` chunks, where `n` is the number of CPU cores.
+        `nodes` into `n_jobs` number of chunks.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
