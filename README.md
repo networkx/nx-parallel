@@ -110,9 +110,8 @@ import nx_parallel as nxp
 # enabling networkx's config for nx-parallel
 nx.config.backends.parallel.active = True
 
-# setting configs
+# setting `n_jobs` (by default, `n_jobs=None`)
 nx.config.backends.parallel.n_jobs = 4
-nx.config.backends.parallel.verbose = 15
 
 G = nx.path_graph(4)
 H = nxp.ParallelGraph(G)
@@ -130,7 +129,7 @@ nxp.betweenness_centrality(G)
 nxp.betweenness_centrality(H)
 ```
 
-For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md)! Additionally, refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more on functionalities provided by networkx for backends and configs like logging, `backend_priority`, etc.
+For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md)! Additionally, refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more on functionalities provided by networkx for backends and configs like logging, `backend_priority`, etc. Another way to configure nx-parallel is by using [`joblib.parallel_config`](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html).
 
 ### Notes
 
