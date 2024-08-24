@@ -51,9 +51,7 @@ def is_reachable(G, s, t, get_chunks="chunks"):
         node_chunks = get_chunks(G)
 
     return all(
-        Parallel(n_jobs=cpu_count)(
-            delayed(two_neighborhood_close)(G, chunk) for chunk in node_chunks
-        )
+        Parallel()(delayed(two_neighborhood_close)(G, chunk) for chunk in node_chunks)
     )
 
 
@@ -90,7 +88,7 @@ def tournament_is_strongly_connected(G, get_chunks="chunks"):
     else:
         node_chunks = get_chunks(G)
 
-    results = Parallel(n_jobs=cpu_count)(
+    results = Parallel()(
         delayed(is_reachable_subset)(G, chunk) for chunk in node_chunks
     )
     return all(results)

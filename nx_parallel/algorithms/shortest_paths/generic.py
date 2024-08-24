@@ -53,6 +53,6 @@ def all_pairs_all_shortest_paths(
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
     )
 
-    for path_chunk in Parallel(n_jobs=total_cores)(paths_chunk_generator):
+    for path_chunk in Parallel()(paths_chunk_generator):
         for path in path_chunk:
             yield path

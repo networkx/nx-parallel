@@ -54,9 +54,7 @@ def all_pairs_shortest_path_length(G, cutoff=None, get_chunks="chunks"):
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
     )
 
-    for path_length_chunk in Parallel(n_jobs=nxp.get_n_jobs())(
-        path_lengths_chunk_generator
-    ):
+    for path_length_chunk in Parallel()(path_lengths_chunk_generator):
         for path_length in path_length_chunk:
             yield path_length
 
@@ -100,6 +98,6 @@ def all_pairs_shortest_path(G, cutoff=None, get_chunks="chunks"):
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
     )
 
-    for path_chunk in Parallel(n_jobs=nxp.get_n_jobs())(paths_chunk_generator):
+    for path_chunk in Parallel()(paths_chunk_generator):
         for path in path_chunk:
             yield path

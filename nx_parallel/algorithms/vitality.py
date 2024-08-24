@@ -48,7 +48,7 @@ def closeness_vitality(
         nx.closeness_vitality, G, weight=weight, wiener_index=wiener_index
     )
 
-    result = Parallel(n_jobs=total_cores)(
+    result = Parallel()(
         delayed(closeness_vitality_chunk_subset)(chunk) for chunk in node_chunks
     )
     return {k: v for d in result for k, v in d.items()}

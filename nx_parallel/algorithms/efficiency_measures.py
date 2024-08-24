@@ -37,7 +37,7 @@ def local_efficiency(G, get_chunks="chunks"):
     else:
         node_chunks = get_chunks(G.nodes)
 
-    efficiencies = Parallel(n_jobs=total_cores)(
+    efficiencies = Parallel()(
         delayed(_local_efficiency_node_subset)(G, chunk) for chunk in node_chunks
     )
     return sum(efficiencies) / len(G)

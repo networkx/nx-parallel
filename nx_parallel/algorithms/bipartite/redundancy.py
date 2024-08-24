@@ -38,7 +38,7 @@ def node_redundancy(G, nodes=None, get_chunks="chunks"):
         node_chunks = nxp.chunks(nodes, num_in_chunk)
     else:
         node_chunks = get_chunks(nodes)
-    node_redundancies = Parallel(n_jobs=total_cores)(
+    node_redundancies = Parallel()(
         delayed(
             lambda G, node_chunk: [(v, _node_redundancy(G, v)) for v in node_chunk]
         )(G, node_chunk)

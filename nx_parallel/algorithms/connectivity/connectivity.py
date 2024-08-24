@@ -73,7 +73,7 @@ def all_pairs_node_connectivity(G, nbunch=None, flow_func=None, get_chunks="chun
         delayed(_process_pair_chunk)(pairs_chunk) for pairs_chunk in pairs_chunks
     )
 
-    for nc_chunk in Parallel(n_jobs=total_cores)(nc_chunk_generator):
+    for nc_chunk in Parallel()(nc_chunk_generator):
         for u, v, k in nc_chunk:
             all_pairs[u][v] = k
             if not directed:

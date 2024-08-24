@@ -32,7 +32,5 @@ def number_of_isolates(G, get_chunks="chunks"):
     else:
         isolate_chunks = get_chunks(isolates_list)
 
-    results = Parallel(n_jobs=cpu_count)(
-        delayed(len)(chunk) for chunk in isolate_chunks
-    )
+    results = Parallel()(delayed(len)(chunk) for chunk in isolate_chunks)
     return sum(results)

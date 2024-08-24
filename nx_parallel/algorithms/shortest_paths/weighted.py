@@ -64,7 +64,7 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
     )
 
-    for path_chunk in Parallel(n_jobs=nxp.get_n_jobs())(paths_chunk_generator):
+    for path_chunk in Parallel()(paths_chunk_generator):
         for path in path_chunk:
             yield path
 
@@ -115,7 +115,7 @@ def all_pairs_dijkstra_path_length(
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
     )
 
-    for path_chunk in Parallel(n_jobs=nxp.get_n_jobs())(paths_chunk_generator):
+    for path_chunk in Parallel()(paths_chunk_generator):
         for path in path_chunk:
             yield path
 
@@ -159,7 +159,7 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
     )
 
-    for path_chunk in Parallel(n_jobs=nxp.get_n_jobs())(paths_chunk_generator):
+    for path_chunk in Parallel()(paths_chunk_generator):
         for path in path_chunk:
             yield path
 
@@ -203,9 +203,7 @@ def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
     )
 
-    for path_length_chunk in Parallel(n_jobs=nxp.get_n_jobs())(
-        path_lengths_chunk_generator
-    ):
+    for path_length_chunk in Parallel()(path_lengths_chunk_generator):
         for path_length in path_length_chunk:
             yield path_length
 
@@ -249,7 +247,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
         delayed(_process_node_chunk)(node_chunk) for node_chunk in node_chunks
     )
 
-    for path_chunk in Parallel(n_jobs=nxp.get_n_jobs())(paths_chunk_generator):
+    for path_chunk in Parallel()(paths_chunk_generator):
         for path in path_chunk:
             yield path
 
@@ -299,7 +297,5 @@ def johnson(G, weight="weight", get_chunks="chunks"):
     else:
         node_chunks = get_chunks(G.nodes)
 
-    results = Parallel(n_jobs=total_cores)(
-        delayed(_johnson_subset)(chunk) for chunk in node_chunks
-    )
+    results = Parallel()(delayed(_johnson_subset)(chunk) for chunk in node_chunks)
     return {v: d_path for result_chunk in results for v, d_path in result_chunk.items()}

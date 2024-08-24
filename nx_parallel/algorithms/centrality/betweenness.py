@@ -53,7 +53,7 @@ def betweenness_centrality(
     else:
         node_chunks = get_chunks(nodes)
 
-    bt_cs = Parallel(n_jobs=total_cores)(
+    bt_cs = Parallel()(
         delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
         for chunk in node_chunks
     )
@@ -123,7 +123,7 @@ def edge_betweenness_centrality(
     else:
         node_chunks = get_chunks(nodes)
 
-    bt_cs = Parallel(n_jobs=total_cores)(
+    bt_cs = Parallel()(
         delayed(_edge_betweenness_centrality_node_subset)(G, chunk, weight)
         for chunk in node_chunks
     )
