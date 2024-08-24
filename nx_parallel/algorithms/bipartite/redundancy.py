@@ -32,7 +32,7 @@ def node_redundancy(G, nodes=None, get_chunks="chunks"):
             "Cannot compute redundancy coefficient for a node"
             " that has fewer than two neighbors."
         )
-    total_cores = nxp.cpu_count()
+    total_cores = nxp.get_n_jobs()
     if get_chunks == "chunks":
         num_in_chunk = max(len(nodes) // total_cores, 1)
         node_chunks = nxp.chunks(nodes, num_in_chunk)

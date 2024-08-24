@@ -42,7 +42,7 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    cpu_count = nxp.cpu_count()
+    cpu_count = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
         num_in_chunk = max(len(G) // cpu_count, 1)
@@ -82,7 +82,7 @@ def tournament_is_strongly_connected(G, get_chunks="chunks"):
     def is_reachable_subset(G, chunk):
         return all(nx.tournament.is_reachable(G, u, v) for v in chunk for u in G)
 
-    cpu_count = nxp.cpu_count()
+    cpu_count = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
         num_in_chunk = max(min(len(G) // cpu_count, 10), 1)

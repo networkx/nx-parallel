@@ -2,7 +2,7 @@ import itertools
 import os
 import networkx as nx
 
-__all__ = ["chunks", "cpu_count", "create_iterables"]
+__all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
 
 def chunks(iterable, n):
@@ -15,7 +15,7 @@ def chunks(iterable, n):
         yield x
 
 
-def cpu_count(n_jobs=None):  # todo: rename to get_n_jobs
+def get_n_jobs(n_jobs=None):
     """Returns the positive value of `n_jobs`."""
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2

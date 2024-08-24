@@ -46,7 +46,7 @@ def betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    total_cores = nxp.cpu_count()
+    total_cores = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
         node_chunks = nxp.create_iterables(G, "node", total_cores, nodes)
@@ -116,7 +116,7 @@ def edge_betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    total_cores = nxp.cpu_count()
+    total_cores = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
         node_chunks = nxp.create_iterables(G, "node", total_cores, nodes)

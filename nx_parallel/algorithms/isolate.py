@@ -23,7 +23,7 @@ def number_of_isolates(G, get_chunks="chunks"):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    cpu_count = nxp.cpu_count()
+    cpu_count = nxp.get_n_jobs()
 
     isolates_list = list(nx.isolates(G))
     if get_chunks == "chunks":

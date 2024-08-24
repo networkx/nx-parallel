@@ -41,7 +41,7 @@ def all_pairs_all_shortest_paths(
         G = G.graph_object
 
     nodes = G.nodes
-    total_cores = nxp.cpu_count()
+    total_cores = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
         num_in_chunk = max(len(nodes) // total_cores, 1)

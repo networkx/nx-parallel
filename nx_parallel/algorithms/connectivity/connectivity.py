@@ -62,7 +62,7 @@ def all_pairs_node_connectivity(G, nbunch=None, flow_func=None, get_chunks="chun
         ]
 
     pairs = list(iter_func(nbunch, 2))
-    total_cores = nxp.cpu_count()
+    total_cores = nxp.get_n_jobs()
     if get_chunks == "chunks":
         num_in_chunk = max(min(len(pairs) // total_cores, 10), 1)
         pairs_chunks = nxp.chunks(pairs, num_in_chunk)

@@ -29,7 +29,7 @@ def local_efficiency(G, get_chunks="chunks"):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    total_cores = nxp.cpu_count()
+    total_cores = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
         num_in_chunk = max(len(G.nodes) // total_cores, 1)

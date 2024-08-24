@@ -48,7 +48,7 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     else:
         node_iter = list(G.nbunch_iter(nodes))
 
-    n_jobs = nxp.cpu_count()
+    n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
         num_in_chunk = max(len(node_iter) // n_jobs, 1)
