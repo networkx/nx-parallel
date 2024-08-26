@@ -2,7 +2,7 @@ import itertools
 import os
 import networkx as nx
 
-__all__ = ["chunks", "cpu_count", "create_iterables"]
+__all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
 
 def chunks(iterable, n):
@@ -15,12 +15,25 @@ def chunks(iterable, n):
         yield x
 
 
-def cpu_count():
-    """Returns the number of logical CPUs or cores"""
-    # Check if we are running under pytest
+def get_n_jobs(n_jobs=None):
+    """Returns the positive value of `n_jobs`."""
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
-    return os.cpu_count()
+    else:
+        if nx.config.backends.parallel.active:
+            n_jobs = nx.config.backends.parallel.n_jobs
+        else:
+            from joblib.parallel import get_active_backend
+
+            n_jobs = get_active_backend()[1]
+        n_cpus = os.cpu_count()
+        if n_jobs is None:
+            return 1
+        if n_jobs < 0:
+            return n_cpus + n_jobs + 1
+        if n_jobs == 0:
+            raise ValueError("n_jobs == 0 in Parallel has no meaning")
+        return int(n_jobs)
 
 
 def create_iterables(G, iterator, n_cores, list_of_iterator=None):

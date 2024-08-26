@@ -6,6 +6,7 @@ import networkx as nx
 __all__ = ["closeness_vitality"]
 
 
+@nxp._configure_if_nx_active()
 def closeness_vitality(
     G, node=None, weight=None, wiener_index=None, get_chunks="chunks"
 ):
@@ -19,7 +20,7 @@ def closeness_vitality(
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and
         returns an iterable `node_chunks`. The default chunking is done by slicing the
-        `nodes` into `n` chunks, where `n` is the total number of CPU cores.
+        `nodes` into `n_jobs` number of chunks.
     """
 
     def closeness_vitality_chunk_subset(chunk):
@@ -35,10 +36,10 @@ def closeness_vitality(
         after = nx.wiener_index(G.subgraph(set(G) - {node}), weight=weight)
         return wiener_index - after
 
-    total_cores = nxp.cpu_count()
+    n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(G) // total_cores, 1)
+        num_in_chunk = max(len(G) // n_jobs, 1)
         node_chunks = nxp.chunks(G.nodes, num_in_chunk)
     else:
         node_chunks = get_chunks(G.nodes)
@@ -47,7 +48,7 @@ def closeness_vitality(
         nx.closeness_vitality, G, weight=weight, wiener_index=wiener_index
     )
 
-    result = Parallel(n_jobs=total_cores)(
+    result = Parallel()(
         delayed(closeness_vitality_chunk_subset)(chunk) for chunk in node_chunks
     )
     return {k: v for d in result for k, v in d.items()}

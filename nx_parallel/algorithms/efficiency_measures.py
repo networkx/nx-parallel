@@ -6,6 +6,7 @@ import nx_parallel as nxp
 __all__ = ["local_efficiency"]
 
 
+@nxp._configure_if_nx_active()
 def local_efficiency(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the
     nodes into chunks and then computing and adding global efficiencies of all node
@@ -19,7 +20,7 @@ def local_efficiency(G, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the `nodes`
-        into `n` chunks, where `n` is the total number of CPU cores available.
+        into `n_jobs` number of chunks.
     """
 
     def _local_efficiency_node_subset(G, chunk):
@@ -28,15 +29,15 @@ def local_efficiency(G, get_chunks="chunks"):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    total_cores = nxp.cpu_count()
+    n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(G.nodes) // total_cores, 1)
+        num_in_chunk = max(len(G.nodes) // n_jobs, 1)
         node_chunks = list(nxp.chunks(G.nodes, num_in_chunk))
     else:
         node_chunks = get_chunks(G.nodes)
 
-    efficiencies = Parallel(n_jobs=total_cores)(
+    efficiencies = Parallel()(
         delayed(_local_efficiency_node_subset)(G, chunk) for chunk in node_chunks
     )
     return sum(efficiencies) / len(G)

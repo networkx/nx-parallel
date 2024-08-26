@@ -9,6 +9,7 @@ __all__ = [
 ]
 
 
+@nxp._configure_if_nx_active()
 def is_reachable(G, s, t, get_chunks="chunks"):
     """The function parallelizes the calculation of two
     neighborhoods of vertices in `G` and checks closure conditions for each
@@ -21,7 +22,7 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the `nodes`
-        into `n` chunks, where `n` is the total number of CPU cores available.
+        into `n_jobs` number of chunks.
     """
 
     def two_neighborhood_close(G, chunk):
@@ -41,21 +42,20 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    cpu_count = nxp.cpu_count()
+    n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(G) // cpu_count, 1)
+        num_in_chunk = max(len(G) // n_jobs, 1)
         node_chunks = nxp.chunks(G, num_in_chunk)
     else:
         node_chunks = get_chunks(G)
 
     return all(
-        Parallel(n_jobs=cpu_count)(
-            delayed(two_neighborhood_close)(G, chunk) for chunk in node_chunks
-        )
+        Parallel()(delayed(two_neighborhood_close)(G, chunk) for chunk in node_chunks)
     )
 
 
+@nxp._configure_if_nx_active()
 def tournament_is_strongly_connected(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the
     nodes into chunks and then checking whether each node is reachable from each
@@ -72,7 +72,7 @@ def tournament_is_strongly_connected(G, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of all the nodes as input and returns an
         iterable `node_chunks`. The default chunking is done by slicing the `nodes`
-        into `n` chunks, where `n` is the total number of CPU cores available.
+        into `n_jobs` number of chunks.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
@@ -80,15 +80,15 @@ def tournament_is_strongly_connected(G, get_chunks="chunks"):
     def is_reachable_subset(G, chunk):
         return all(nx.tournament.is_reachable(G, u, v) for v in chunk for u in G)
 
-    cpu_count = nxp.cpu_count()
+    n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(min(len(G) // cpu_count, 10), 1)
+        num_in_chunk = max(min(len(G) // n_jobs, 10), 1)
         node_chunks = nxp.chunks(G, num_in_chunk)
     else:
         node_chunks = get_chunks(G)
 
-    results = Parallel(n_jobs=cpu_count)(
+    results = Parallel()(
         delayed(is_reachable_subset)(G, chunk) for chunk in node_chunks
     )
     return all(results)
