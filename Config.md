@@ -135,7 +135,9 @@ This behavior ensures that `nx-parallel` functions consistently use NetworkX’s
 
 ### 3.3 When Should You Use Which System?
 
-When working with multiple NetworkX backends, it's crucial to ensure compatibility among the backends to avoid conflicts between different configurations. In such cases, using NetworkX's configuration system to configure `nx-parallel` is recommended. This approach helps maintain consistency across backends. For example:
+When the only networkx backend you're using is `nx-parallel`, then either of the NetworkX or `joblib` configuration systems can be used, depending on your preference.
+
+But, when working with multiple NetworkX backends, it's crucial to ensure compatibility among the backends to avoid conflicts between different configurations. In such cases, using NetworkX's configuration system to configure `nx-parallel` is recommended. This approach helps maintain consistency across backends. For example:
 
 ```python
 nx.config.backend_priority = ["another_nx_backend", "parallel"]
@@ -146,8 +148,6 @@ nx.square_clustering(G)
 ```
 
 In this example, if `another_nx_backend` also internally utilizes `joblib.Parallel` (without exposing it to the user) within its implementation of the `square_clustering` algorithm, then the `nx-parallel` configurations set by `joblib.parallel_config` will influence the internal `joblib.Parallel` used by `another_nx_backend`. To prevent unexpected behavior, it is advisable to configure these settings through the NetworkX configuration system.
-
-If you're using `nx-parallel` independently, either the NetworkX or `joblib` configuration system can be used, depending on your preference.
 
 **Future Synchronization:** We are working on synchronizing both configuration systems so that changes in one system automatically reflect in the other. This started with [PR#68](https://github.com/networkx/nx-parallel/pull/68), which introduced a unified context manager for `nx-parallel`. For more details on the challenges of creating a compatibility layer to keep both systems in sync, refer to [Issue#76](https://github.com/networkx/nx-parallel/issues/76).
 
