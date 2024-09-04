@@ -3,7 +3,7 @@ import os
 import networkx as nx
 from typing import Iterable, Iterator, Optional, List, Union
 
-from nx_parallel import NX_GTYPES
+from nx_parallel.utils import NX_GTYPES
 
 
 __all__ = ["chunks", "get_n_jobs", "create_iterables"]

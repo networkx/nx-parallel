@@ -2,7 +2,8 @@ import networkx as nx
 from typing import Optional
 from operator import attrgetter
 
-from nx_parallel import algorithms, NX_GTYPES
+from nx_parallel import algorithms
+from nx_parallel.utils import NX_GTYPES
 
 __all__ = ["BackendInterface", "ParallelGraph"]
 
@@ -74,24 +75,23 @@ class ParallelGraph:
         return f"Parallel{self.graph_object}"
 
 
+def assign_algorithms(cls):
+    """Class decorator to assign algorithms to the class attributes."""
+    for attr in ALGORITHMS:
+        func_name = attr.rsplit(".", 1)[
+            -1
+        ]  # get the function name by parsing the module hierarchy
+        setattr(
+            cls,
+            func_name,
+            attrgetter(attr)(algorithms),
+        )
+    return cls
+
+
+@assign_algorithms
 class BackendInterface:
     """BackendInterface class for parallel algorithms."""
-
-    # assign the imported functions to class attributes
-    for attr in ALGORITHMS:
-        if "." in attr:
-            module_name, func_name = attr.rsplit(".", 1)
-            setattr(
-                locals()["BackendInterface"],
-                func_name,
-                attrgetter(attr)(algorithms),
-            )
-        else:
-            setattr(
-                locals()["BackendInterface"],
-                attr,
-                getattr(algorithms, attr),
-            )
 
     @staticmethod
     def convert_from_nx(graph: Optional[NX_GTYPES], *args, **kwargs) -> ParallelGraph:
