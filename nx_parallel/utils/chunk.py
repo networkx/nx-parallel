@@ -1,18 +1,23 @@
 import itertools
 import os
 import networkx as nx
-from typing import Iterable, Iterator, Optional, List, Union
+from typing import Iterable, Iterator, Optional, List, Union, Tuple
 
-from nx_parallel.utils import NX_GTYPES
+from nx_parallel.utils import NX_GTYPES, GraphIteratorType
 
 
 __all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
 
-def chunks(iterable: Iterable, n: int) -> Iterator[tuple]:
-    """Yield successive chunks of size n from an iterable."""
+def chunks(iterable: Iterable, n_chunks: int) -> Iterator[Tuple]:
+    """Yield exactly `n_chunks` chunks from `iterable`, balancing the chunk sizes."""
+    iterable = list(iterable)
+    k, m = divmod(len(iterable), n_chunks)
     it = iter(iterable)
-    yield from iter(lambda: tuple(itertools.islice(it, n)), ())
+    for _ in range(n_chunks):
+        chunk_size = k + (1 if m > 0 else 0)
+        m -= 1
+        yield tuple(itertools.islice(it, chunk_size))
 
 
 def get_n_jobs(n_jobs: Optional[int] = None) -> int:
@@ -26,25 +31,28 @@ def get_n_jobs(n_jobs: Optional[int] = None) -> int:
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
 
-    if nx.config.backends.parallel.active:
-        n_jobs = nx.config.backends.parallel.n_jobs
-    else:
-        from joblib.parallel import get_active_backend
-
-        n_jobs = get_active_backend()[1]
-
-    if n_jobs is None:
-        return 1
-    if n_jobs < 0:
-        return os.cpu_count() + n_jobs + 1
     if n_jobs == 0:
         raise ValueError("n_jobs == 0 in Parallel has no meaning")
+
+    if not n_jobs:
+        if nx.config.backends.parallel.active:
+            n_jobs = nx.config.backends.parallel.n_jobs
+        else:
+            from joblib.parallel import get_active_backend
+
+            n_jobs = get_active_backend()[1]
+
+    if not n_jobs:
+        return 1  # Default to 1 if no valid n_jobs is found or passed
+    if n_jobs < 0:
+        return os.cpu_count() + n_jobs + 1
+
     return int(n_jobs)
 
 
 def create_iterables(
     G: NX_GTYPES,
-    iterator: str,
+    iterator: GraphIteratorType,
     n_cores: int,
     list_of_iterator: Optional[Union[List, Iterable]] = None,
 ) -> Iterator[Union[List, Iterable]]:
@@ -56,8 +64,8 @@ def create_iterables(
     ----------
     G : networkx.Graph
         The NetworkX graph.
-    iterator : str
-        Type of iterator. Valid values are 'node', 'edge', 'isolate'.
+    iterator : GraphIteratorType
+        Type of iterator. Valid values are 'NODE', 'EDGE', 'ISOLATE'.
     n_cores : int
         The number of cores to use.
     list_of_iterator : list, optional
@@ -74,22 +82,17 @@ def create_iterables(
     ValueError
         If the iterator type is not valid.
     """
-    if list_of_iterator is None:
-        if iterator == "node":
-            iter_func = G.nodes
-        elif iterator == "edge":
-            iter_func = G.edges
-        elif iterator == "isolate":
-            iter_func = lambda: nx.isolates(G)
+    if not list_of_iterator:
+        if iterator == GraphIteratorType.NODE:
+            list_of_iterator = list(G.nodes)
+        elif iterator == GraphIteratorType.EDGE:
+            list_of_iterator = list(G.edges)
+        elif iterator == GraphIteratorType.ISOLATE:
+            list_of_iterator = list(nx.isolates(G))
         else:
             raise ValueError(f"Invalid iterator type: {iterator}")
 
-        # Instead of creating a list, use the generator directly in chunks
-        list_of_iterator = iter_func()
+    if not list_of_iterator:
+        return iter([])
 
-    num_in_chunk = (
-        max(len(list(G)) // n_cores, 1)
-        if isinstance(list_of_iterator, list)
-        else n_cores
-    )
-    return chunks(list_of_iterator, num_in_chunk)
+    return chunks(list_of_iterator, n_cores)
