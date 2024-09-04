@@ -1,7 +1,10 @@
 import itertools
 import os
 import networkx as nx
-from typing import Iterable, Iterator, Optional, List, Union, Generator
+from typing import Iterable, Iterator, Optional, List, Union
+
+from nx_parallel import NX_GTYPES
+
 
 __all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
@@ -40,7 +43,7 @@ def get_n_jobs(n_jobs: Optional[int] = None) -> int:
 
 
 def create_iterables(
-    G: nx.Graph,
+    G: NX_GTYPES,
     iterator: str,
     n_cores: int,
     list_of_iterator: Optional[Union[List, Iterable]] = None,

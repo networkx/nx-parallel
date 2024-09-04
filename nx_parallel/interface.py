@@ -1,12 +1,11 @@
 import networkx as nx
-from typing import Optional, Union
+from typing import Optional
 from operator import attrgetter
 
-from nx_parallel import algorithms
+from nx_parallel import algorithms, NX_GTYPES
 
 __all__ = ["BackendInterface", "ParallelGraph"]
 
-NX_GTYPES = Union[nx.Graph, nx.DiGraph, nx.MultiGraph, nx.MultiDiGraph]
 
 ALGORITHMS = [
     # Bipartite
