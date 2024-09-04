@@ -1,36 +1,38 @@
-from dataclasses import asdict
-from joblib import parallel_config
-import networkx as nx
-from functools import wraps
 import os
+import networkx as nx
+from dataclasses import asdict
+from typing import Callable, Any, TypeVar, cast
+from functools import wraps
+from joblib import parallel_config
 
-__all__ = [
-    "_configure_if_nx_active",
-]
+
+__all__ = ["_configure_if_nx_active"]
+
+F = TypeVar("F", bound=Callable[..., Any])
 
 
-def _configure_if_nx_active():
-    """Decorator to set the configuration for the parallel computation
-    of the nx-parallel algorithms."""
+def _configure_if_nx_active() -> Callable[[F], F]:
+    """
+    Decorator to set the configuration for the parallel computation
+    of the nx-parallel algorithms.
+    """
 
-    def decorator(func):
+    def decorator(func: F) -> F:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             if (
                 nx.config.backends.parallel.active
                 or "PYTEST_CURRENT_TEST" in os.environ
             ):
-                # to activate nx config system in nx_parallel use:
+                # Activate nx config system in nx_parallel with:
                 # `nx.config.backends.parallel.active = True`
                 config_dict = asdict(nx.config.backends.parallel)
-                del config_dict["active"]
-                config_dict.update(config_dict["backend_params"])
-                del config_dict["backend_params"]
+                config_dict.update(config_dict.pop("backend_params"))
+                config_dict.pop("active", None)
                 with parallel_config(**config_dict):
                     return func(*args, **kwargs)
-            else:
-                return func(*args, **kwargs)
+            return func(*args, **kwargs)
 
-        return wrapper
+        return cast(F, wrapper)
 
     return decorator
