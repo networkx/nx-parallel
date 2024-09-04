@@ -13,11 +13,6 @@ def get_info():
         "short_summary": "A networkx backend that uses joblib to run graph algorithms in parallel. Find the nx-parallel's configuration guide `here <https://github.com/networkx/nx-parallel/blob/main/Config.md>`_",
         "default_config": _config,
         "functions": {
-            "_configure_if_nx_active": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/decorators.py#L14",
-                "additional_docs": "Decorator to set the configuration for the parallel computation of the nx-parallel algorithms.",
-                "additional_parameters": None,
-            },
             "all_pairs_all_shortest_paths": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/generic.py#L11",
                 "additional_docs": "The parallel implementation first divides the nodes into chunks and then creates a generator to lazily compute all shortest paths between all nodes for each node in `node_chunk`, and then employs joblib's `Parallel` function to execute these computations in parallel across `n_jobs` number of CPU cores.",
@@ -95,23 +90,11 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
-            "chunks": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L12",
-                "additional_docs": "Yield exactly `n_chunks` chunks from `iterable`, balancing the chunk sizes.",
-                "additional_parameters": None,
-            },
             "closeness_vitality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L10",
                 "additional_docs": "The parallel computation is implemented only when the node is not specified. The closeness vitality for each node is computed concurrently.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
-                },
-            },
-            "create_iterables": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L53",
-                "additional_docs": "Create an iterable of function inputs for parallel computation based on the provided iterator type.",
-                "additional_parameters": {
-                    "G : networkx.Graph": "The NetworkX graph. iterator : GraphIteratorType Type of iterator. Valid values are 'NODE', 'EDGE', 'ISOLATE'. n_cores : int The number of cores to use. list_of_iterator : list, optional A precomputed list of items to iterate over. If None, it will be generated based on the iterator type."
                 },
             },
             "edge_betweenness_centrality": {
@@ -120,11 +103,6 @@ def get_info():
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
-            },
-            "get_n_jobs": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py#L23",
-                "additional_docs": "Return the positive value of `n_jobs`, adjusting for the environment.",
-                "additional_parameters": None,
             },
             "is_reachable": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L13",

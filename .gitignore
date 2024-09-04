@@ -136,3 +136,5 @@ html/
 # get_info update script
 temp__init__.py
 .history/
+
+.DS_Store
