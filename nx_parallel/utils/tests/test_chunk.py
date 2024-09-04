@@ -3,6 +3,7 @@ import pytest
 import networkx as nx
 
 import nx_parallel as nxp
+from nx_parallel.utils.types import GraphIteratorType
 
 
 def test_get_n_jobs():
@@ -43,13 +44,13 @@ def test_create_iterables():
     G = nx.fast_gnp_random_graph(50, 0.6, seed=42)
 
     # Test node iterator
-    iterable = nxp.create_iterables(G, nxp.utils.GraphIteratorType.NODE, 4)
+    iterable = nxp.create_iterables(G, GraphIteratorType.NODE, 4)
     assert len(list(iterable)) == 4
 
     # Test edge iterator
-    iterable = nxp.create_iterables(G, nxp.utils.GraphIteratorType.EDGE, 4)
+    iterable = nxp.create_iterables(G, GraphIteratorType.EDGE, 4)
     assert len(list(iterable)) == 4
 
     # Test isolate iterator (G has no isolates, so this should be empty)
-    iterable = nxp.create_iterables(G, nxp.utils.GraphIteratorType.ISOLATE, 4)
+    iterable = nxp.create_iterables(G, GraphIteratorType.ISOLATE, 4)
     assert len(list(iterable)) == 0

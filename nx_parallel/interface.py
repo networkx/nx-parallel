@@ -3,7 +3,7 @@ from typing import Optional
 from operator import attrgetter
 
 from nx_parallel import algorithms
-from nx_parallel.utils import NX_GTYPES
+from nx_parallel.utils.types import NX_GTYPES
 
 __all__ = ["BackendInterface", "ParallelGraph"]
 
