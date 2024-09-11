@@ -47,7 +47,8 @@ parallel = "_nx_parallel:get_info"
 
 [project.optional-dependencies]
 developer = [
-    'pre-commit',
+    'pre-commit==3.8.0',
+    'ruff==0.1.8',
 ]
 test = [
     'pytest>=7.2',
@@ -85,7 +86,7 @@ line-length = 88
 target-version = 'py310'
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ['I', 'F403']
+"__init__.py" = ['I', 'F403', 'F401']
 
 [tool.ruff.format]
 docstring-code-format = true

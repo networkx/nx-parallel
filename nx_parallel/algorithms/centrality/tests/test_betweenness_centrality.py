@@ -5,7 +5,7 @@ import math
 
 def test_betweenness_centrality_get_chunks():
     def get_chunk(nodes):
-        num_chunks = nxp.cpu_count()
+        num_chunks = nxp.get_n_jobs()
         nodes_ebc = {i: 0 for i in nodes}
         for i in ebc:
             nodes_ebc[i[0]] += ebc[i]
