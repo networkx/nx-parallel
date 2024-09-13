@@ -1,25 +1,22 @@
 import os
 import networkx as nx
 from dataclasses import asdict
-from typing import Callable, Any, TypeVar, cast
 from functools import wraps
 from joblib import parallel_config
 
 
 __all__ = ["_configure_if_nx_active"]
 
-F = TypeVar("F", bound=Callable[..., Any])
 
-
-def _configure_if_nx_active() -> Callable[[F], F]:
+def _configure_if_nx_active():
     """
     Decorator to set the configuration for the parallel computation
     of the nx-parallel algorithms.
     """
 
-    def decorator(func: F) -> F:
+    def decorator(func):
         @wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
+        def wrapper(*args, **kwargs):
             if (
                 nx.config.backends.parallel.active
                 or "PYTEST_CURRENT_TEST" in os.environ
@@ -33,6 +30,6 @@ def _configure_if_nx_active() -> Callable[[F], F]:
                     return func(*args, **kwargs)
             return func(*args, **kwargs)
 
-        return cast(F, wrapper)
+        return wrapper
 
     return decorator

@@ -1,15 +1,14 @@
 import itertools
 import os
 import networkx as nx
-from typing import Iterable, Iterator, Optional, List, Union, Tuple
 
-from nx_parallel.utils.types import NX_GTYPES, GraphIteratorType
+from nx_parallel.utils.types import GraphIteratorType
 
 
 __all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
 
-def chunks(iterable: Iterable, n_chunks: int) -> Iterator[Tuple]:
+def chunks(iterable, n_chunks):
     """Yield exactly `n_chunks` chunks from `iterable`, balancing the chunk sizes."""
     iterable = list(iterable)
     k, m = divmod(len(iterable), n_chunks)
@@ -20,7 +19,7 @@ def chunks(iterable: Iterable, n_chunks: int) -> Iterator[Tuple]:
         yield tuple(itertools.islice(it, chunk_size))
 
 
-def get_n_jobs(n_jobs: Optional[int] = None) -> int:
+def get_n_jobs(n_jobs=None):
     """
     Return the positive value of `n_jobs`, adjusting for the environment.
 
@@ -51,11 +50,11 @@ def get_n_jobs(n_jobs: Optional[int] = None) -> int:
 
 
 def create_iterables(
-    G: NX_GTYPES,
-    iterator: GraphIteratorType,
-    n_cores: int,
-    list_of_iterator: Optional[Union[List, Iterable]] = None,
-) -> Iterator[Union[List, Iterable]]:
+    G,
+    iterator,
+    n_cores,
+    list_of_iterator=None,
+):
     """
     Create an iterable of function inputs for parallel computation
     based on the provided iterator type.

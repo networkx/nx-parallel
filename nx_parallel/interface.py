@@ -1,12 +1,12 @@
 import networkx as nx
-from typing import Optional
+from typing import Union
 from operator import attrgetter
 
 from nx_parallel import algorithms
-from nx_parallel.utils.types import NX_GTYPES
 
 __all__ = ["BackendInterface", "ParallelGraph"]
 
+NX_GTYPES = Union[nx.Graph, nx.DiGraph, nx.MultiGraph, nx.MultiDiGraph]
 
 ALGORITHMS = [
     # Bipartite
@@ -54,7 +54,7 @@ class ParallelGraph:
 
     def __init__(
         self,
-        graph_object: Optional[NX_GTYPES] = None,
+        graph_object,
     ):
         if graph_object is None:
             self.graph_object = nx.Graph()
@@ -94,7 +94,7 @@ class BackendInterface:
     """BackendInterface class for parallel algorithms."""
 
     @staticmethod
-    def convert_from_nx(graph: Optional[NX_GTYPES], *args, **kwargs) -> ParallelGraph:
+    def convert_from_nx(graph, *args, **kwargs) -> ParallelGraph:
         """
         Convert a networkx.Graph, networkx.DiGraph, networkx.MultiGraph,
         or networkx.MultiDiGraph to a ParallelGraph.
@@ -104,7 +104,7 @@ class BackendInterface:
         return ParallelGraph(graph)
 
     @staticmethod
-    def convert_to_nx(result, *, name: Optional[str] = None) -> Optional[NX_GTYPES]:
+    def convert_to_nx(result, *, name=None):
         """
         Convert a ParallelGraph to a networkx.Graph, networkx.DiGraph,
         networkx.MultiGraph, or networkx.MultiDiGraph.
