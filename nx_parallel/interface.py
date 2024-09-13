@@ -94,7 +94,7 @@ class BackendInterface:
     """BackendInterface class for parallel algorithms."""
 
     @staticmethod
-    def convert_from_nx(graph, *args, **kwargs) -> ParallelGraph:
+    def convert_from_nx(graph, *args, **kwargs):
         """
         Convert a networkx.Graph, networkx.DiGraph, networkx.MultiGraph,
         or networkx.MultiDiGraph to a ParallelGraph.
