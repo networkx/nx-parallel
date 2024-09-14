@@ -1,7 +1,9 @@
 import os
-import networkx as nx
 from dataclasses import asdict
 from functools import wraps
+
+import networkx as nx
+
 from joblib import parallel_config
 
 
@@ -9,8 +11,7 @@ __all__ = ["_configure_if_nx_active"]
 
 
 def _configure_if_nx_active():
-    """
-    Decorator to set the configuration for the parallel computation
+    """Decorator to set the configuration for the parallel computation
     of the nx-parallel algorithms.
     """
 

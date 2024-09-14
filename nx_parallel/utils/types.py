@@ -2,6 +2,6 @@ from enum import Enum
 
 
 class GraphIteratorType(Enum):
-    NODE = "node"
-    EDGE = "edge"
-    ISOLATE = "isolate"
+    NODES = "nodes"
+    EDGES = "edges"
+    ISOLATES = "isolates"

@@ -1,6 +1,7 @@
-import networkx as nx
 from typing import Union
 from operator import attrgetter
+
+import networkx as nx
 
 from nx_parallel import algorithms
 
@@ -45,8 +46,7 @@ ALGORITHMS = [
 
 
 class ParallelGraph:
-    """
-    A wrapper class for networkx.Graph, networkx.DiGraph, networkx.MultiGraph,
+    """A wrapper class for networkx.Graph, networkx.DiGraph, networkx.MultiGraph,
     and networkx.MultiDiGraph.
     """
 
@@ -63,11 +63,9 @@ class ParallelGraph:
         else:
             self.graph_object = nx.Graph(graph_object)
 
-    @property
     def is_multigraph(self):
         return self.graph_object.is_multigraph()
 
-    @property
     def is_directed(self):
         return self.graph_object.is_directed()
 
@@ -90,8 +88,7 @@ class BackendInterface:
 
     @staticmethod
     def convert_from_nx(graph, *args, **kwargs):
-        """
-        Convert a networkx.Graph, networkx.DiGraph, networkx.MultiGraph,
+        """Convert a networkx.Graph, networkx.DiGraph, networkx.MultiGraph,
         or networkx.MultiDiGraph to a ParallelGraph.
         """
         if isinstance(graph, ParallelGraph):
@@ -100,8 +97,7 @@ class BackendInterface:
 
     @staticmethod
     def convert_to_nx(result, *, name=None):
-        """
-        Convert a ParallelGraph to a networkx.Graph, networkx.DiGraph,
+        """Convert a ParallelGraph to a networkx.Graph, networkx.DiGraph,
         networkx.MultiGraph, or networkx.MultiDiGraph.
         """
         if isinstance(result, ParallelGraph):

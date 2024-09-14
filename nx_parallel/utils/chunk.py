@@ -1,5 +1,6 @@
 import itertools
 import os
+
 import networkx as nx
 
 from nx_parallel.utils.types import GraphIteratorType
@@ -20,8 +21,7 @@ def chunks(iterable, n_chunks):
 
 
 def get_n_jobs(n_jobs=None):
-    """
-    Return the positive value of `n_jobs`, adjusting for the environment.
+    """Return the positive value of `n_jobs`, adjusting for the environment.
 
     If running under pytest, returns 2 jobs. If using a parallel backend,
     returns the number of jobs configured for the backend. Otherwise, returns
@@ -55,16 +55,15 @@ def create_iterables(
     n_cores,
     list_of_iterator=None,
 ):
-    """
-    Create an iterable of function inputs for parallel computation
+    """Create an iterable of function inputs for parallel computation
     based on the provided iterator type.
 
     Parameters
     ----------
-    G : networkx.Graph
+    G : NetworkX graph
         The NetworkX graph.
     iterator : GraphIteratorType
-        Type of iterator. Valid values are 'NODE', 'EDGE', 'ISOLATE'.
+        Type of iterator. Valid values are 'NODES', 'EDGES', 'ISOLATES'.
     n_cores : int
         The number of cores to use.
     list_of_iterator : list, optional
@@ -81,12 +80,15 @@ def create_iterables(
     ValueError
         If the iterator type is not valid.
     """
+    if isinstance(iterator, str):
+        iterator = GraphIteratorType(iterator)
+
     if not list_of_iterator:
-        if iterator == GraphIteratorType.NODE:
+        if iterator == GraphIteratorType.NODES:
             list_of_iterator = list(G.nodes)
-        elif iterator == GraphIteratorType.EDGE:
+        elif iterator == GraphIteratorType.EDGES:
             list_of_iterator = list(G.edges)
-        elif iterator == GraphIteratorType.ISOLATE:
+        elif iterator == GraphIteratorType.ISOLATES:
             list_of_iterator = list(nx.isolates(G))
         else:
             raise ValueError(f"Invalid iterator type: {iterator}")
