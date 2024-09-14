@@ -80,11 +80,7 @@ def assign_algorithms(cls):
     for attr in ALGORITHMS:
         # get the function name by parsing the module hierarchy
         func_name = attr.rsplit(".", 1)[-1]  
-        setattr(
-            cls,
-            func_name,
-            attrgetter(attr)(algorithms),
-        )
+        setattr(cls, func_name, attrgetter(attr)(algorithms))
     return cls
 
 
