@@ -63,7 +63,7 @@ def create_iterables(
     G : NetworkX graph
         The NetworkX graph.
     iterator : GraphIteratorType
-        Type of iterator. Valid values are 'NODES', 'EDGES', 'ISOLATES'.
+        Type of iterator. Valid values are 'NODE', 'EDGE', 'ISOLATE'.
     n_cores : int
         The number of cores to use.
     list_of_iterator : list, optional
@@ -84,11 +84,11 @@ def create_iterables(
         iterator = GraphIteratorType(iterator)
 
     if not list_of_iterator:
-        if iterator == GraphIteratorType.NODES:
+        if iterator == GraphIteratorType.NODE:
             list_of_iterator = list(G.nodes)
-        elif iterator == GraphIteratorType.EDGES:
+        elif iterator == GraphIteratorType.EDGE:
             list_of_iterator = list(G.edges)
-        elif iterator == GraphIteratorType.ISOLATES:
+        elif iterator == GraphIteratorType.ISOLATE:
             list_of_iterator = list(nx.isolates(G))
         else:
             raise ValueError(f"Invalid iterator type: {iterator}")
