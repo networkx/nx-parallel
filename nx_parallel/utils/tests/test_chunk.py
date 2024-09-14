@@ -45,13 +45,13 @@ def test_create_iterables():
     G = nx.fast_gnp_random_graph(50, 0.6, seed=42)
 
     # Test node iterator
-    iterable = nxp.create_iterables(G, GraphIteratorType.NODE, 4)
+    iterable = nxp.create_iterables(G, GraphIteratorType.NODES, 4)
     assert len(list(iterable)) == 4
 
     # Test edge iterator
-    iterable = nxp.create_iterables(G, GraphIteratorType.EDGE, 4)
+    iterable = nxp.create_iterables(G, GraphIteratorType.EDGES, 4)
     assert len(list(iterable)) == 4
 
     # Test isolate iterator (G has no isolates, so this should be empty)
-    iterable = nxp.create_iterables(G, GraphIteratorType.ISOLATE, 4)
+    iterable = nxp.create_iterables(G, GraphIteratorType.ISOLATES, 4)
     assert len(list(iterable)) == 0
