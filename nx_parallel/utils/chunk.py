@@ -33,7 +33,7 @@ def get_n_jobs(n_jobs=None):
     if n_jobs == 0:
         raise ValueError("n_jobs == 0 in Parallel has no meaning")
 
-    if not n_jobs:
+    if n_jobs is None:
         if nx.config.backends.parallel.active:
             n_jobs = nx.config.backends.parallel.n_jobs
         else:
