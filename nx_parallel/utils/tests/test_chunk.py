@@ -21,6 +21,7 @@ def test_get_n_jobs():
         assert nxp.get_n_jobs(-1) == os.cpu_count()
         nx.config.backends.parallel.active = False
         from joblib import parallel_config
+
         parallel_config(n_jobs=3)
         assert nxp.get_n_jobs() == 3
         nx.config.backends.parallel.active = True
