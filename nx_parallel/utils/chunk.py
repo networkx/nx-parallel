@@ -21,12 +21,15 @@ def chunks(iterable, n_chunks):
 
 
 def get_n_jobs(n_jobs=None):
-    """Return the positive value of `n_jobs`, adjusting for the environment.
+    """Returns the positive value of `n_jobs` by either extracting it from the 
+    active configuration system or modifying the passed-in value, similar to 
+    joblib's behavior.
 
-    If running under pytest, returns 2 jobs. If using a parallel backend,
-    returns the number of jobs configured for the backend. Otherwise, returns
-    the number of CPUs adjusted for negative `n_jobs` values.
-    """
+    - If running under pytest, it returns 2 jobs.
+    - If the `active` configuration in NetworkX's config is `True`, `n_jobs` 
+      is extracted from the NetworkX config.
+    - Otherwise, `n_jobs` is obtained from joblib's active backend.
+    - `ValueError` is raised if `n_jobs` is 0."""
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
 
