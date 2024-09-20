@@ -41,8 +41,8 @@ def get_n_jobs(n_jobs=None):
 
             n_jobs = get_active_backend()[1]
 
-    if not n_jobs:
-        return 1  # Default to 1 if no valid n_jobs is found or passed
+    if n_jobs is None:
+        return 1
     if n_jobs < 0:
         return os.cpu_count() + n_jobs + 1
 
