@@ -19,7 +19,13 @@ def test_get_n_jobs():
 
         # Test with n_jobs set to negative value
         assert nxp.get_n_jobs(-1) == os.cpu_count()
-
+        nx.config.backends.parallel.active = False
+        from joblib import parallel_config
+        parallel_config(n_jobs=3)
+        assert nxp.get_n_jobs() == 3
+        nx.config.backends.parallel.active = True
+        nx.config.backends.parallel.n_jobs = 5
+        assert nxp.get_n_jobs() == 5
     # Test with n_jobs = 0 to raise a ValueError
     try:
         nxp.get_n_jobs(0)
