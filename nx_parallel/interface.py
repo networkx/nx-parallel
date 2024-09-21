@@ -50,10 +50,7 @@ class ParallelGraph:
 
     __networkx_backend__ = "parallel"
 
-    def __init__(
-        self,
-        graph_object=None,
-    ):
+    def __init__(self, graph_object=None):
         if graph_object is None:
             self.graph_object = nx.Graph()
         elif isinstance(graph_object, nx.Graph):
