@@ -1,4 +1,3 @@
-from typing import Union
 from operator import attrgetter
 
 import networkx as nx
@@ -7,7 +6,6 @@ from nx_parallel import algorithms
 
 __all__ = ["BackendInterface", "ParallelGraph"]
 
-NX_GTYPES = Union[nx.Graph, nx.DiGraph, nx.MultiGraph, nx.MultiDiGraph]
 
 ALGORITHMS = [
     # Bipartite
@@ -54,11 +52,11 @@ class ParallelGraph:
 
     def __init__(
         self,
-        graph_object,
+        graph_object=None,
     ):
         if graph_object is None:
             self.graph_object = nx.Graph()
-        elif isinstance(graph_object, NX_GTYPES):
+        elif isinstance(graph_object, nx.Graph):
             self.graph_object = graph_object
         else:
             self.graph_object = nx.Graph(graph_object)
