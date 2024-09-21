@@ -3,8 +3,6 @@ import os
 
 import networkx as nx
 
-from nx_parallel.utils.types import GraphIteratorType
-
 
 __all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
