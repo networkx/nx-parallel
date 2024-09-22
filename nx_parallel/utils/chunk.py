@@ -19,7 +19,10 @@ def chunks(iterable, n_chunks):
 
 
 def get_n_jobs(n_jobs=None):
-    """Returns the positive value of `n_jobs` by either extracting it from the
+    """Returns the positive value of `n_jobs`
+
+
+    Returns the positive value of `n_jobs` by either extracting it from the
     active configuration system or modifying the passed-in value, similar to
     joblib's behavior.
 
@@ -27,7 +30,8 @@ def get_n_jobs(n_jobs=None):
     - If the `active` configuration in NetworkX's config is `True`, `n_jobs`
       is extracted from the NetworkX config.
     - Otherwise, `n_jobs` is obtained from joblib's active backend.
-    - `ValueError` is raised if `n_jobs` is 0."""
+    - `ValueError` is raised if `n_jobs` is 0.
+    """
     if "PYTEST_CURRENT_TEST" in os.environ:
         return 2
 
