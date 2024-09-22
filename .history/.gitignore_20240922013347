@@ -6,6 +6,9 @@ build/*
 dist/*
 nx_parallel/version.py
 examples/*/*.png
+doc/networkx-documentation.zip
+doc/networkx_reference.pdf
+doc/networkx_tutorial.pdf
 doc/build
 doc/ghpages_build
 .coverage

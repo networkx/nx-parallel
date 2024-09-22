@@ -4,8 +4,11 @@ __pycache__
 .DS_Store
 build/*
 dist/*
-nx_parallel/version.py
+networkx/version.py
 examples/*/*.png
+doc/networkx-documentation.zip
+doc/networkx_reference.pdf
+doc/networkx_tutorial.pdf
 doc/build
 doc/ghpages_build
 .coverage
@@ -24,7 +27,7 @@ examples/advanced/edgelist.utf-8
 examples/basic/grid.edgelist
 
 # Generated when 'python setup_egg.py'
-nx_parallel.egg-info/
+networkx.egg-info/
 
 # Sublime Text project files
 *.sublime-project
