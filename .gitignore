@@ -2,6 +2,7 @@
 __pycache__
 *~
 .DS_Store
+.history
 build/*
 dist/*
 nx_parallel/version.py
@@ -10,15 +11,6 @@ doc/build
 doc/ghpages_build
 .coverage
 *.class
-
-# Generated while building documentation.
-doc/auto_examples
-doc/modules
-doc/reference/generated
-doc/reference/algorithms/generated
-doc/reference/classes/generated
-doc/reference/readwrite/generated
-doc/path.to.file
 
 examples/advanced/edgelist.utf-8
 examples/basic/grid.edgelist
