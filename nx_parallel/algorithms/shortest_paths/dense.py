@@ -40,25 +40,12 @@ def floyd_warshall(G, weight="weight", blocking_factor=None):
     A = _adjacency_matrix(G, weight, nodelist, undirected)
     n = G.number_of_nodes()
 
-    total_cores = nxp.cpu_count()
-    print(
-        "number of nodes: ",
-        n,
-        " number of core: ",
-        total_cores,
-    )
+    total_cores = nxp.get_n_jobs()
+
     if blocking_factor is None:
         blocking_factor, is_prime = _find_nearest_divisor(n, total_cores)
     no_of_primary = n // blocking_factor
 
-    print(
-        "blocking factor: ",
-        blocking_factor,
-        " number of block: ",
-        no_of_primary,
-        " number of core: ",
-        total_cores,
-    )
     for primary_block in range(no_of_primary):
         k_start = (primary_block * n) // no_of_primary
         k_end = k_start + (n // no_of_primary) - 1
@@ -66,10 +53,9 @@ def floyd_warshall(G, weight="weight", blocking_factor=None):
             k_end = k_end + (n % no_of_primary)
         k = (k_start, k_end)
         # Phase 1: Compute Primary block
-        # print("\n\niteration:",primary_block,"\n\n")
         # Execute Normal floyd warshall for the primary block submatrix
         _partial_floyd_warshall_numpy(A, k, k, k)
-        # print("After phase 1 - it",primary_block,":\n",A)
+
         # Phase 2: Compute Cross block
 
         params = []
@@ -87,8 +73,7 @@ def floyd_warshall(G, weight="weight", blocking_factor=None):
         Parallel(n_jobs=(no_of_primary - 1) * 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
-        # print("phase 2, coordinate", params)
-        # print("After phase 2 - it",primary_block,":\n",A)
+
         # Phase 3: Compute remaining
         params.clear()
         for block_i in range(no_of_primary):
@@ -106,9 +91,6 @@ def floyd_warshall(G, weight="weight", blocking_factor=None):
         Parallel(n_jobs=(no_of_primary - 1) ** 2, require="sharedmem")(
             delayed(_partial_floyd_warshall_numpy)(A, k, i, j) for (i, j) in params
         )
-        # print("phase 3, coordinate", params)
-        # print("After phase 3 - it",primary_block,":\n",A)
-    # print("Matrice di adiacenza \n", A)
     dist = _matrix_to_dict(A, nodelist)
 
     return dist
