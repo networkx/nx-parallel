@@ -76,7 +76,7 @@ def create_iterables(G, iterator, n_cores, list_of_iterator=None):
     Raises
     ------
     ValueError
-        If the iterator type is not one of "node", "edge" or "isolate".
+        If the iterator type is not valid.
     """
 
     if not list_of_iterator:
