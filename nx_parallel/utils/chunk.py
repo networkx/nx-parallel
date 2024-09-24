@@ -83,7 +83,7 @@ def create_iterables(
     Raises
     ------
     ValueError
-        If the iterator type is not valid.
+        If the iterator type is not one of "node", "edge" or "isolate".
     """
 
     if not list_of_iterator:
