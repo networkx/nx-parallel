@@ -1,7 +1,5 @@
 from operator import attrgetter
-
 import networkx as nx
-
 from nx_parallel import algorithms
 
 __all__ = ["BackendInterface", "ParallelGraph"]

@@ -1,6 +1,5 @@
 import itertools
 import os
-
 import networkx as nx
 
 
@@ -20,7 +19,6 @@ def chunks(iterable, n_chunks):
 
 def get_n_jobs(n_jobs=None):
     """Returns the positive value of `n_jobs`
-
 
     Returns the positive value of `n_jobs` by either extracting it from the
     active configuration system or modifying the passed-in value, similar to
@@ -54,12 +52,7 @@ def get_n_jobs(n_jobs=None):
     return int(n_jobs)
 
 
-def create_iterables(
-    G,
-    iterator,
-    n_cores,
-    list_of_iterator=None,
-):
+def create_iterables(G, iterator, n_cores, list_of_iterator=None):
     """Create an iterable of function inputs for parallel computation
     based on the provided iterator type.
 
@@ -77,7 +70,7 @@ def create_iterables(
 
     Returns
     -------
-    iterable
+    iterable : Iterable
         An iterable of function inputs.
 
     Raises
