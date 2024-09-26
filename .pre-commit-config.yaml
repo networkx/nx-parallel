@@ -2,13 +2,6 @@
 # pre-commit install
 
 repos:
-  - repo: local
-    hooks:
-      - id: update-get_info
-        name: Update function info
-        entry: sh _nx_parallel/script.sh
-        language: system
-        pass_filenames: false
   - repo: https://github.com/adamchainz/blacken-docs
     rev: 1.18.0
     hooks:
@@ -20,3 +13,10 @@ repos:
         args:
           - --fix
       - id: ruff-format
+  - repo: local
+    hooks:
+      - id: update-get_info
+        name: Update function info
+        entry: sh _nx_parallel/script.sh
+        language: system
+        pass_filenames: false
