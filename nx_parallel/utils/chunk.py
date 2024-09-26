@@ -18,7 +18,7 @@ def chunks(iterable, n_chunks):
 
 
 def get_n_jobs(n_jobs=None):
-    """Returns the positive value of `n_jobs`
+    """Get the positive value of `n_jobs`
 
     Returns the positive value of `n_jobs` by either extracting it from the
     active configuration system or modifying the passed-in value, similar to
