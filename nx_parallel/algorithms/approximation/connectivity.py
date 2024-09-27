@@ -1,4 +1,5 @@
 """Parallel implementations of fast approximation for node connectivity"""
+
 import itertools
 from joblib import Parallel, delayed
 from networkx.algorithms.approximation.connectivity import local_node_connectivity
