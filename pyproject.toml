@@ -48,7 +48,7 @@ parallel = "_nx_parallel:get_info"
 [project.optional-dependencies]
 developer = [
     'pre-commit==3.8.0',
-    'ruff==0.1.8',
+    'ruff==0.6.7',
 ]
 test = [
     'pytest>=7.2',
