@@ -40,20 +40,18 @@ def betweenness_centrality(
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    if k is None:
-        nodes = G.nodes
-    else:
-        nodes = seed.sample(list(G.nodes), k)
-
     def process_func(G, chunk, weight, endpoints):
         return _betweenness_centrality_node_subset(
             G, chunk, weight=weight, endpoints=endpoints
         )
 
     def iterator_func(G):
-        return G.nodes
+        if k is None:
+            return G.nodes
+        else:
+            return seed.sample(list(G.nodes), k)
 
-    results = nxp.utils.chunks.execute_parallel(
+    bt_cs = nxp.utils.chunks.execute_parallel(
         G,
         process_func=process_func,
         iterator_func=iterator_func,
@@ -64,7 +62,7 @@ def betweenness_centrality(
 
     # Reducing partial solution
     bt_c = {}
-    for bt in results:
+    for bt in bt_cs:
         for n, value in bt.items():
             bt_c[n] = bt_c.get(n, 0.0) + value
 
@@ -115,18 +113,16 @@ def edge_betweenness_centrality(
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    if k is None:
-        nodes = G.nodes
-    else:
-        nodes = seed.sample(list(G.nodes), k)
-
-    def process_func(G, chunk, weight) -> dict:
+    def process_func(G, chunk, weight):
         return _edge_betweenness_centrality_node_subset(G, chunk, weight=weight)
 
     def iterator_func(G):
-        return nodes
+        if k is None:
+            return G.nodes
+        else:
+            return seed.sample(list(G.nodes), k)
 
-    results = nxp.utils.chunk.execute_parallel(
+    bt_cs = nxp.utils.chunk.execute_parallel(
         G,
         process_func=process_func,
         iterator_func=iterator_func,
@@ -136,12 +132,12 @@ def edge_betweenness_centrality(
 
     # Reducing partial solution
     bt_c = {}
-    for partial_bt in results:
+    for partial_bt in bt_cs:
         for edge, value in partial_bt.items():
             bt_c[edge] = bt_c.get(edge, 0.0) + value
 
-    for node in G:  # remove nodes to only return edges
-        bt_c.pop(node, None)
+    for n in G:  # remove nodes to only return edges
+        del bt_c[n]
 
     betweenness = _rescale_e(bt_c, len(G), normalized=normalized, k=k)
 
