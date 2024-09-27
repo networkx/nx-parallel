@@ -112,7 +112,7 @@ def get_info():
                 },
             },
             "floyd_warshall": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/dense.py#L11",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/dense.py#L12",
                 "additional_docs": "Parallel implementation of Floyd warshall using the tiled floyd warshall algorithm  [1]_.",
                 "additional_parameters": {
                     "blocking_factor : number": "The number used for divinding the adjacency matrix in sub-matrix. The default blocking factor is get by finding the optimal value for the core available",

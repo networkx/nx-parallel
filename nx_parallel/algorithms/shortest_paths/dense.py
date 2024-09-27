@@ -1,4 +1,5 @@
 """Floyd-Warshall algorithm for shortest paths."""
+
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 import math
