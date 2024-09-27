@@ -62,7 +62,7 @@ def betweenness_centrality(
         endpoints=endpoints,
     )
 
-    # Aggregation of partial results
+    # Reducing the partial solution
     bt_c = {}
     for bt in results:
         for n, value in bt.items():
@@ -126,7 +126,6 @@ def edge_betweenness_centrality(
     def iterator_func(G):
         return nodes
 
-    # Execute the parallel processing
     results = nxp.utils.chunk.execute_parallel(
         G,
         process_func=process_func,
@@ -135,7 +134,7 @@ def edge_betweenness_centrality(
         weight=weight,
     )
 
-    # Aggregation of partial results
+    # Reducing the partial solution
     bt_c = {}
     for partial_bt in results:
         for edge, value in partial_bt.items():
