@@ -62,7 +62,7 @@ def betweenness_centrality(
         endpoints=endpoints,
     )
 
-    # Reducing the partial solution
+    # Reducing partial solution
     bt_c = {}
     for bt in results:
         for n, value in bt.items():
@@ -134,20 +134,17 @@ def edge_betweenness_centrality(
         weight=weight,
     )
 
-    # Reducing the partial solution
+    # Reducing partial solution
     bt_c = {}
     for partial_bt in results:
         for edge, value in partial_bt.items():
             bt_c[edge] = bt_c.get(edge, 0.0) + value
 
-    # Remove node entries to retain only edges (in case any nodes were mistakenly included)
-    for node in G:
+    for node in G:  # remove nodes to only return edges
         bt_c.pop(node, None)
 
-    # Rescale the betweenness centrality values
     betweenness = _rescale_e(bt_c, len(G), normalized=normalized, k=k)
 
-    # Handle MultiGraphs by adding edge keys
     if G.is_multigraph():
         betweenness = _add_edge_keys(G, betweenness, weight=weight)
 
