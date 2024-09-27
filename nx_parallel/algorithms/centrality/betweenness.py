@@ -1,4 +1,3 @@
-from joblib import Parallel, delayed
 from networkx.algorithms.centrality.betweenness import (
     _accumulate_basic,
     _accumulate_endpoints,
@@ -46,23 +45,28 @@ def betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    n_jobs = nxp.get_n_jobs()
+    def process_func(G, chunk, weight, endpoints):
+        return _betweenness_centrality_node_subset(
+            G, chunk, weight=weight, endpoints=endpoints
+        )
 
-    if get_chunks == "chunks":
-        node_chunks = nxp.create_iterables(G, "node", n_jobs, nodes)
-    else:
-        node_chunks = get_chunks(nodes)
+    def iterator_func(G):
+        return G.nodes
 
-    bt_cs = Parallel()(
-        delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
-        for chunk in node_chunks
+    results = nxp.utils.chunks.execute_parallel(
+        G,
+        process_func=process_func,
+        iterator_func=iterator_func,
+        get_chunks=get_chunks,
+        weight=weight,
+        endpoints=endpoints,
     )
 
-    # Reducing partial solution
-    bt_c = bt_cs[0]
-    for bt in bt_cs[1:]:
-        for n in bt:
-            bt_c[n] += bt[n]
+    # Aggregation of partial results
+    bt_c = {}
+    for bt in results:
+        for n, value in bt.items():
+            bt_c[n] = bt_c.get(n, 0.0) + value
 
     betweenness = _rescale(
         bt_c,
@@ -116,29 +120,35 @@ def edge_betweenness_centrality(
     else:
         nodes = seed.sample(list(G.nodes), k)
 
-    n_jobs = nxp.get_n_jobs()
+    def process_func(G, chunk, weight) -> dict:
+        return _edge_betweenness_centrality_node_subset(G, chunk, weight=weight)
 
-    if get_chunks == "chunks":
-        node_chunks = nxp.create_iterables(G, "node", n_jobs, nodes)
-    else:
-        node_chunks = get_chunks(nodes)
+    def iterator_func(G):
+        return nodes
 
-    bt_cs = Parallel()(
-        delayed(_edge_betweenness_centrality_node_subset)(G, chunk, weight)
-        for chunk in node_chunks
+    # Execute the parallel processing
+    results = nxp.utils.chunk.execute_parallel(
+        G,
+        process_func=process_func,
+        iterator_func=iterator_func,
+        get_chunks=get_chunks,
+        weight=weight,
     )
 
-    # Reducing partial solution
-    bt_c = bt_cs[0]
-    for bt in bt_cs[1:]:
-        for e in bt:
-            bt_c[e] += bt[e]
+    # Aggregation of partial results
+    bt_c = {}
+    for partial_bt in results:
+        for edge, value in partial_bt.items():
+            bt_c[edge] = bt_c.get(edge, 0.0) + value
 
-    for n in G:  # remove nodes to only return edges
-        del bt_c[n]
+    # Remove node entries to retain only edges (in case any nodes were mistakenly included)
+    for node in G:
+        bt_c.pop(node, None)
 
+    # Rescale the betweenness centrality values
     betweenness = _rescale_e(bt_c, len(G), normalized=normalized, k=k)
 
+    # Handle MultiGraphs by adding edge keys
     if G.is_multigraph():
         betweenness = _add_edge_keys(G, betweenness, weight=weight)
 

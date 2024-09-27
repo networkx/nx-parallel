@@ -1,9 +1,34 @@
 import itertools
 import os
+import threading
+from contextlib import contextmanager
 import networkx as nx
+import nx_parallel as nxp
+from joblib import Parallel, delayed
+
+__all__ = ["chunks", "get_n_jobs", "execute_parallel"]
+
+_joblib_config = (
+    threading.local()
+)  # thread-local storage ensures that parallel configs are thread-safe and do not interfere with each other during concurrent executions.
 
 
-__all__ = ["chunks", "get_n_jobs", "create_iterables"]
+@contextmanager
+def parallel_config(**kwargs):
+    """
+    Context manager to set Joblib's Parallel configurations in thread-local storage.
+
+    Parameters
+    ----------
+    **kwargs : dict
+        Keyword arguments corresponding to Joblib's Parallel parameters (e.g., backend, verbose).
+    """
+    original_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
+    _joblib_config.parallel_kwargs = kwargs
+    try:
+        yield
+    finally:
+        _joblib_config.parallel_kwargs = original_kwargs
 
 
 def chunks(iterable, n_chunks):
@@ -52,44 +77,56 @@ def get_n_jobs(n_jobs=None):
     return int(n_jobs)
 
 
-def create_iterables(G, iterator, n_cores, list_of_iterator=None):
-    """Create an iterable of function inputs for parallel computation
-    based on the provided iterator type.
+def execute_parallel(
+    G: nx.Graph,
+    process_func,
+    iterator_func,
+    get_chunks="chunks",
+    **kwargs,
+):
+    """
+    Helper function to execute a processing function in parallel over chunks of data.
 
     Parameters
     ----------
-    G : NetworkX graph
-        The NetworkX graph.
-    iterator : str
-        Type of iterator. Valid values are 'node', 'edge', 'isolate'
-    n_cores : int
-        The number of cores to use.
-    list_of_iterator : list, optional
-        A precomputed list of items to iterate over. If None, it will
-        be generated based on the iterator type.
+    G : networkx.Graph
+        The graph on which the algorithm operates.
+    process_func : callable
+        The function to process each chunk. Should accept (G, chunk, **kwargs).
+    iterator_func : callable, optional
+        A function that takes G and returns an iterable of data to process.
+    get_chunks : str or callable, optional (default="chunks")
+        Determines how to chunk the data.
+            - If "chunks", chunks are created automatically based on the number of jobs.
+            - If callable, it should take the data iterable and return an iterable of chunks.
+    **kwargs : dict
+        Additional keyword arguments to pass to `process_func`.
 
     Returns
     -------
-    iterable : Iterable
-        An iterable of function inputs.
-
-    Raises
-    ------
-    ValueError
-        If the iterator type is not one of "node", "edge" or "isolate".
+    list
+        A list of results from each parallel execution.
     """
+    n_jobs = nxp.get_n_jobs()
 
-    if not list_of_iterator:
-        if iterator == "node":
-            list_of_iterator = list(G.nodes)
-        elif iterator == "edge":
-            list_of_iterator = list(G.edges)
-        elif iterator == "isolate":
-            list_of_iterator = list(nx.isolates(G))
-        else:
-            raise ValueError(f"Invalid iterator type: {iterator}")
+    # generate data using the iterator function
+    data = iterator_func(G)
 
-    if not list_of_iterator:
-        return iter([])
+    # handle chunking
+    if get_chunks == "chunks":
+        # convert data to a list if it's a generator or other iterable
+        data = list(data)
+        data_chunks = nxp.chunks(data, max(len(data) // n_jobs, 1))
+    elif callable(get_chunks):
+        data_chunks = get_chunks(data)
+    else:
+        raise ValueError(
+            "get_chunks must be 'chunks' or a callable that returns an iterable of chunks."
+        )
 
-    return chunks(list_of_iterator, n_cores)
+    # read parallel_kwargs from thread-local storage
+    parallel_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
+
+    return Parallel(n_jobs=n_jobs, **(parallel_kwargs or {}))(
+        delayed(process_func)(G, chunk, **kwargs) for chunk in data_chunks
+    )
