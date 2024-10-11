@@ -42,9 +42,9 @@ Output:
 
 ```
 NetworkXConfig(
-    backend_priority=[],
+    backend_priority=BackendPriorities(algos=[], generators=[]),
     backends=Config(
-        parallel=ParallelConfig(
+        parallel=Config(
             active=False,
             backend="loky",
             n_jobs=None,
@@ -59,6 +59,8 @@ NetworkXConfig(
         )
     ),
     cache_converted_graphs=True,
+    fallback_to_nx=False,
+    warnings_to_ignore=set(),
 )
 ```
 
