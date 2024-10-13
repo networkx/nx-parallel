@@ -6,7 +6,7 @@ requires = ['setuptools>=61.2']
 name = "nx-parallel"
 description = "A parallel backend for NetworkX. It uses joblib to run NetworkX algorithms on multiple CPU cores."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dynamic = ['version']
 keywords = ["networkx", "graphs", "algorithms", "parallel"]
 license = {text = "BSD-3-Clause"}
@@ -16,14 +16,14 @@ classifiers = [
     'License :: OSI Approved :: BSD License',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
     'Programming Language :: Python :: 3 :: Only',
 ]
 
 dependencies = [
-    "networkx>=3.3",
+    "networkx>=3.4.1",
     "joblib>=1.4.2"
 ]
 
