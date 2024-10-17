@@ -1,8 +1,6 @@
-from functools import wraps
 from operator import attrgetter
 import networkx as nx
 from nx_parallel import algorithms
-from nx_parallel.utils.chunk import execute_parallel
 
 __all__ = ["BackendInterface", "ParallelGraph"]
 
