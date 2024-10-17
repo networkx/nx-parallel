@@ -103,7 +103,7 @@ def edge_betweenness_centrality(
     normalized=True,
     weight=None,
     seed=None,
-    get_chunks="edges",
+    get_chunks="nodes",
     **kwargs,
 ):
     """The parallel computation is implemented by dividing the nodes into chunks and
