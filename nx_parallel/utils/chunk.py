@@ -6,25 +6,28 @@ import networkx as nx
 import nx_parallel as nxp
 from joblib import Parallel, delayed
 
-__all__ = ["chunks", "get_n_jobs", "execute_parallel"]
+__all__ = ["parallel_config", "chunks", "get_n_jobs", "execute_parallel"]
 
 _joblib_config = (
     threading.local()
-)  # thread-local storage ensures that parallel configs are thread-safe and do not interfere with each other during concurrent executions.
+)  # thread-local storage ensures that parallel configs are thread-safe and do not
+# interfere with each other during concurrent executions.
 
 
 @contextmanager
 def parallel_config(**kwargs):
-    """
-    Context manager to set Joblib's Parallel configurations in thread-local storage.
+    """Context manager to temporarily override Joblib's Parallel configurations.
 
     Parameters
     ----------
     **kwargs : dict
-        Keyword arguments corresponding to Joblib's Parallel parameters (e.g., backend, verbose).
+        Keyword arguments corresponding to Joblib's Parallel parameters
+        (e.g., backend, verbose). These overrides are temporary and confined
+        to the current thread.
     """
-    original_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
-    _joblib_config.parallel_kwargs = kwargs
+    original_kwargs = getattr(_joblib_config, "parallel_kwargs", {}).copy()
+    _joblib_config.parallel_kwargs = {**original_kwargs, **kwargs}
+
     try:
         yield
     finally:
@@ -49,13 +52,17 @@ def get_n_jobs(n_jobs=None):
     active configuration system or modifying the passed-in value, similar to
     joblib's behavior.
 
-    - If running under pytest, it returns 2 jobs.
+    - If running under pytest, it returns 2 jobs when n_jobs is None.
     - If the `active` configuration in NetworkX's config is `True`, `n_jobs`
       is extracted from the NetworkX config.
     - Otherwise, `n_jobs` is obtained from joblib's active backend.
     - `ValueError` is raised if `n_jobs` is 0.
     """
-    if "PYTEST_CURRENT_TEST" in os.environ:
+    parallel_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
+    if n_jobs is None and "n_jobs" in parallel_kwargs:
+        n_jobs = parallel_kwargs["n_jobs"]
+
+    if n_jobs is None and "PYTEST_CURRENT_TEST" in os.environ:
         return 2
 
     if n_jobs is None:
@@ -84,8 +91,7 @@ def execute_parallel(
     get_chunks="chunks",
     **kwargs,
 ):
-    """
-    Helper function to execute a processing function in parallel over chunks of data.
+    """Helper function to execute a processing function in parallel over chunks of data.
 
     Parameters
     ----------
@@ -93,12 +99,13 @@ def execute_parallel(
         The graph on which the algorithm operates.
     process_func : callable
         The function to process each chunk. Should accept (G, chunk, **kwargs).
-    iterator_func : callable, optional
+    iterator_func : callable
         A function that takes G and returns an iterable of data to process.
     get_chunks : str or callable, optional (default="chunks")
         Determines how to chunk the data.
             - If "chunks", chunks are created automatically based on the number of jobs.
-            - If callable, it should take the data iterable and return an iterable of chunks.
+            - If callable, it should take the data iterable and return an iterable of
+            chunks.
     **kwargs : dict
         Additional keyword arguments to pass to `process_func`.
 
@@ -109,24 +116,40 @@ def execute_parallel(
     """
     n_jobs = nxp.get_n_jobs()
 
-    # generate data using the iterator function
     data = iterator_func(G)
 
-    # handle chunking
     if get_chunks == "chunks":
-        # convert data to a list if it's a generator or other iterable
         data = list(data)
         data_chunks = nxp.chunks(data, max(len(data) // n_jobs, 1))
     elif callable(get_chunks):
         data_chunks = get_chunks(data)
     else:
         raise ValueError(
-            "get_chunks must be 'chunks' or a callable that returns an iterable of chunks."
+            "get_chunks must be 'chunks' or a callable that returns an iterable of "
+            "chunks."
         )
 
-    # read parallel_kwargs from thread-local storage
-    parallel_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
+    # retrieve global backend ParallelConfig instance
+    config = nx.config.backends.parallel
 
-    return Parallel()(
+    joblib_params = {
+        "backend": config.backend,
+        "n_jobs": n_jobs,
+        "verbose": config.verbose,
+        "temp_folder": config.temp_folder,
+        "max_nbytes": config.max_nbytes,
+        "mmap_mode": config.mmap_mode,
+        "prefer": config.prefer,
+        "require": config.require,
+        "inner_max_num_threads": config.inner_max_num_threads,
+    }
+
+    # retrieve and apply overrides from parallel_config
+    parallel_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
+    joblib_params.update(parallel_kwargs)
+
+    joblib_params = {k: v for k, v in joblib_params.items() if v is not None}
+
+    return Parallel(**joblib_params)(
         delayed(process_func)(G, chunk, **kwargs) for chunk in data_chunks
     )

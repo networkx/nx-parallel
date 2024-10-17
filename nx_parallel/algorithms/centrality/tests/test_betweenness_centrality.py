@@ -3,33 +3,48 @@ import nx_parallel as nxp
 import math
 
 
-def test_betweenness_centrality_get_chunks():
-    def get_chunk(nodes):
+def test_edge_betweenness_centrality_get_chunks():
+    def get_chunk(edges):
         num_chunks = nxp.get_n_jobs()
-        nodes_ebc = {i: 0 for i in nodes}
-        for i in ebc:
-            nodes_ebc[i[0]] += ebc[i]
-            nodes_ebc[i[1]] += ebc[i]
 
-        sorted_nodes = sorted(nodes_ebc.items(), key=lambda x: x[1], reverse=True)
+        # Convert edges to a list to support slicing
+        edges = list(edges)
 
-        chunks = [[] for _ in range(num_chunks)]
-        chunk_sums = [0] * num_chunks
+        # Split edges into chunks without relying on precomputed centrality
+        chunk_size = max(1, len(edges) // num_chunks)
+        chunks = [edges[i : i + chunk_size] for i in range(0, len(edges), chunk_size)]
 
-        for node, value in sorted_nodes:
-            min_chunk_index = chunk_sums.index(min(chunk_sums))
-            chunks[min_chunk_index].append(node)
-            chunk_sums[min_chunk_index] += value
+        # Debugging: Print how edges are distributed among chunks
+        print(f"Chunks distribution: {chunks}")
 
         return chunks
 
+    # Create a random graph
     G = nx.fast_gnp_random_graph(100, 0.1, directed=False)
-    H = nxp.ParallelGraph(G)
-    ebc = nx.edge_betweenness_centrality(G)
-    par_bc_chunk = nxp.betweenness_centrality(H, get_chunks=get_chunk)  # smoke test
-    par_bc = nxp.betweenness_centrality(H)
+    H = nxp.ParallelGraph(G)  # Wrap the graph in ParallelGraph
 
-    for i in range(len(G.nodes)):
-        assert math.isclose(par_bc[i], par_bc_chunk[i], abs_tol=1e-16)
-    # get_chunk is faster than default(for big graphs)
-    # G = nx.bipartite.random_graph(400, 700, 0.8, seed=5, directed=False)
+    # Compute edge betweenness centrality using NetworkX
+    ebc = nx.edge_betweenness_centrality(G, normalized=True)
+
+    # Debugging: Print the edge betweenness centrality values from NetworkX
+    print(f"NetworkX Edge Betweenness Centrality: {ebc}")
+
+    # Instantiate the BackendInterface
+    backend = nxp.BackendInterface()
+
+    # Smoke test for edge_betweenness_centrality with custom get_chunks
+    par_bc_chunk = backend.edge_betweenness_centrality(
+        H.graph_object,  # Pass the underlying NetworkX graph
+        get_chunks=get_chunk,  # Pass the custom get_chunks function
+    )
+
+    # Debugging: Print the results from parallel computation
+    print(f"Parallel Computed Edge Betweenness Centrality: {par_bc_chunk}")
+
+    # Compare with standard NetworkX edge betweenness centrality
+    standard_bc = nx.edge_betweenness_centrality(G, normalized=True)
+
+    for edge in standard_bc:
+        assert math.isclose(
+            par_bc_chunk[edge], standard_bc[edge], abs_tol=1e-6
+        ), f"Edge {edge} mismatch: {par_bc_chunk[edge]} vs {standard_bc[edge]}"
