@@ -51,7 +51,7 @@ def betweenness_centrality(
         else:
             return seed.sample(list(G.nodes), k)
 
-    bt_cs = nxp.utils.chunks.execute_parallel(
+    bt_cs = nxp.utils.chunk.execute_parallel(
         G,
         process_func=process_func,
         iterator_func=iterator_func,
