@@ -127,6 +127,6 @@ def execute_parallel(
     # read parallel_kwargs from thread-local storage
     parallel_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
 
-    return Parallel(n_jobs=n_jobs, **(parallel_kwargs or {}))(
+    return Parallel()(
         delayed(process_func)(G, chunk, **kwargs) for chunk in data_chunks
     )
