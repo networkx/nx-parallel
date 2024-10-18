@@ -103,7 +103,8 @@ def execute_parallel(
         A function that takes G and returns an iterable of data to process.
     get_chunks : str or callable, optional (default="chunks")
         Determines how to chunk the data.
-            - If "chunks", chunks are created automatically based on the number of jobs.
+            - If "chunks" or "nodes", chunks are created automatically based on the
+            number of jobs.
             - If callable, it should take the data iterable and return an iterable of
             chunks.
     **kwargs : dict
@@ -118,15 +119,15 @@ def execute_parallel(
 
     data = iterator_func(G)
 
-    if get_chunks == "chunks":
+    if get_chunks in {"chunks", "nodes"}:
         data = list(data)
         data_chunks = nxp.chunks(data, max(len(data) // n_jobs, 1))
     elif callable(get_chunks):
         data_chunks = get_chunks(data)
     else:
         raise ValueError(
-            "get_chunks must be 'chunks' or a callable that returns an iterable of "
-            "chunks."
+            "get_chunks must be 'chunks', 'nodes', or a callable that returns an "
+            "iterable of chunks."
         )
 
     # retrieve global backend ParallelConfig instance
