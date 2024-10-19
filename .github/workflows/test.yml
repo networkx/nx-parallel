@@ -28,8 +28,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          python -m pip install scipy numpy pytest-randomly
-            # pandas pytest-cov matplotlib lxml pygraphviz pydot sympy  # Extra networkx deps we don't need yet
           python -m pip install git+https://github.com/networkx/networkx.git@main
           python -m pip install .
           echo "Done with installing"
