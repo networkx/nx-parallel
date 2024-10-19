@@ -30,6 +30,7 @@ jobs:
         run: |
           python -m pip install git+https://github.com/networkx/networkx.git@main
           python -m pip install .
+          python -m pip install ".[test]"
           echo "Done with installing"
       - name: PyTest
         run: |
