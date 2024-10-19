@@ -84,8 +84,9 @@ def test_get_chunks():
                     H, process_func, iterator_func, get_chunks=random_chunking
                 )
                 if isinstance(c1, types.GeneratorType):
-                    c1, c2 = list(c1), list(
-                        c2
+                    c1, c2 = (
+                        list(c1),
+                        list(c2),
                     )  # Convert generators to lists for comparison
                     if func in chk_dict_vals:
                         for i in range(len(G.nodes)):
