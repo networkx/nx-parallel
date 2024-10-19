@@ -81,9 +81,9 @@ class ParallelGraph:
 def assign_algorithms(cls):
     """Class decorator to assign algorithms to the class attributes."""
     for attr in ALGORITHMS:
-        func_name = attr.rsplit(".", 1)[-1]
-        func = attrgetter(attr)(algorithms)
-        setattr(cls, func_name, staticmethod(func))
+        setattr(
+            cls, attr.rsplit(".", 1)[-1], staticmethod(attrgetter(attr)(algorithms))
+        )
     return cls
 
 

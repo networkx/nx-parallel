@@ -27,7 +27,7 @@ def test_get_n_jobs():
         with patch("joblib.parallel.get_active_backend", return_value=("loky", 3)):
             assert nxp.get_n_jobs() == 3
 
-        # Test with n_jobs set in NetworkX config
+        # Test with n_jobs set in NX config
         nx.config.backends.parallel.active = True
         nx.config.backends.parallel.n_jobs = 5
         assert nxp.get_n_jobs() == 5
@@ -59,13 +59,11 @@ def test_execute_parallel_basic():
     G = nx.path_graph(10)
     H = nxp.ParallelGraph(G)
 
-    # Define a simple process_func that calculates the degree of each node in the chunk
     def process_func(G, chunk, **kwargs):
         return {node: G.degree(node) for node in chunk}
 
-    # Define an iterator_func that returns all nodes
     def iterator_func(G):
-        return list(G.nodes())  # Convert NodeView to list
+        return list(G.nodes())
 
     # Execute in parallel without overrides
     results = nxp.execute_parallel(
@@ -85,17 +83,14 @@ def test_execute_parallel_basic():
 def test_execute_parallel_with_overrides():
     """Test `execute_parallel` with overridden parallel configuration."""
 
-    # Create a simple graph
     G = nx.complete_graph(5)
     H = nxp.ParallelGraph(G)
 
-    # Define a simple process_func that returns the list of nodes in the chunk
     def process_func(G, chunk, **kwargs):
         return list(chunk)
 
-    # Define an iterator_func that returns all nodes
     def iterator_func(G):
-        return list(G.nodes())  # Convert NodeView to list
+        return list(G.nodes())
 
     # Mock joblib.Parallel in the correct module
     with patch("nx_parallel.utils.chunk.Parallel") as mock_parallel:
@@ -123,11 +118,9 @@ def test_execute_parallel_callable_chunks():
     G = nx.cycle_graph(6)
     H = nxp.ParallelGraph(G)
 
-    # Define a process_func that sums node numbers in the chunk
     def process_func(G, chunk, **kwargs):
         return sum(chunk)
 
-    # Define an iterator_func that returns all nodes as a list
     def iterator_func(G):
         return list(G.nodes())  # Convert NodeView to list
 
@@ -151,17 +144,14 @@ def test_execute_parallel_callable_chunks():
 def test_parallel_config_override():
     """Test that `parallel_config` correctly overrides config within its context."""
 
-    # Define a simple graph
     G = nx.complete_graph(5)
     H = nxp.ParallelGraph(G)
 
-    # Define a simple process_func that returns the list of nodes in the chunk
     def process_func(G, chunk, **kwargs):
         return list(chunk)
 
-    # Define an iterator_func that returns all nodes
     def iterator_func(G):
-        return list(G.nodes())  # Convert NodeView to list
+        return list(G.nodes())
 
     # Mock joblib.Parallel to capture the parameters it's called with
     with patch("nx_parallel.utils.chunk.Parallel") as mock_parallel:
@@ -189,11 +179,9 @@ def test_parallel_config_nested_overrides():
     G = nx.complete_graph(5)
     H = nxp.ParallelGraph(G)
 
-    # Define a simple process_func
     def process_func(G, chunk, **kwargs):
         return list(chunk)
 
-    # Define an iterator_func
     def iterator_func(G):
         return list(G.nodes())
 
