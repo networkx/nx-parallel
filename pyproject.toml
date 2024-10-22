@@ -23,7 +23,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "networkx>=3.4.1",
+    "networkx>=3.4.2",
     "joblib>=1.4.2"
 ]
 
