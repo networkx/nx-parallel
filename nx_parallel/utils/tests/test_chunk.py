@@ -4,6 +4,7 @@ import networkx as nx
 import nx_parallel as nxp
 
 
+@pytest.mark.order(2)
 def test_get_n_jobs():
     """Test for various scenarios in `get_n_jobs`."""
     # Test with no n_jobs (default)

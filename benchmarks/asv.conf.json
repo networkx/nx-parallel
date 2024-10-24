@@ -11,7 +11,7 @@
     "dvcs": "git",
     "environment_type": "virtualenv",
     "show_commit_url": "https://github.com/networkx/nx-parallel/commit/",
-    "matrix": {"networkx": ["3.4.1"], "nx-parallel": []},
+    "matrix": {"networkx": ["3.4.2"], "nx-parallel": []},
     "benchmark_dir": "benchmarks",
     "env_dir": "env",
     "results_dir": "results",
