@@ -38,8 +38,6 @@ def betweenness_centrality(
         iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
     """
-    if hasattr(G, "graph_object"):
-        G = G.graph_object
 
     def process_func(G, chunk, weight, endpoints):
         return _betweenness_centrality_node_subset(
@@ -118,8 +116,6 @@ def edge_betweenness_centrality(
         iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
     """
-    if hasattr(G, "graph_object"):
-        G = G.graph_object
 
     def process_func(G, chunk, weight):
         return _edge_betweenness_centrality_node_subset(G, chunk, weight=weight)
