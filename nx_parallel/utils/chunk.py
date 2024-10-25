@@ -85,7 +85,7 @@ def get_n_jobs(n_jobs=None):
 
 
 def execute_parallel(
-    G: nx.Graph,
+    G,
     process_func,
     iterator_func,
     get_chunks="chunks",
@@ -95,7 +95,7 @@ def execute_parallel(
 
     Parameters
     ----------
-    G : networkx.Graph
+    G : networkx.Graph or ParallelGraph
         The graph on which the algorithm operates.
     process_func : callable
         The function to process each chunk. Should accept (G, chunk, **kwargs).
@@ -116,6 +116,9 @@ def execute_parallel(
         A list of results from each parallel execution.
     """
     n_jobs = nxp.get_n_jobs()
+
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
     data = iterator_func(G)
 

@@ -65,18 +65,6 @@ class ParallelGraph:
     def __str__(self):
         return f"Parallel{self.graph_object}"
 
-    def __getattr__(self, attr):
-        """Delegate attribute access to the underlying NetworkX graph."""
-        return getattr(self.graph_object, attr)
-
-    def __getstate__(self):
-        """Support pickling by returning the state of the underlying graph."""
-        return self.graph_object
-
-    def __setstate__(self, state):
-        """Support unpickling by restoring the underlying graph."""
-        self.graph_object = state
-
 
 def assign_algorithms(cls):
     """Class decorator to assign algorithms to the class attributes."""
