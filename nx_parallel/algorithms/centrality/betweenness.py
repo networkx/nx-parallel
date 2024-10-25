@@ -24,7 +24,6 @@ def betweenness_centrality(
     endpoints=False,
     seed=None,
     get_chunks="chunks",
-    **kwargs,
 ):
     """The parallel computation is implemented by dividing the nodes into chunks and
     computing betweenness centrality for each chunk concurrently.
@@ -57,7 +56,6 @@ def betweenness_centrality(
         get_chunks=get_chunks,
         weight=weight,
         endpoints=endpoints,
-        **kwargs,
     )
 
     # Reducing partial solution
@@ -102,7 +100,6 @@ def edge_betweenness_centrality(
     weight=None,
     seed=None,
     get_chunks="nodes",
-    **kwargs,
 ):
     """The parallel computation is implemented by dividing the nodes into chunks and
         computing edge betweenness centrality for each chunk concurrently.
@@ -132,7 +129,6 @@ def edge_betweenness_centrality(
         iterator_func=iterator_func,
         get_chunks=get_chunks,
         weight=weight,
-        **kwargs,
     )
 
     # Reducing partial solution
