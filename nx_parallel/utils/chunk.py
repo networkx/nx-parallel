@@ -1,9 +1,37 @@
 import itertools
 import os
+import threading
+from contextlib import contextmanager
 import networkx as nx
+import nx_parallel as nxp
+from joblib import Parallel, delayed
+
+__all__ = ["parallel_config", "chunks", "get_n_jobs", "execute_parallel"]
+
+_joblib_config = (
+    threading.local()
+)  # thread-local storage ensures that parallel configs are thread-safe and do not
+# interfere with each other during concurrent executions.
 
 
-__all__ = ["chunks", "get_n_jobs", "create_iterables"]
+@contextmanager
+def parallel_config(**kwargs):
+    """Context manager to temporarily override Joblib's Parallel configurations.
+
+    Parameters
+    ----------
+    **kwargs : dict
+        Keyword arguments corresponding to Joblib's Parallel parameters
+        (e.g., backend, verbose). These overrides are temporary and confined
+        to the current thread.
+    """
+    original_kwargs = getattr(_joblib_config, "parallel_kwargs", {}).copy()
+    _joblib_config.parallel_kwargs = {**original_kwargs, **kwargs}
+
+    try:
+        yield
+    finally:
+        _joblib_config.parallel_kwargs = original_kwargs
 
 
 def chunks(iterable, n_chunks):
@@ -24,13 +52,17 @@ def get_n_jobs(n_jobs=None):
     active configuration system or modifying the passed-in value, similar to
     joblib's behavior.
 
-    - If running under pytest, it returns 2 jobs.
+    - If running under pytest, it returns 2 jobs when n_jobs is None.
     - If the `active` configuration in NetworkX's config is `True`, `n_jobs`
       is extracted from the NetworkX config.
     - Otherwise, `n_jobs` is obtained from joblib's active backend.
     - `ValueError` is raised if `n_jobs` is 0.
     """
-    if "PYTEST_CURRENT_TEST" in os.environ:
+    parallel_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
+    if n_jobs is None and "n_jobs" in parallel_kwargs:
+        n_jobs = parallel_kwargs["n_jobs"]
+
+    if n_jobs is None and "PYTEST_CURRENT_TEST" in os.environ:
         return 2
 
     if n_jobs is None:
@@ -52,44 +84,76 @@ def get_n_jobs(n_jobs=None):
     return int(n_jobs)
 
 
-def create_iterables(G, iterator, n_cores, list_of_iterator=None):
-    """Create an iterable of function inputs for parallel computation
-    based on the provided iterator type.
+def execute_parallel(
+    G,
+    process_func,
+    iterator_func,
+    get_chunks="chunks",
+    **kwargs,
+):
+    """Helper function to execute a processing function in parallel over chunks of data.
 
     Parameters
     ----------
-    G : NetworkX graph
-        The NetworkX graph.
-    iterator : str
-        Type of iterator. Valid values are 'node', 'edge', 'isolate'
-    n_cores : int
-        The number of cores to use.
-    list_of_iterator : list, optional
-        A precomputed list of items to iterate over. If None, it will
-        be generated based on the iterator type.
+    G : networkx.Graph or ParallelGraph
+        The graph on which the algorithm operates.
+    process_func : callable
+        The function to process each chunk. Should accept (G, chunk, **kwargs).
+    iterator_func : callable
+        A function that takes G and returns an iterable of data to process.
+    get_chunks : str or callable, optional (default="chunks")
+        Determines how to chunk the data.
+            - If "chunks" or "nodes", chunks are created automatically based on the
+            number of jobs.
+            - If callable, it should take the data iterable and return an iterable of
+            chunks.
+    **kwargs : dict
+        Additional keyword arguments to pass to `process_func`.
 
     Returns
     -------
-    iterable : Iterable
-        An iterable of function inputs.
-
-    Raises
-    ------
-    ValueError
-        If the iterator type is not one of "node", "edge" or "isolate".
+    list
+        A list of results from each parallel execution.
     """
+    n_jobs = nxp.get_n_jobs()
 
-    if not list_of_iterator:
-        if iterator == "node":
-            list_of_iterator = list(G.nodes)
-        elif iterator == "edge":
-            list_of_iterator = list(G.edges)
-        elif iterator == "isolate":
-            list_of_iterator = list(nx.isolates(G))
-        else:
-            raise ValueError(f"Invalid iterator type: {iterator}")
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
 
-    if not list_of_iterator:
-        return iter([])
+    data = iterator_func(G)
 
-    return chunks(list_of_iterator, n_cores)
+    if get_chunks in {"chunks", "nodes"}:
+        data = list(data)
+        data_chunks = nxp.chunks(data, max(len(data) // n_jobs, 1))
+    elif callable(get_chunks):
+        data_chunks = get_chunks(data)
+    else:
+        raise ValueError(
+            "get_chunks must be 'chunks', 'nodes', or a callable that returns an "
+            "iterable of chunks."
+        )
+
+    # retrieve global backend ParallelConfig instance
+    config = nx.config.backends.parallel
+
+    joblib_params = {
+        "backend": config.backend,
+        "n_jobs": n_jobs,
+        "verbose": config.verbose,
+        "temp_folder": config.temp_folder,
+        "max_nbytes": config.max_nbytes,
+        "mmap_mode": config.mmap_mode,
+        "prefer": config.prefer,
+        "require": config.require,
+        "inner_max_num_threads": config.inner_max_num_threads,
+    }
+
+    # retrieve and apply overrides from parallel_config
+    parallel_kwargs = getattr(_joblib_config, "parallel_kwargs", {})
+    joblib_params.update(parallel_kwargs)
+
+    joblib_params = {k: v for k, v in joblib_params.items() if v is not None}
+
+    return Parallel(**joblib_params)(
+        delayed(process_func)(G, chunk, **kwargs) for chunk in data_chunks
+    )
