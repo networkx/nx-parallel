@@ -1,3 +1,64 @@
+# nx-parallel 0.3
+
+We're happy to announce the release of nx-parallel 0.3!
+
+## Enhancements
+
+- Add parallel version of edge_betweenness_centrality ([#60](https://github.com/networkx/nx-parallel/pull/60)).
+- Adding a `pre-commit` hook to update `get_info` ([#55](https://github.com/networkx/nx-parallel/pull/55)).
+- ENH: Adding and documenting configs in nx-parallel ([#75](https://github.com/networkx/nx-parallel/pull/75)).
+
+## Bug Fixes
+
+- Ignoring functions in `utils` for the `get_info` dict ([#78](https://github.com/networkx/nx-parallel/pull/78)).
+- Adding ruff as a developer dependency ([#85](https://github.com/networkx/nx-parallel/pull/85)).
+
+## Documentation
+
+- Update release process ([#66](https://github.com/networkx/nx-parallel/pull/66)).
+- DOC: minor doc_string changes to check write access ([#70](https://github.com/networkx/nx-parallel/pull/70)).
+
+## Infrastructure
+
+- ENH: Adding and documenting configs in nx-parallel ([#75](https://github.com/networkx/nx-parallel/pull/75)).
+
+## Maintenance
+
+- Revisiting nxp algorithms ([#63](https://github.com/networkx/nx-parallel/pull/63)).
+- MAINT: Switching to setuptools ([#69](https://github.com/networkx/nx-parallel/pull/69)).
+- MAINT: updated readme with conda installation guide ([#71](https://github.com/networkx/nx-parallel/pull/71)).
+- Ignoring functions in `utils` for the `get_info` dict ([#78](https://github.com/networkx/nx-parallel/pull/78)).
+- Test on Python 3.13-dev ([#83](https://github.com/networkx/nx-parallel/pull/83)).
+- Chore/style cleanup utility functions ([#80](https://github.com/networkx/nx-parallel/pull/80)).
+- Clean up and bump deps, ruff, pre-commit ([#84](https://github.com/networkx/nx-parallel/pull/84)).
+- MAINT: Drop support for python 3.10, and update min supported networkx version to 3.4.1 ([#88](https://github.com/networkx/nx-parallel/pull/88)).
+- TST: Added tests checking entry_points discovery and config initialisation ([#89](https://github.com/networkx/nx-parallel/pull/89)).
+
+## Contributors
+
+7 authors added to this release (alphabetically):
+
+- Aditi Juneja ([@Schefflera-Arboricola](https://github.com/Schefflera-Arboricola))
+- Dan Schult ([@dschult](https://github.com/dschult))
+- Derek Alexander ([@dPys](https://github.com/dPys))
+- Jakub Krajniak ([@jkrajniak](https://github.com/jkrajniak))
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+- Mridul Seth ([@MridulS](https://github.com/MridulS))
+- Ratan Kulshreshtha ([@RatanShreshtha](https://github.com/RatanShreshtha))
+
+8 reviewers added to this release (alphabetically):
+
+- Aditi Juneja ([@Schefflera-Arboricola](https://github.com/Schefflera-Arboricola))
+- Dan Schult ([@dschult](https://github.com/dschult))
+- Derek Alexander ([@dPys](https://github.com/dPys))
+- Erik Welch ([@eriknw](https://github.com/eriknw))
+- Jakub Krajniak ([@jkrajniak](https://github.com/jkrajniak))
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+- Mridul Seth ([@MridulS](https://github.com/MridulS))
+- Ross Barnowski ([@rossbar](https://github.com/rossbar))
+
+_These lists are automatically generated, and may not be complete or may contain duplicates._
+
 # nx-parallel 0.2
 
 We're happy to announce the release of nx-parallel 0.2!
