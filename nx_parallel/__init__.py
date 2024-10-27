@@ -3,4 +3,4 @@ from .utils import *
 from .algorithms import *
 from .interface import *
 
-__version__ = "0.3"
+__version__ = "0.4rc0.dev0"
