@@ -121,11 +121,12 @@ The default chunking in nx-parallel is done by slicing the list of nodes (or edg
 - The algorithm that you are considering to add to nx-parallel should be in the main networkx repository and it should have the `_dispatchable` decorator. If not, you can consider adding a sequential implementation in networkx first.
 - check-list for adding a new function:
   - [ ] Add the parallel implementation(make sure API doesn't break), the file structure should be the same as that in networkx.
-  - [ ] add the function to the `BackendInterface` class in [interface.py](./nx_parallel/interface.py) (take care of the `name` parameter in `_dispatchable` (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html)))
+  - [ ] Include the `get_chunks` additional parameter. Currently, all algorithms in nx-parallel offer the user to pass their own custom chunks. Unless it is impossible to chunk, please do include this additional parameter.
+  - [ ] add the function to the `ALGORITHMS` list in [interface.py](./nx_parallel/interface.py). Take care of the `name` parameter in `_dispatchable` for the algorithms with same name but different implementations. The `name` parameter is used distinguish such algorithms in a single namespace. (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html)))
   - [ ] update the `__init__.py` files accordingly
   - [ ] docstring following the above format
-  - [ ] run the [timing script](./timing/timing_individual_function.py) to get the performance heatmap
-  - [ ] add additional test(if any)
-  - [ ] add benchmark(s) for the new function(ref. the README in benchmarks folder for more details)
+  - [ ] add additional test, if needed. The smoke tests for the additional parameter `get_chunks` are done [here](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/tests/test_get_chunks.py) together for all the algorithms.
+  - [ ] run the [timing script](./timing/timing_individual_function.py) to get the performance heatmap (ref. [Issue#51](https://github.com/networkx/nx-parallel/issues/51))
+  - [ ] add benchmark(s) for the new function(ref. the README in `benchmarks` folder for more details)
 
 Happy contributing! 🎉
