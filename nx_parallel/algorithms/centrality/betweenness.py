@@ -1,4 +1,3 @@
-from joblib import Parallel, delayed
 from networkx.algorithms.centrality.betweenness import (
     _accumulate_basic,
     _accumulate_endpoints,
@@ -38,31 +37,35 @@ def betweenness_centrality(
         iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
     """
+
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    if k is None:
-        nodes = G.nodes
-    else:
-        nodes = seed.sample(list(G.nodes), k)
+    def process_func(G, chunk, weight, endpoints):
+        return _betweenness_centrality_node_subset(
+            G, chunk, weight=weight, endpoints=endpoints
+        )
 
-    n_jobs = nxp.get_n_jobs()
+    def iterator_func(G):
+        if k is None:
+            return G.nodes
+        else:
+            return seed.sample(list(G.nodes), k)
 
-    if get_chunks == "chunks":
-        node_chunks = nxp.create_iterables(G, "node", n_jobs, nodes)
-    else:
-        node_chunks = get_chunks(nodes)
-
-    bt_cs = Parallel()(
-        delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
-        for chunk in node_chunks
+    bt_cs = nxp.utils.chunk.execute_parallel(
+        G,
+        process_func=process_func,
+        iterator_func=iterator_func,
+        get_chunks=get_chunks,
+        weight=weight,
+        endpoints=endpoints,
     )
 
     # Reducing partial solution
-    bt_c = bt_cs[0]
-    for bt in bt_cs[1:]:
-        for n in bt:
-            bt_c[n] += bt[n]
+    bt_c = {}
+    for bt in bt_cs:
+        for n, value in bt.items():
+            bt_c[n] = bt_c.get(n, 0.0) + value
 
     betweenness = _rescale(
         bt_c,
@@ -94,7 +97,12 @@ def _betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
 @nxp._configure_if_nx_active()
 @py_random_state(4)
 def edge_betweenness_centrality(
-    G, k=None, normalized=True, weight=None, seed=None, get_chunks="chunks"
+    G,
+    k=None,
+    normalized=True,
+    weight=None,
+    seed=None,
+    get_chunks="nodes",
 ):
     """The parallel computation is implemented by dividing the nodes into chunks and
         computing edge betweenness centrality for each chunk concurrently.
@@ -111,28 +119,28 @@ def edge_betweenness_centrality(
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    if k is None:
-        nodes = G.nodes
-    else:
-        nodes = seed.sample(list(G.nodes), k)
+    def process_func(G, chunk, weight):
+        return _edge_betweenness_centrality_node_subset(G, chunk, weight=weight)
 
-    n_jobs = nxp.get_n_jobs()
+    def iterator_func(G):
+        if k is None:
+            return G.nodes
+        else:
+            return seed.sample(list(G.nodes), k)
 
-    if get_chunks == "chunks":
-        node_chunks = nxp.create_iterables(G, "node", n_jobs, nodes)
-    else:
-        node_chunks = get_chunks(nodes)
-
-    bt_cs = Parallel()(
-        delayed(_edge_betweenness_centrality_node_subset)(G, chunk, weight)
-        for chunk in node_chunks
+    bt_cs = nxp.utils.chunk.execute_parallel(
+        G,
+        process_func=process_func,
+        iterator_func=iterator_func,
+        get_chunks=get_chunks,
+        weight=weight,
     )
 
     # Reducing partial solution
-    bt_c = bt_cs[0]
-    for bt in bt_cs[1:]:
-        for e in bt:
-            bt_c[e] += bt[e]
+    bt_c = {}
+    for partial_bt in bt_cs:
+        for edge, value in partial_bt.items():
+            bt_c[edge] = bt_c.get(edge, 0.0) + value
 
     for n in G:  # remove nodes to only return edges
         del bt_c[n]
