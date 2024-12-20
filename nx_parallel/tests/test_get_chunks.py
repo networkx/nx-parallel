@@ -22,7 +22,21 @@ def get_all_functions(package_name="nx_parallel"):
 
     for name, obj in inspect.getmembers(package, inspect.isfunction):
         if not name.startswith("_"):
-            args, kwargs = inspect.getfullargspec(obj)[:2]
+            signature = inspect.signature(obj)
+            args = [
+                param.name
+                for param in signature.parameters.values()
+                if param.kind
+                in (
+                    inspect.Parameter.POSITIONAL_ONLY,
+                    inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                )
+            ]
+            kwargs = [
+                param.name
+                for param in signature.parameters.values()
+                if param.kind == inspect.Parameter.KEYWORD_ONLY
+            ]
             functions[name] = {"args": args, "kwargs": kwargs}
 
     return functions
@@ -76,14 +90,18 @@ def test_get_chunks():
                 if isinstance(c1, types.GeneratorType):
                     c1, c2 = dict(c1), dict(c2)
                     if func in chk_dict_vals:
-                        for i in range(len(G.nodes)):
-                            assert math.isclose(c1[i], c2[i], abs_tol=1e-16)
+                        for edge in G.edges:
+                            assert math.isclose(
+                                c1.get(edge, 0), c2.get(edge, 0), abs_tol=1e-16
+                            )
                     else:
                         assert c1 == c2
                 else:
                     if func in chk_dict_vals:
-                        for i in range(len(G.nodes)):
-                            assert math.isclose(c1[i], c2[i], abs_tol=1e-16)
+                        for edge in G.edges:
+                            assert math.isclose(
+                                c1.get(edge, 0), c2.get(edge, 0), abs_tol=1e-16
+                            )
                     else:
                         if isinstance(c1, float):
                             assert math.isclose(c1, c2, abs_tol=1e-16)
