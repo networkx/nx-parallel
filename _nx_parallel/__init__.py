@@ -90,64 +90,6 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
-            "bfs_edges": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L109",
-                "additional_docs": "Iterate over edges in a breadth-first-search starting at source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node": "Specify starting node for breadth-first search; this function iterates over only those edges in the component reachable from this node.",
-                    "reverse : bool, optional": "If True traverse a directed graph in the reverse direction",
-                    "depth_limit : int, optional(default=len(G))": "Specify the maximum search depth",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "bfs_labeled_edges": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L464",
-                "additional_docs": "Iterate over edges in a breadth-first search (BFS) labeled by type.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "A graph over which to find the layers using breadth-first search.",
-                    "sources : node in `G` or list of nodes in `G`": "Starting nodes for single source or multiple sources breadth-first search",
-                },
-            },
-            "bfs_layers": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L406",
-                "additional_docs": "Returns an iterator of all the layers in breadth-first search traversal.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "A graph over which to find the layers using breadth-first search.",
-                    "sources : node in `G` or list of nodes in `G`": "Specify starting nodes for single source or multiple sources breadth-first search",
-                },
-            },
-            "bfs_predecessors": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L266",
-                "additional_docs": "Returns an iterator of predecessors in breadth-first-search from source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node": "Specify starting node for breadth-first search",
-                    "depth_limit : int, optional(default=len(G))": "Specify the maximum search depth",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "bfs_successors": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L332",
-                "additional_docs": "Returns an iterator of successors in breadth-first-search from source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node": "Specify starting node for breadth-first search",
-                    "depth_limit : int, optional(default=len(G))": "Specify the maximum search depth",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "bfs_tree": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L198",
-                "additional_docs": "Returns an oriented tree constructed from of a breadth-first-search starting at source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node": "Specify starting node for breadth-first search",
-                    "reverse : bool, optional": "If True traverse a directed graph in the reverse direction",
-                    "depth_limit : int, optional(default=len(G))": "Specify the maximum search depth",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
             "closeness_vitality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L10",
                 "additional_docs": "The parallel computation is implemented only when the node is not specified. The closeness vitality for each node is computed concurrently.",
@@ -155,99 +97,11 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
-            "descendants_at_distance": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L539",
-                "additional_docs": "Returns all nodes at a fixed `distance` from `source` in `G`.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "A graph source : node in `G` distance : the distance of the wanted nodes from `source`"
-                },
-            },
-            "dfs_edges": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/depth_first_search.py#L19",
-                "additional_docs": "Iterate over edges in a depth-first-search (DFS).",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node, optional": "Specify starting node for depth-first search and yield edges in the component reachable from source.",
-                    "depth_limit : int, optional (default=len(G))": "Specify the maximum search depth.",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "dfs_labeled_edges": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/depth_first_search.py#L414",
-                "additional_docs": "Iterate over edges in a depth-first-search (DFS) labeled by type.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node, optional": "Specify starting node for depth-first search and return edges in the component reachable from source.",
-                    "depth_limit : int, optional (default=len(G))": "Specify the maximum search depth.",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "dfs_postorder_nodes": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/depth_first_search.py#L296",
-                "additional_docs": "Generate nodes in a depth-first-search post-ordering starting at source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node, optional": "Specify starting node for depth-first search.",
-                    "depth_limit : int, optional (default=len(G))": "Specify the maximum search depth.",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "dfs_predecessors": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/depth_first_search.py#L167",
-                "additional_docs": "Returns dictionary of predecessors in depth-first-search from source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node, optional": "Specify starting node for depth-first search. Note that you will get predecessors for all nodes in the component containing `source`. This input only specifies where the DFS starts.",
-                    "depth_limit : int, optional (default=len(G))": "Specify the maximum search depth.",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "dfs_preorder_nodes": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/depth_first_search.py#L355",
-                "additional_docs": "Generate nodes in a depth-first-search pre-ordering starting at source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node, optional": "Specify starting node for depth-first search and return nodes in the component reachable from source.",
-                    "depth_limit : int, optional (default=len(G))": "Specify the maximum search depth.",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "dfs_successors": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/depth_first_search.py#L229",
-                "additional_docs": "Returns dictionary of successors in depth-first-search from source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node, optional": "Specify starting node for depth-first search. Note that you will get successors for all nodes in the component containing `source`. This input only specifies where the DFS starts.",
-                    "depth_limit : int, optional (default=len(G))": "Specify the maximum search depth.",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                },
-            },
-            "dfs_tree": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/depth_first_search.py#L116",
-                "additional_docs": "Returns oriented tree constructed from a depth-first-search from source.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node, optional": "Specify starting node for depth-first search.",
-                    "depth_limit : int, optional (default=len(G))": "Specify the maximum search depth.",
-                    "sort_neighbors : function (default=None)": "A function that takes an iterator over nodes as the input, and returns an iterable of the same nodes with a custom ordering. For example, `sorted` will sort the nodes in increasing order.",
-                    "T : NetworkX DiGraph": "An oriented tree",
-                },
-            },
             "edge_betweenness_centrality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L96",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing edge betweenness centrality for each chunk concurrently.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
-                },
-            },
-            "generic_bfs_edges": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L20",
-                "additional_docs": "Iterate over edges in a breadth-first search.",
-                "additional_parameters": {
-                    "G : NetworkX graph": "",
-                    "source : node": "Starting node for the breadth-first search; this function iterates over only those edges in the component reachable from this node.",
-                    "neighbors : function": "A function that takes a newly visited node of the graph as input and returns an *iterator* (not just a list) of nodes that are neighbors of that node with custom ordering. If not specified, this is just the ``G.neighbors`` method, but in general it can be any function that returns an iterator over some or all of the neighbors of a given node, in any order.",
-                    "depth_limit : int, optional(default=len(G))": "Specify the maximum search depth.",
                 },
             },
             "is_reachable": {
@@ -283,6 +137,14 @@ def get_info():
                 "additional_docs": "The parallel computation is implemented by dividing the list of isolated nodes into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the isolated nodes as input and returns an iterable `isolate_chunks`. The default chunking is done by slicing the `isolates` into `n_jobs` number of chunks."
+                },
+            },
+            "parallel_bfs": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L10",
+                "additional_docs": "Perform a parallelized Breadth-First Search (BFS) on the graph.",
+                "additional_parameters": {
+                    "G : graph": 'A NetworkX graph. source : node, optional Starting node for the BFS traversal. If None, BFS is performed for all nodes. get_chunks : str or function (default="chunks") A function to divide nodes into chunks for parallel processing. If "chunks", the nodes are split into `n_jobs` chunks automatically. n_jobs : int, optional Number of jobs to run in parallel. If None, defaults to the number of CPUs.',
+                    "bfs_result : dict": "A dictionary where keys are nodes and values are their BFS traversal order.",
                 },
             },
             "square_clustering": {
