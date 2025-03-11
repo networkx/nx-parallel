@@ -1,9 +1,9 @@
 from joblib import Parallel, delayed
-import networkx as nx
 import networkx.utils as nxu
 import networkx.parallel as nxp
 
 __all__ = ["voterank_parallel"]
+
 
 @nxp._configure_if_nx_active()
 @nxu.py_random_state(5)
@@ -62,14 +62,14 @@ def voterank_parallel(
     def process_chunk(chunk):
         """Process a chunk of nodes and compute VoteRank scores."""
         local_vote_rank = {n: [0, 1] for n in chunk}
-        
+
         for n in chunk:
             local_vote_rank[n][0] = 0  # Reset scores
         for n, nbr in G.edges():
             local_vote_rank[n][0] += vote_rank[nbr][1]
             if not G.is_directed():
                 local_vote_rank[nbr][0] += vote_rank[n][1]
-        
+
         return local_vote_rank
 
     influential_nodes = []
@@ -97,4 +97,3 @@ def voterank_parallel(
             vote_rank[nbr][1] = max(vote_rank[nbr][1] - 1 / avg_degree, 0)
 
     return influential_nodes
-

@@ -104,6 +104,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "harmonic_centrality_parallel": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/harmonic.py#L10",
+                "additional_docs": "Compute harmonic centrality in parallel.",
+                "additional_parameters": {
+                    "G : NetworkX graph": 'A graph (directed or undirected). nbunch : container, optional (default: all nodes in G) Nodes for which harmonic centrality is calculated. sources : container, optional (default: all nodes in G) Nodes from which reciprocal distances are computed. distance : edge attribute key, optional (default: None) Use the specified edge attribute as the edge weight. get_chunks : str, function (default = "chunks") Function that takes a list of nodes as input and returns an iterable `node_chunks`.'
+                },
+            },
             "is_reachable": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L13",
                 "additional_docs": "The function parallelizes the calculation of two neighborhoods of vertices in `G` and checks closure conditions for each neighborhood subset in parallel.",
@@ -159,6 +166,14 @@ def get_info():
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and then checking whether each node is reachable from each other node in parallel.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
+            "voterank_parallel": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/voterank.py#L10",
+                "additional_docs": "Parallelized VoteRank Algorithm using joblib.",
+                "additional_parameters": {
+                    "G : networkx.Graph": 'Input graph. number_of_nodes : int, optional Number of ranked nodes to extract (default: all nodes). get_chunks : str, function (default = "chunks") A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks.',
+                    "influential_nodes : list": "List of influential nodes ranked by VoteRank.",
                 },
             },
         },

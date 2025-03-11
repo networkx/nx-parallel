@@ -5,12 +5,15 @@ import networkx.parallel as nxp
 
 __all__ = ["harmonic_centrality_parallel"]
 
+
 @nxp._configure_if_nx_active()
-def harmonic_centrality_parallel(G, nbunch=None, distance=None, sources=None, get_chunks="chunks"):
+def harmonic_centrality_parallel(
+    G, nbunch=None, distance=None, sources=None, get_chunks="chunks"
+):
     """Compute harmonic centrality in parallel.
 
     This implementation follows the approach used in betweenness centrality parallelization.
-    
+
     Parameters
     ----------
     G : NetworkX graph
@@ -81,4 +84,3 @@ def harmonic_centrality_parallel(G, nbunch=None, distance=None, sources=None, ge
             centrality[node] += value
 
     return centrality
-
