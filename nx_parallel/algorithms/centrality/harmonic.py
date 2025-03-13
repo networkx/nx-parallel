@@ -1,31 +1,30 @@
 from functools import partial
 from joblib import Parallel, delayed
 import networkx as nx
-import networkx.parallel as nxp
+import nx_parallel as nxp
 
 __all__ = ["harmonic_centrality"]
 
 
 @nxp._configure_if_nx_active()
 def harmonic_centrality(
-    G, nbunch=None, distance=None, sources=None, get_chunks="chunks"
+    G, u=None, distance=None, wf_improved=True, *, backend=None, **backend_kwargs
 ):
     """Compute harmonic centrality in parallel.
-
-    This implementation follows the approach used in betweenness centrality parallelization.
 
     Parameters
     ----------
     G : NetworkX graph
         A graph (directed or undirected).
-    nbunch : container, optional (default: all nodes in G)
-        Nodes for which harmonic centrality is calculated.
-    sources : container, optional (default: all nodes in G)
-        Nodes from which reciprocal distances are computed.
+    u : node or iterable, optional (default: all nodes in G)
+        Compute harmonic centrality for the specified node(s).
     distance : edge attribute key, optional (default: None)
         Use the specified edge attribute as the edge weight.
-    get_chunks : str, function (default = "chunks")
-        Function that takes a list of nodes as input and returns an iterable `node_chunks`.
+    wf_improved : bool, optional (default: True)
+        This parameter is included for API compatibility but not used in harmonic centrality.
+    backend : str, optional (default: None)
+        The parallel backend to use (`'loky'`, `'threading'`, etc.).
+    **backend_kwargs : additional backend parameters
 
     Returns
     -------
@@ -36,15 +35,15 @@ def harmonic_centrality(
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    nbunch = set(G.nbunch_iter(nbunch) if nbunch is not None else G.nodes)
-    sources = set(G.nbunch_iter(sources) if sources is not None else G.nodes)
+    u = set(G.nbunch_iter(u) if u is not None else G.nodes)
+    sources = set(G.nodes)  # Always use all nodes as sources
 
-    centrality = {u: 0 for u in nbunch}
+    centrality = {v: 0 for v in u}
 
     transposed = False
-    if len(nbunch) < len(sources):
+    if len(u) < len(sources):
         transposed = True
-        nbunch, sources = sources, nbunch
+        u, sources = sources, u
         if nx.is_directed(G):
             G = nx.reverse(G, copy=False)
 
@@ -53,28 +52,25 @@ def harmonic_centrality(
 
     # Chunking nodes for parallel processing
     nodes = list(sources)
-    if get_chunks == "chunks":
-        node_chunks = nxp.create_iterables(G, "node", n_jobs, nodes)
-    else:
-        node_chunks = get_chunks(nodes)
+    node_chunks = nxp.create_iterables(G, "node", n_jobs, nodes)
 
     def process_chunk(chunk):
         """Process a chunk of nodes and compute harmonic centrality."""
-        local_centrality = {u: 0 for u in chunk}
+        local_centrality = {v: 0 for v in chunk}
         spl = partial(nx.shortest_path_length, G, weight=distance)
 
         for v in chunk:
             dist = spl(v)
-            for u in nbunch.intersection(dist):
-                d = dist[u]
+            for node in u.intersection(dist):
+                d = dist[node]
                 if d == 0:
                     continue
-                local_centrality[v if transposed else u] += 1 / d
+                local_centrality[v if transposed else node] += 1 / d
 
         return local_centrality
 
     # Run parallel processing on node chunks
-    results = Parallel(n_jobs=n_jobs)(
+    results = Parallel(n_jobs=n_jobs, backend=backend, **backend_kwargs)(
         delayed(process_chunk)(chunk) for chunk in node_chunks
     )
 

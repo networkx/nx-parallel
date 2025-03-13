@@ -1,99 +1,71 @@
 from joblib import Parallel, delayed
-import networkx.utils as nxu
-import networkx.parallel as nxp
+import nx_parallel as nxp
 
 __all__ = ["voterank_centrality"]
 
 
+def _compute_votes(G, vote_rank, nodes):
+    """Compute votes for a chunk of nodes in parallel."""
+    votes = {n: 0 for n in nodes}
+
+    for n in nodes:
+        for nbr in G[n]:
+            votes[n] += vote_rank[nbr][1]  # Node receives votes from neighbors
+
+    return votes
+
+
+def _update_voting_ability(G, vote_rank, selected_node, avgDegree):
+    """Update the voting ability of the selected node and its out-neighbors."""
+    for nbr in G[selected_node]:
+        vote_rank[nbr][1] = max(
+            vote_rank[nbr][1] - (1 / avgDegree), 0
+        )  # Ensure non-negative
+
+
 @nxp._configure_if_nx_active()
-@nxu.py_random_state(5)
-def voterank_centrality(
-    G,
-    number_of_nodes=None,
-    get_chunks="chunks",
-):
-    """Parallelized VoteRank Algorithm using joblib.
-
-    This implementation splits the graph into chunks and processes each chunk
-    in parallel using joblib. It follows the approach used in betweenness
-    centrality parallelization.
-
-    Parameters
-    ----------
-    G : networkx.Graph
-        Input graph.
-    number_of_nodes : int, optional
-        Number of ranked nodes to extract (default: all nodes).
-    get_chunks : str, function (default = "chunks")
-        A function that takes in a list of all the nodes as input and returns
-        an iterable `node_chunks`. The default chunking is done by slicing the
-        `nodes` into `n_jobs` number of chunks.
-
-    Returns
-    -------
-    influential_nodes : list
-        List of influential nodes ranked by VoteRank.
-    """
-
-    if hasattr(G, "graph_object"):
-        G = G.graph_object
+def voterank_centrality(G, number_of_nodes=None, *, backend=None, **backend_kwargs):
+    """Parallelized VoteRank centrality using joblib with chunking."""
+    influential_nodes = []
+    vote_rank = {n: [0, 1] for n in G.nodes()}  # (score, voting ability)
 
     if len(G) == 0:
-        return []
-
-    # Set default number of nodes to rank
+        return influential_nodes
     if number_of_nodes is None or number_of_nodes > len(G):
         number_of_nodes = len(G)
 
-    # Get number of parallel jobs
-    n_jobs = nxp.get_n_jobs()
-
-    # Determine chunks of nodes for parallel processing
+    avgDegree = sum(
+        deg for _, deg in (G.out_degree() if G.is_directed() else G.degree())
+    ) / len(G)
     nodes = list(G.nodes())
-    if get_chunks == "chunks":
-        node_chunks = nxp.create_iterables(G, "node", n_jobs, nodes)
-    else:
-        node_chunks = get_chunks(nodes)
-
-    # Initialize vote ranking structure
-    vote_rank = {n: [0, 1] for n in G.nodes()}
-    avg_degree = sum(deg for _, deg in G.degree()) / len(G)
-
-    def process_chunk(chunk):
-        """Process a chunk of nodes and compute VoteRank scores."""
-        local_vote_rank = {n: [0, 1] for n in chunk}
-
-        for n in chunk:
-            local_vote_rank[n][0] = 0  # Reset scores
-        for n, nbr in G.edges():
-            local_vote_rank[n][0] += vote_rank[nbr][1]
-            if not G.is_directed():
-                local_vote_rank[nbr][0] += vote_rank[n][1]
-
-        return local_vote_rank
-
-    influential_nodes = []
+    chunk_size = backend_kwargs.get("chunk_size", 100)  # Support chunk size override
+    node_chunks = [nodes[i : i + chunk_size] for i in range(0, len(nodes), chunk_size)]
 
     for _ in range(number_of_nodes):
-        # Run parallel processing on node chunks
-        vote_chunks = Parallel(n_jobs=n_jobs)(
-            delayed(process_chunk)(chunk) for chunk in node_chunks
+        # Step 1: Compute votes in parallel using chunks
+        vote_chunks = Parallel(n_jobs=-1)(
+            delayed(_compute_votes)(G, vote_rank, chunk) for chunk in node_chunks
         )
 
-        # Merge partial results
-        for chunk_result in vote_chunks:
-            for node, scores in chunk_result.items():
-                vote_rank[node][0] += scores[0]
+        # Merge chunk results
+        votes = {n: 0 for n in G.nodes()}
+        for chunk_votes in vote_chunks:
+            for node, score in chunk_votes.items():
+                votes[node] += score
 
-        # Select top influential node
-        top_node = max(G.nodes, key=lambda x: vote_rank[x][0])
-        if vote_rank[top_node][0] == 0:
-            break
-        influential_nodes.append(top_node)
+        # Step 2: Reset votes for already selected nodes
+        for n in influential_nodes:
+            votes[n] = 0
 
-        # Weaken the selected node and its neighbors
-        vote_rank[top_node] = [0, 0]
-        for _, nbr in G.edges(top_node):
-            vote_rank[nbr][1] = max(vote_rank[nbr][1] - 1 / avg_degree, 0)
+        # Step 3: Select the most influential node
+        n = max(sorted(G.nodes()), key=lambda x: votes[x])  # Deterministic tie-breaking
+        if votes[n] == 0:
+            return influential_nodes  # Stop if no influential node found
+
+        influential_nodes.append(n)
+        vote_rank[n] = [0, 0]  # Weaken selected node
+
+        # Step 4: Update voting ability
+        _update_voting_ability(G, vote_rank, n, avgDegree)
 
     return influential_nodes
