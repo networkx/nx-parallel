@@ -3,11 +3,11 @@ from joblib import Parallel, delayed
 import networkx as nx
 import networkx.parallel as nxp
 
-__all__ = ["harmonic_centrality_parallel"]
+__all__ = ["harmonic_centrality"]
 
 
 @nxp._configure_if_nx_active()
-def harmonic_centrality_parallel(
+def harmonic_centrality(
     G, nbunch=None, distance=None, sources=None, get_chunks="chunks"
 ):
     """Compute harmonic centrality in parallel.

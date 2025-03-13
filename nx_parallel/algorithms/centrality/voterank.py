@@ -2,12 +2,12 @@ from joblib import Parallel, delayed
 import networkx.utils as nxu
 import networkx.parallel as nxp
 
-__all__ = ["voterank_parallel"]
+__all__ = ["voterank_centrality"]
 
 
 @nxp._configure_if_nx_active()
 @nxu.py_random_state(5)
-def voterank_parallel(
+def voterank_centrality(
     G,
     number_of_nodes=None,
     get_chunks="chunks",
