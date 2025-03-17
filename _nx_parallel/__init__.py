@@ -168,7 +168,7 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
-            "voterank_centrality": {
+            "voterank": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/voterank.py#L27",
                 "additional_docs": "Parallelized VoteRank centrality using joblib with chunking.",
                 "additional_parameters": None,

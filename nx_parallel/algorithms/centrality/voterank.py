@@ -1,7 +1,7 @@
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 
-__all__ = ["voterank_centrality"]
+__all__ = ["voterank"]
 
 
 def _compute_votes(G, vote_rank, nodes):
@@ -24,7 +24,7 @@ def _update_voting_ability(G, vote_rank, selected_node, avgDegree):
 
 
 @nxp._configure_if_nx_active()
-def voterank_centrality(G, number_of_nodes=None, *, backend=None, **backend_kwargs):
+def voterank(G, number_of_nodes=None, *, backend=None, **backend_kwargs):
     """Parallelized VoteRank centrality using joblib with chunking."""
     influential_nodes = []
     vote_rank = {n: [0, 1] for n in G.nodes()}  # (score, voting ability)

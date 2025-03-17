@@ -15,7 +15,7 @@ heatmapDF = pd.DataFrame()
 number_of_nodes_list = [200, 400, 800, 1600]
 weighted = False
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.tournament.is_reachable
+currFun = nx.harmonic_centrality
 """
 for p in pList:
     for num in range(len(number_of_nodes_list)):

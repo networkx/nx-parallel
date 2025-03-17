@@ -22,8 +22,8 @@ def test_voterank_get_chunks():
     H = nxp.ParallelGraph(G)
 
     # Compute VoteRank with and without chunking
-    par_vr_chunk = nxp.voterank_centrality(H, get_chunks=get_chunk)
-    par_vr = nxp.voterank_centrality(H)
+    par_vr_chunk = nxp.voterank(H, get_chunks=get_chunk)
+    par_vr = nxp.voterank(H)
 
     # Ensure both methods produce the same influential nodes
     assert par_vr_chunk == par_vr
