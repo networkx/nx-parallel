@@ -118,3 +118,64 @@ def test_betweenness_centrality_multigraph():
 
     for node in G.nodes:
         assert math.isclose(par_bc[node], expected_bc[node], abs_tol=1e-16)
+
+
+def test_closeness_centrality_default_chunks():
+    """Test closeness centrality with default chunking."""
+    G = nx.path_graph(5)  # A simple path graph
+    H = nxp.ParallelGraph(G)
+
+    par_cc = nxp.closeness_centrality(H, get_chunks="chunks")
+    expected_cc = nx.closeness_centrality(G)
+
+    for node in G.nodes:
+        assert pytest.approx(par_cc[node], rel=1e-6) == expected_cc[node]
+
+
+def test_closeness_centrality_custom_chunks():
+    """Test closeness centrality with a custom chunking function."""
+    def custom_chunking(nodes):
+        # Example custom chunking: split nodes into two equal parts
+        mid = len(nodes) // 2
+        return [nodes[:mid], nodes[mid:]]
+
+    G = nx.path_graph(5)  # A simple path graph
+    H = nxp.ParallelGraph(G)
+
+    par_cc = nxp.closeness_centrality(H, get_chunks=custom_chunking)
+    expected_cc = nx.closeness_centrality(G)
+
+    for node in G.nodes:
+        assert pytest.approx(par_cc[node], rel=1e-6) == expected_cc[node]
+
+
+def test_closeness_centrality_empty_graph():
+    """Test closeness centrality on an empty graph."""
+    G = nx.Graph()  # An empty graph
+    H = nxp.ParallelGraph(G)
+
+    assert nxp.closeness_centrality(H, get_chunks="chunks") == {}, "Expected an empty dictionary for an empty graph"
+
+
+def test_closeness_centrality_single_node():
+    """Test closeness centrality on a graph with a single node."""
+    G = nx.Graph()
+    G.add_node(1)
+    H = nxp.ParallelGraph(G)
+
+    par_cc = nxp.closeness_centrality(H, get_chunks="chunks")
+    expected_cc = nx.closeness_centrality(G)
+
+    assert par_cc == expected_cc  # Both should return {1: 0.0}
+
+
+def test_closeness_centrality_large_graph():
+    """Test closeness centrality on a large graph."""
+    G = nx.fast_gnp_random_graph(1000, 0.01, directed=False)
+    H = nxp.ParallelGraph(G)
+
+    par_cc = nxp.closeness_centrality(H, get_chunks="chunks")
+    expected_cc = nx.closeness_centrality(G)
+
+    for node in G.nodes:
+        assert pytest.approx(par_cc[node], rel=1e-6) == expected_cc[node]
