@@ -1,110 +1,59 @@
 import time
-
 import networkx as nx
+import nx_parallel as nxp
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-import nx_parallel as nxp
-
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
-# for bipartite graphs
-# n = [50, 100, 200, 400]
-# m = [25, 50, 100, 200]
-number_of_nodes_list = [200, 400, 800, 1600]
-weighted = False
-pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.tournament.is_reachable
-"""
-for p in pList:
-    for num in range(len(number_of_nodes_list)):
-        # create original and parallel graphs
-        G = nx.fast_gnp_random_graph(
-            number_of_nodes_list[num], p, seed=42, directed=True
-        )
+number_of_nodes_list = [10, 50, 100, 200, 400]
+pList = [1, 0.8, 0.6, 0.4, 0.2]  # List of edge probabilities
+currFun = nxp.closeness_centrality
 
+for p in pList:  # Loop through edge probabilities
+    for num in number_of_nodes_list:  # Loop through number of nodes
+        print(f"Processing graph with {num} nodes and edge probability {p}")
 
-        # for bipartite.node_redundancy
-        G = nx.bipartite.random_graph(n[num], m[num], p, seed=42, directed=True)
-        for i in G.nodes:
-            l = list(G.neighbors(i))
-            if len(l) == 0:
-                v = random.choice(list(G.nodes) - [i,])
-                G.add_edge(i, v)
-                G.add_edge(i, random.choice([node for node in G.nodes if node != i]))
-            elif len(l) == 1:
-                G.add_edge(i, random.choice([node for node in G.nodes if node != i and node not in list(G.neighbors(i))]))
-
-        # for weighted graphs
-        if weighted:
-            random.seed(42)
-            for u, v in G.edges():
-                G[u][v]["weight"] = random.random()
-
+        # Create original and parallel graphs
+        G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
         H = nxp.ParallelGraph(G)
 
-        # time both versions and update heatmapDF
+        # Time the parallel version
         t1 = time.time()
         c1 = currFun(H)
-        if isinstance(c1, types.GeneratorType):
-            d = dict(c1)
         t2 = time.time()
         parallelTime = t2 - t1
+
+        # Time the standard version
         t1 = time.time()
         c2 = currFun(G)
-        if isinstance(c2, types.GeneratorType):
-            d = dict(c2)
         t2 = time.time()
         stdTime = t2 - t1
+
+        # Calculate speedup
         timesFaster = stdTime / parallelTime
-        heatmapDF.at[number_of_nodes_list[num], p] = timesFaster
-        print("Finished " + str(currFun))
-"""
+        heatmapDF.at[num, p] = timesFaster
+        print(f"Finished {currFun.__name__} for {num} nodes and p={p}")
 
-# Code to create for row of heatmap specifically for tournaments
-for num in number_of_nodes_list:
-    print(num)
-    G = nx.tournament.random_tournament(num, seed=42)
-    H = nxp.ParallelGraph(G)
-    t1 = time.time()
-    c = currFun(H, 1, num)
-    t2 = time.time()
-    parallelTime = t2 - t1
-    print(parallelTime)
-    t1 = time.time()
-    c = currFun(G, 1, num)
-    t2 = time.time()
-    stdTime = t2 - t1
-    print(stdTime)
-    timesFaster = stdTime / parallelTime
-    heatmapDF.at[num, 3] = timesFaster
-    print("Finished " + str(currFun))
-
-# plotting the heatmap with numbers and a green color scheme
+# Plotting the heatmap with numbers and a green color scheme
 plt.figure(figsize=(20, 4))
 hm = sns.heatmap(data=heatmapDF.T, annot=True, cmap="Greens", cbar=True)
 
-# Remove the tick labels on both axes
-hm.set_yticklabels(
-    [
-        3,
-    ]
-)
-
-# Adding x-axis labels
+# Adding x-axis and y-axis labels
 hm.set_xticklabels(number_of_nodes_list)
+hm.set_yticklabels(pList)
 
-# Rotating the x-axis labels for better readability (optional)
+# Rotating the x-axis labels for better readability
 plt.xticks(rotation=45)
 plt.yticks(rotation=20)
 plt.title(
-    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to NetworkX"
+    f"Speedups of {currFun.__name__} compared to NetworkX for Different Edge Probabilities"
 )
 plt.xlabel("Number of Vertices")
 plt.ylabel("Edge Probability")
-print(currFun.__name__)
 
-# displaying the plotted heatmap
+# Save and display the heatmap
 plt.tight_layout()
-plt.savefig("timing/" + "heatmap_" + currFun.__name__ + "_timing.png")
+plt.savefig(f"heatmap_{currFun.__name__}_timing.png")
+plt.show()
