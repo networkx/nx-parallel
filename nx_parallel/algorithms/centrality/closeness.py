@@ -45,7 +45,7 @@ def closeness_centrality(
     if u is not None:
         result = _closeness_centrality_node_subset(G, nodes, distance, wf_improved)
         return result[u]
-    
+
     n_jobs = nxp.get_n_jobs()
 
     # Validate get_chunks - the chunk parameter is only used for parallel execution
@@ -66,9 +66,7 @@ def closeness_centrality(
         return {}
 
     cc_subs = Parallel()(
-        delayed(_closeness_centrality_node_subset)(
-            G, chunk, distance, wf_improved
-        )
+        delayed(_closeness_centrality_node_subset)(G, chunk, distance, wf_improved)
         for chunk in node_chunks
     )
 
@@ -82,30 +80,30 @@ def closeness_centrality(
 def _closeness_centrality_node_subset(G, nodes, distance=None, wf_improved=True):
     """
     Compute closeness centrality for a subset of nodes.
-    
+
     Implemented to match NetworkX's implementation exactly.
     """
     # Create a copy of the graph to avoid modifying the original
     # Handle directed graphs by reversing (matches NetworkX implementation)
     if G.is_directed():
         G = G.reverse()  # create a reversed graph view
-    
+
     closeness_dict = {}
-    
+
     for n in nodes:
         # Using the exact NetworkX path calculation logic
         if distance is not None:
             # Use Dijkstra for weighted graphs
             sp = nx.single_source_dijkstra_path_length(G, n, weight=distance)
         else:
-            # Use BFS for unweighted graphs  
+            # Use BFS for unweighted graphs
             sp = nx.single_source_shortest_path_length(G, n)
-        
+
         # Sum of shortest paths exactly as NetworkX does it
         totsp = sum(sp.values())
         len_G = len(G)
         _closeness_centrality = 0.0
-        
+
         # Use the exact NetworkX formula and conditions
         if totsp > 0.0 and len_G > 1:
             _closeness_centrality = (len(sp) - 1.0) / totsp
@@ -113,7 +111,7 @@ def _closeness_centrality_node_subset(G, nodes, distance=None, wf_improved=True)
             if wf_improved:
                 s = (len(sp) - 1.0) / (len_G - 1)
                 _closeness_centrality *= s
-        
+
         closeness_dict[n] = _closeness_centrality
-    
+
     return closeness_dict

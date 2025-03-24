@@ -56,15 +56,21 @@ for j in range(0, len(number_of_nodes_list)):
     G = nx.tournament.random_tournament(num)
     H = nx_parallel.ParallelGraph(G)
     t1 = time.time()
-    c = nx.tournament.is_reachable(H, 0, num - 1)  # Provide source (0) and target (num - 1)
+    c = nx.tournament.is_reachable(
+        H, 0, num - 1
+    )  # Provide source (0) and target (num - 1)
     t2 = time.time()
     parallelTime = t2 - t1
     t1 = time.time()
-    c = nx.tournament.is_reachable(G, 0, num - 1)  # Provide source (0) and target (num - 1)
+    c = nx.tournament.is_reachable(
+        G, 0, num - 1
+    )  # Provide source (0) and target (num - 1)
     t2 = time.time()
     stdTime = t2 - t1
     timesFaster = stdTime / parallelTime
-    heatmapDF.at[j, len(function_list)] = timesFaster  # Add this as a new row in the heatmap
+    heatmapDF.at[j, len(function_list)] = (
+        timesFaster  # Add this as a new row in the heatmap
+    )
     print("Finished nx.tournament.is_reachable")
 
 # plotting the heatmap with numbers and a green color scheme
@@ -81,7 +87,7 @@ labels = [
 ]
 
 # Ensure the number of labels matches the number of rows in heatmapDF
-hm.set_yticklabels(labels[:len(heatmapDF.columns)])
+hm.set_yticklabels(labels[: len(heatmapDF.columns)])
 
 # Adding x-axis labels
 hm.set_xticklabels(number_of_nodes_list)

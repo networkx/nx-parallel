@@ -21,6 +21,7 @@ def test_degree_centrality_default_chunks():
 
 def test_degree_centrality_custom_chunks():
     """Test degree centrality with custom chunking."""
+
     def get_chunk(nodes):
         num_chunks = nxp.get_n_jobs()
         chunks = [[] for _ in range(num_chunks)]
@@ -132,4 +133,6 @@ def test_degree_centrality_large_graph():
     expected_dc = nx.degree_centrality(G)
 
     for node in G.nodes:
-        assert math.isclose(par_dc[node], expected_dc[node], abs_tol=1e-6)  # Larger tolerance for large graphs
+        assert math.isclose(
+            par_dc[node], expected_dc[node], abs_tol=1e-6
+        )  # Larger tolerance for large graphs

@@ -90,6 +90,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "closeness_centrality": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/closeness.py#L9",
+                "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing closeness centrality for each chunk concurrently.",
+                "additional_parameters": {
+                    "G : graph": 'A NetworkX graph u : node, optional Return only the value for node u distance : string or function, optional The edge attribute to use as distance when computing shortest paths, or a user-defined distance function. wf_improved : bool, optional If True, use the improved formula for closeness centrality. get_chunks : str, function (default = "chunks") A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks.'
+                },
+            },
             "closeness_vitality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L10",
                 "additional_docs": "The parallel computation is implemented only when the node is not specified. The closeness vitality for each node is computed concurrently.",
@@ -97,8 +104,15 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "degree_centrality": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/degree.py#L8",
+                "additional_docs": "Parallel computation of degree centrality. Divides nodes into chunks and computes degree centrality for each chunk concurrently.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "edge_betweenness_centrality": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L96",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L104",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing edge betweenness centrality for each chunk concurrently.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."

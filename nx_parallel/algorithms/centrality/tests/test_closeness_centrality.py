@@ -3,6 +3,7 @@ import nx_parallel as nxp
 import math
 import pytest
 
+
 def test_betweenness_centrality_get_chunks():
     def get_chunk(nodes):
         num_chunks = nxp.get_n_jobs()
@@ -49,11 +50,11 @@ def test_betweenness_centrality_weighted_graph():
     """Test betweenness centrality on a weighted graph."""
     G = nx.fast_gnp_random_graph(100, 0.1, directed=False)
     for u, v in G.edges:
-        G[u][v]['weight'] = 1.0  # Assign uniform weights
+        G[u][v]["weight"] = 1.0  # Assign uniform weights
 
     H = nxp.ParallelGraph(G)
-    par_bc = nxp.betweenness_centrality(H, weight='weight')
-    expected_bc = nx.betweenness_centrality(G, weight='weight')
+    par_bc = nxp.betweenness_centrality(H, weight="weight")
+    expected_bc = nx.betweenness_centrality(G, weight="weight")
 
     for node in G.nodes:
         assert math.isclose(par_bc[node], expected_bc[node], abs_tol=1e-16)
@@ -78,7 +79,9 @@ def test_betweenness_centrality_empty_graph():
 
     # Check if the underlying graph is empty before calling the function
     if len(H.graph_object) == 0:  # Use the underlying graph's length
-        assert nxp.betweenness_centrality(H) == {}, "Expected an empty dictionary for an empty graph"
+        assert (
+            nxp.betweenness_centrality(H) == {}
+        ), "Expected an empty dictionary for an empty graph"
     else:
         pytest.fail("Graph is not empty, but it should be.")
 
@@ -104,7 +107,9 @@ def test_betweenness_centrality_large_graph():
     expected_bc = nx.betweenness_centrality(G)
 
     for node in G.nodes:
-        assert math.isclose(par_bc[node], expected_bc[node], abs_tol=1e-6)  # Larger tolerance for large graphs
+        assert math.isclose(
+            par_bc[node], expected_bc[node], abs_tol=1e-6
+        )  # Larger tolerance for large graphs
 
 
 def test_betweenness_centrality_multigraph():
@@ -134,6 +139,7 @@ def test_closeness_centrality_default_chunks():
 
 def test_closeness_centrality_custom_chunks():
     """Test closeness centrality with a custom chunking function."""
+
     def custom_chunking(nodes):
         # Example custom chunking: split nodes into two equal parts
         mid = len(nodes) // 2
@@ -154,7 +160,9 @@ def test_closeness_centrality_empty_graph():
     G = nx.Graph()  # An empty graph
     H = nxp.ParallelGraph(G)
 
-    assert nxp.closeness_centrality(H, get_chunks="chunks") == {}, "Expected an empty dictionary for an empty graph"
+    assert (
+        nxp.closeness_centrality(H, get_chunks="chunks") == {}
+    ), "Expected an empty dictionary for an empty graph"
 
 
 def test_closeness_centrality_single_node():

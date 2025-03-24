@@ -1,6 +1,5 @@
 from joblib import Parallel, delayed
 import nx_parallel as nxp
-import networkx as nx
 
 __all__ = ["degree_centrality"]
 
