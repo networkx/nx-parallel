@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 heatmapDF = pd.DataFrame()
 number_of_nodes_list = [10, 50, 100, 200, 400]
 pList = [1, 0.8, 0.6, 0.4, 0.2]  # List of edge probabilities
-currFun = nxp.closeness_centrality
+currFun = nxp.degree_centrality
 
 for p in pList:  # Loop through edge probabilities
     for num in number_of_nodes_list:  # Loop through number of nodes
