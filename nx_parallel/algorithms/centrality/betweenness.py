@@ -53,18 +53,12 @@ def betweenness_centrality(
     else:
         node_chunks = get_chunks(nodes)
 
-    # Handle empty chunks
-    if not node_chunks:
-        return {}
 
     bt_cs = Parallel()(
         delayed(_betweenness_centrality_node_subset)(G, chunk, weight, endpoints)
         for chunk in node_chunks
     )
 
-    # Handle empty results
-    if not bt_cs:
-        return {}
 
     # Reducing partial solution
     bt_c = bt_cs[0]
