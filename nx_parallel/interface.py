@@ -18,7 +18,6 @@ ALGORITHMS = [
     # Centrality
     "betweenness_centrality",
     "edge_betweenness_centrality",
-    "closeness_centrality",
     "degree_centrality",
     # Efficiency
     "local_efficiency",
