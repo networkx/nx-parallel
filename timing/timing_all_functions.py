@@ -81,7 +81,6 @@ hm = sns.heatmap(data=heatmapDF.T, annot=True, cmap="Greens", cbar=True)
 labels = [
     "betweenness_centrality",
     "closeness_vitality",
-    "closeness_centrality",
     "degree_centrality",
     "tournament is_reachable",
 ]
