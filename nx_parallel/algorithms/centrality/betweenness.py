@@ -61,9 +61,6 @@ def betweenness_centrality(
         for chunk in node_chunks
     )
 
-    if not bt_cs:
-        return {}
-
     # Reducing partial solution
     bt_c = bt_cs[0]
     for bt in bt_cs[1:]:
@@ -136,9 +133,6 @@ def edge_betweenness_centrality(
         delayed(_edge_betweenness_centrality_node_subset)(G, chunk, weight)
         for chunk in node_chunks
     )
-
-    if not bt_cs:
-        return {}
 
     # Reducing partial solution
     bt_c = bt_cs[0]
