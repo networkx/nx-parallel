@@ -41,6 +41,9 @@ def betweenness_centrality(
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
+    if not G:
+        return {}
+
     if k is None:
         nodes = G.nodes
     else:
@@ -110,6 +113,9 @@ def edge_betweenness_centrality(
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
+
+    if not G:
+        return {}
 
     if k is None:
         nodes = G.nodes
