@@ -127,16 +127,6 @@ def edge_betweenness_centrality(
     if not G:
         return {}
 
-    if k is not None:
-        if k < 0:
-            raise ValueError("k cannot be negative")
-        if k == 0:
-            raise ZeroDivisionError("k cannot be zero")
-        if k > len(G):
-            raise ValueError(f"k cannot be larger than the total nodes in G={len(G)}")
-        if k == len(G):
-            k = None
-
     if k is None:
         nodes = G.nodes
     else:
