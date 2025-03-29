@@ -1,0 +1,61 @@
+name: "Pull Request Details"
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      ## Pull Request Details
+
+- type: input
+  id: issue_number
+  attributes:
+    label: "Issue Number"
+    description: "If applicable, please provide the related issue number."
+    placeholder: "Issue #"
+
+- type: checkboxes
+  id: pr_type
+  attributes:
+    label: "PR Type"
+    description: "Please select the type of PR you are submitting."
+  options:
+  - label: "Feature"
+    value: feature
+  - label: "Improvement"
+    value: improvement
+  - label: "Bug"
+    value: bug
+  - label: "New Project"
+    value: new_project
+
+- type: textarea
+  id: pr_description
+  attributes:
+    label: "PR Description"
+    description: "Please provide a short description of the changes made in this pull request."
+
+- type: markdown
+  attributes:
+    value: |
+      ## Checklist ✅ 
+
+- type: checkboxes
+  id: checklist
+  attributes:
+    label: "Checklist"
+    description: "Please check each item that you have completed for this PR:"
+  options:
+  - label: "I have read and understood the project's Contribution Guidelines."
+    value: read_contribution_guidelines
+  - label: "I have tested my changes to ensure they work as expected."
+    value: tested_changes
+  - label: "I have added/updated relevant documentation/screenshots (if applicable)."
+    value: updated_documentation
+  - label: "I have included tests (if applicable)."
+    value: included_tests
+  - label: "I have labeled the PR appropriately with 'Feature', 'Improvement', 'Bug', or 'New Project'."
+    value: labeled_pr
+  - label: "My branch is up to date with the main branch."
+    value: branch_up_to_date
+  - label: "The PR has a meaningful title and description."
+    value: meaningful_title_description
