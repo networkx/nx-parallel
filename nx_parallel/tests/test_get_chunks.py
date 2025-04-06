@@ -18,36 +18,26 @@ def get_all_functions(package_name="nx_parallel"):
     the function's keyword arguments and positional arguments.
     """
     package = importlib.import_module(package_name)
-    functions = {}
+    all_funcs_kwargs = {}
 
     for name, obj in inspect.getmembers(package, inspect.isfunction):
         if not name.startswith("_"):
             signature = inspect.signature(obj)
-            args = [
-                param.name
-                for param in signature.parameters.values()
-                if param.kind
-                in (
-                    inspect.Parameter.POSITIONAL_ONLY,
-                    inspect.Parameter.POSITIONAL_OR_KEYWORD,
-                )
-            ]
             kwargs = [
                 param.name
                 for param in signature.parameters.values()
-                if param.kind == inspect.Parameter.KEYWORD_ONLY
+                if param.default is not inspect.Parameter.empty
             ]
-            functions[name] = {"args": args, "kwargs": kwargs}
-
-    return functions
+            all_funcs_kwargs[name] = kwargs
+    return all_funcs_kwargs
 
 
 def get_functions_with_get_chunks():
     """Returns a list of function names with the `get_chunks` kwarg."""
-    all_funcs = get_all_functions()
+    all_funcs_kwargs = get_all_functions()
     get_chunks_funcs = []
-    for func in all_funcs:
-        if "get_chunks" in all_funcs[func]["args"]:
+    for func in all_funcs_kwargs:
+        if "get_chunks" in all_funcs_kwargs[func]:
             get_chunks_funcs.append(func)
     return get_chunks_funcs
 
@@ -90,17 +80,17 @@ def test_get_chunks():
                 if isinstance(c1, types.GeneratorType):
                     c1, c2 = dict(c1), dict(c2)
                     if func in chk_dict_vals:
-                        for edge in G.edges:
+                        for key in c1.keys():
                             assert math.isclose(
-                                c1.get(edge, 0), c2.get(edge, 0), abs_tol=1e-16
+                                c1.get(key, 0), c2.get(key, 0), abs_tol=1e-16
                             )
                     else:
                         assert c1 == c2
                 else:
                     if func in chk_dict_vals:
-                        for edge in G.edges:
+                        for key in c1.keys():
                             assert math.isclose(
-                                c1.get(edge, 0), c2.get(edge, 0), abs_tol=1e-16
+                                c1.get(key, 0), c2.get(key, 0), abs_tol=1e-16
                             )
                     else:
                         if isinstance(c1, float):
