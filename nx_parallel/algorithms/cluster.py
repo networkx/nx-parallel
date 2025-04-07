@@ -1,9 +1,12 @@
 from itertools import combinations, chain
+from collections import Counter
 from joblib import Parallel, delayed
+from networkx.algorithms.cluster import _triangles_and_degree_iter
 import nx_parallel as nxp
 
 __all__ = [
     "square_clustering",
+    "triangles",
 ]
 
 
@@ -67,3 +70,72 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     if nodes in G:
         return clustering[nodes]
     return clustering
+
+
+@nxp._configure_if_nx_active()
+def triangles(G, nodes=None, get_chunks="chunks"):
+    """The nodes are chunked into `node_chunks` and for all `node_chunks`
+    the number of triangles that include a node as one vertex is computed
+    in parallel over `n_jobs` number of CPU cores.
+
+    networkx.triangles : https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.triangles.html#networkx.algorithms.cluster.triangles.html
+
+    Parameters
+    ----------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in a list of all the nodes (or nbunch) as input and
+        returns an iterable `node_chunks`. The default chunking is done by slicing the
+        `nodes` into `n_jobs` number of chunks.
+
+    Returns
+    -------
+    triangles : dict
+        A dictionary mapping each node to its triangle count.
+
+    Notes
+    -----
+    This function uses parallel processing via joblib for efficiency.
+    """
+
+    def compute_triangles_chunk(node_iter_chunk):
+        triangle_counts = Counter()
+        for node1 in node_iter_chunk:
+            neighbors = later_nbrs[node1]
+            for node2 in neighbors:
+                third_nodes = neighbors & later_nbrs[node2]
+                m = len(third_nodes)
+                triangle_counts[node1] += m
+                triangle_counts[node2] += m
+                triangle_counts.update(third_nodes)
+        return triangle_counts
+
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
+    if nodes is not None:
+        if nodes in G:
+            return next(_triangles_and_degree_iter(G, nodes))[2] // 2
+        return {v: t // 2 for v, d, t, _ in _triangles_and_degree_iter(G, nodes)}
+
+    later_nbrs = {}
+    for node, neighbors in G.adjacency():
+        later_nbrs[node] = {n for n in neighbors if n not in later_nbrs and n != node}
+
+    n_jobs = nxp.get_n_jobs()
+    nodes_to_process = list(G.nodes())
+
+    if get_chunks == "chunks":
+        num_in_chunk = max(len(nodes_to_process) // n_jobs, 1)
+        node_iter_chunks = nxp.chunks(nodes_to_process, num_in_chunk)
+    else:
+        node_iter_chunks = get_chunks(nodes_to_process)
+
+    results = Parallel()(
+        delayed(compute_triangles_chunk)(node_iter_chunk)
+        for node_iter_chunk in node_iter_chunks
+    )
+
+    triangle_counts = Counter()
+    for result in results:
+        triangle_counts.update(result)
+    return {node: count for node, count in sorted(triangle_counts.items())}
