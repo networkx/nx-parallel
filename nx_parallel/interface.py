@@ -30,6 +30,7 @@ ALGORITHMS = [
     "johnson",
     # Clustering
     "square_clustering",
+    "triangles",
     # Shortest Paths : unweighted graphs
     "all_pairs_shortest_path",
     "all_pairs_shortest_path_length",
