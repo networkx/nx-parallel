@@ -49,6 +49,7 @@ parallel = "_nx_parallel:get_info"
 developer = [
     'pre-commit==3.8.0',
     'ruff==0.6.7',
+    'pytest-order',
 ]
 test = [
     'pytest>=7.2',
