@@ -49,13 +49,17 @@ parallel = "_nx_parallel:get_info"
 developer = [
     'pre-commit==3.8.0',
     'ruff==0.6.7',
-    'pytest-order',
 ]
 test = [
     'pytest>=7.2',
     'pytest-order>=1.3.0',
     'numpy>=1.23',
     'scipy>=1.9,!=1.11.0,!=1.11.1',
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "order: customize the order in which tests are run"
 ]
 
 [tool.setuptools]
