@@ -89,7 +89,7 @@ def test_get_chunks():
                         assert c1 == c2
                 else:
                     if func in chk_dict_vals:
-                        for key in c1.keys():
+                        for key in c1:
                             if not math.isclose(c1[key], c2[key], abs_tol=1e-16):
                                 raise ValueError(
                                     f"Values for key '{key}' differ: {c1[key]} != {c2[key]}"
