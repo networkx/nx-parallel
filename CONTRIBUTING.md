@@ -4,12 +4,12 @@ Hi, Thanks for stopping by!
 
 This project is part of the larger NetworkX project. If you're interested in contributing to nx-parallel, you can first go through the [NetworkX's contributing guide](https://github.com/networkx/networkx/blob/main/CONTRIBUTING.rst) for general guidelines on contributing, setting up the development environment, and adding tests/docs, etc.
 
-## Setting up the development environment
+## Development workflow
 
 To set the local development environment:
 
 - Fork this repository.
-- Clone the forked repository locally.
+- Clone the forked repository locally:
 
 ```.sh
 git clone git@github.com:<your_username>/nx-parallel.git
@@ -28,13 +28,7 @@ source nxp-dev/bin/activate
 - Install the dependencies using the following command
 
 ```.sh
-pip install -e ".[developer]"
-```
-
-- Install pre-commit actions that will run the linters before making a commit
-
-```.sh
-pre-commit install
+make install
 ```
 
 - Create a new branch for your changes using
@@ -43,42 +37,19 @@ pre-commit install
 git checkout -b <branch_name>
 ```
 
-- Stage your changes, run `pre-commit` and then commit and push them and create a PR
+- Make the changes in this new feature branch and run tests before pushing them ([learn more](https://networkx.org/documentation/latest/reference/backends.html#testing-the-custom-backend)):
+
+```.sh
+make test
+```
+
+- If all the tests run successfully, stage your changes, then commit and push and then create a PR
 
 ```.sh
 git add .
-pre-commit
-git add .
-git commit -m "Your commit message"
+git commit -m"Your commit message"
 git push origin <branch_name>
 ```
-
-## Testing nx-parallel
-
-Firstly, install the dependencies for testing:
-
-```.sh
-pip install -e ".[test]"
-```
-
-Then run the following command that executes all the tests in networkx's test suite with a `ParallelGraph` object and for algorithms not in nx-parallel, it falls back to networkx's sequential implementations. This is to ensure that the parallel backend follows the same API as networkx's.
-
-```.sh
-PYTHONPATH=. \
-NETWORKX_TEST_BACKEND=parallel \
-NETWORKX_FALLBACK_TO_NX=True \
-    pytest --pyargs networkx "$@"
-```
-
-Ref. [NetworkX Backend testing docs](https://networkx.org/documentation/latest/reference/backends.html#testing-the-custom-backend) to know about testing mechanisms in networkx.
-
-For running additional tests specific to nx-parallel, you can run the following command:
-
-```.sh
-pytest nx_parallel
-```
-
-To add any additional tests, **specific to nx_parallel**, you can follow the way test folders are structured in networkx and add your specific test(s) accordingly.
 
 ## Documentation syntax
 
@@ -122,7 +93,7 @@ The default chunking in nx-parallel is done by slicing the list of nodes (or edg
 - check-list for adding a new function:
   - [ ] Add the parallel implementation(make sure API doesn't break), the file structure should be the same as that in networkx.
   - [ ] Include the `get_chunks` additional parameter. Currently, all algorithms in nx-parallel offer the user to pass their own custom chunks. Unless it is impossible to chunk, please do include this additional parameter.
-  - [ ] add the function to the `ALGORITHMS` list in [interface.py](./nx_parallel/interface.py). Take care of the `name` parameter in `_dispatchable` for the algorithms with same name but different implementations. The `name` parameter is used distinguish such algorithms in a single namespace. (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html)))
+  - [ ] add the function to the `ALGORITHMS` list in [interface.py](./nx_parallel/interface.py). Take care of the `name` parameter in `_dispatchable` for the algorithms with same name but different implementations. The `name` parameter is used distinguish such algorithms in a single namespace. (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html))
   - [ ] update the `__init__.py` files accordingly
   - [ ] docstring following the above format
   - [ ] add additional test, if needed. The smoke tests for the additional parameter `get_chunks` are done [here](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/tests/test_get_chunks.py) together for all the algorithms.
