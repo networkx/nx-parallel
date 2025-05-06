@@ -47,7 +47,7 @@ pip install nx-parallel
 conda install nx-parallel
 ```
 
-For more, see [INSTALL.rst](./INSTALL.rst).
+For more, see [INSTALL.md](./INSTALL.md).
 
 ## Backend usage
 
