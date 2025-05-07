@@ -104,6 +104,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "harmonic_centrality": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/harmonic.py#L10",
+                "additional_docs": "Compute harmonic centrality in parallel.",
+                "additional_parameters": {
+                    "G : NetworkX graph": "A graph (directed or undirected). u : node or iterable, optional (default: all nodes in G) Compute harmonic centrality for the specified node(s). distance : edge attribute key, optional (default: None) Use the specified edge attribute as the edge weight. wf_improved : bool, optional (default: True) This parameter is included for API compatibility but not used in harmonic centrality. backend : str, optional (default: None) The parallel backend to use (`'loky'`, `'threading'`, etc.). **backend_kwargs : additional backend parameters"
+                },
+            },
             "is_reachable": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L13",
                 "additional_docs": "The function parallelizes the calculation of two neighborhoods of vertices in `G` and checks closure conditions for each neighborhood subset in parallel.",
@@ -139,6 +146,14 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the isolated nodes as input and returns an iterable `isolate_chunks`. The default chunking is done by slicing the `isolates` into `n_jobs` number of chunks."
                 },
             },
+            "parallel_bfs": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/traversal/breadth_first_search.py#L10",
+                "additional_docs": "Perform a parallelized Breadth-First Search (BFS) on the graph.",
+                "additional_parameters": {
+                    "G : graph": 'A NetworkX graph. source : node, optional Starting node for the BFS traversal. If None, BFS is performed for all nodes. get_chunks : str or function (default="chunks") A function to divide nodes into chunks for parallel processing. If "chunks", the nodes are split into `n_jobs` chunks automatically. n_jobs : int, optional Number of jobs to run in parallel. If None, defaults to the number of CPUs.',
+                    "bfs_result : dict": "A dictionary where keys are nodes and values are their BFS traversal order.",
+                },
+            },
             "square_clustering": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L11",
                 "additional_docs": "The nodes are chunked into `node_chunks` and then the square clustering coefficient for all `node_chunks` are computed in parallel over `n_jobs` number of CPU cores.",
@@ -152,6 +167,11 @@ def get_info():
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
+            },
+            "voterank": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/voterank.py#L27",
+                "additional_docs": "Parallelized VoteRank centrality using joblib with chunking.",
+                "additional_parameters": None,
             },
         },
     }

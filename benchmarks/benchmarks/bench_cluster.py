@@ -5,13 +5,16 @@ from .common import (
     get_cached_gnp_random_graph,
     Benchmark,
 )
-import networkx as nx
+import nx_parallel as nxp
 
 
-class Cluster(Benchmark):
+class VoteRank(Benchmark):
+    """Benchmark for the parallelized VoteRank centrality."""
+
     params = [(backends), (num_nodes), (edge_prob)]
     param_names = ["backend", "num_nodes", "edge_prob"]
 
-    def time_square_clustering(self, backend, num_nodes, edge_prob):
+    def time_voterank(self, backend, num_nodes, edge_prob):
+        """Benchmark VoteRank on different graph sizes and backends."""
         G = get_cached_gnp_random_graph(num_nodes, edge_prob)
-        _ = nx.square_clustering(G, backend=backend)
+        _ = nxp.voterank(G, number_of_nodes=min(100, num_nodes), backend=backend)
