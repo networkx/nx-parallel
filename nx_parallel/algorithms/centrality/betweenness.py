@@ -44,6 +44,9 @@ def betweenness_centrality(
     if not G:
         return {}
 
+    if k == len(G):
+        k = None
+
     if k is None:
         nodes = G.nodes
     else:
@@ -74,6 +77,7 @@ def betweenness_centrality(
         directed=G.is_directed(),
         k=k,
         endpoints=endpoints,
+        sampled_nodes=nodes,
     )
     return betweenness
 
