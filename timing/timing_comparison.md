@@ -22,6 +22,9 @@ betweenness_centrality
 closeness_vitality
 ![alt text](heatmap_closeness_vitality_timing.png)
 
+degree_centrality
+![alt text](heatmap_degree_centrality_timing.png)
+
 local_efficiency
 ![alt text](heatmap_local_efficiency_timing.png)
 
