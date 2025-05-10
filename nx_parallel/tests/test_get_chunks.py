@@ -10,31 +10,31 @@ import networkx as nx
 import nx_parallel as nxp
 
 
-def get_all_functions_kwargs(package_name="nx_parallel"):
-    """Returns a dict keyed by function names to its positional-or-keyword arguments.
+def get_all_function_arguments(package_name="nx_parallel"):
+    """Returns a dict keyed by function names to its arguments.
 
     This function constructs a dictionary keyed by the function
     names in the package `package_name` to dictionaries containing
-    the function's positional-or-keyword arguments.
+    the function's arguments.
     """
     package = importlib.import_module(package_name)
-    all_funcs_kwargs = {}
+    all_funcs_arguments = {}
 
     for name, obj in inspect.getmembers(package, inspect.isfunction):
         if not name.startswith("_"):
             signature = inspect.signature(obj)
-            kwargs = [
+            arguments = [
                 param.name
                 for param in signature.parameters.values()
                 if param.kind == inspect.Parameter.POSITIONAL_OR_KEYWORD
             ]
-            all_funcs_kwargs[name] = kwargs
-    return all_funcs_kwargs
+            all_funcs_arguments[name] = arguments
+    return all_funcs_arguments
 
 
 def get_functions_with_get_chunks():
     """Returns a list of function names with the `get_chunks` kwarg."""
-    all_funcs_kwargs = get_all_functions_kwargs()
+    all_funcs_kwargs = get_all_function_arguments()
     get_chunks_funcs = []
     for func in all_funcs_kwargs:
         if "get_chunks" in all_funcs_kwargs[func]:
@@ -81,19 +81,13 @@ def test_get_chunks():
                     c1, c2 = dict(c1), dict(c2)
                     if func in chk_dict_vals:
                         for key in c1:
-                            if not math.isclose(c1[key], c2[key], abs_tol=1e-16):
-                                raise ValueError(
-                                    f"Values for key '{key}' differ: {c1[key]} != {c2[key]}"
-                                )
+                            assert math.isclose(c1[key], c2[key], abs_tol=1e-16)
                     else:
                         assert c1 == c2
                 else:
                     if func in chk_dict_vals:
                         for key in c1:
-                            if not math.isclose(c1[key], c2[key], abs_tol=1e-16):
-                                raise ValueError(
-                                    f"Values for key '{key}' differ: {c1[key]} != {c2[key]}"
-                                )
+                            assert math.isclose(c1[key], c2[key], abs_tol=1e-16)
                     else:
                         if isinstance(c1, float):
                             assert math.isclose(c1, c2, abs_tol=1e-16)
