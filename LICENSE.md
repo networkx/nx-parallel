@@ -1,6 +1,6 @@
 BSD 3-Clause License
 
-Copyright (c) 2024, [Contributors of nx-parallel](https://github.com/networkx/nx-parallel/graphs/contributors)
+Copyright (c) 2024-2025, [Contributors of nx-parallel](https://github.com/networkx/nx-parallel/graphs/contributors)
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
