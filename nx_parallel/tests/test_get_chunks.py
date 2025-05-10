@@ -10,15 +10,13 @@ import networkx as nx
 import nx_parallel as nxp
 
 
-def get_all_function_arguments(package_name="nx_parallel"):
-    """Returns a dict keyed by function names to its arguments.
-
-    This function constructs a dictionary keyed by the function
-    names in the package `package_name` to dictionaries containing
-    the function's arguments.
+def get_all_funcs_with_args(package_name="nx_parallel"):
+    """Returns a dict keyed by function names to a list of
+    the function's args names, for all the functions in
+    the package `package_name`.
     """
     package = importlib.import_module(package_name)
-    all_funcs_arguments = {}
+    funcs_with_args = {}
 
     for name, obj in inspect.getmembers(package, inspect.isfunction):
         if not name.startswith("_"):
@@ -28,16 +26,16 @@ def get_all_function_arguments(package_name="nx_parallel"):
                 for param in signature.parameters.values()
                 if param.kind == inspect.Parameter.POSITIONAL_OR_KEYWORD
             ]
-            all_funcs_arguments[name] = arguments
-    return all_funcs_arguments
+            funcs_with_args[name] = arguments
+    return funcs_with_args
 
 
 def get_functions_with_get_chunks():
     """Returns a list of function names with the `get_chunks` kwarg."""
-    all_funcs_kwargs = get_all_function_arguments()
+    all_funcs = get_all_funcs_with_args()
     get_chunks_funcs = []
-    for func in all_funcs_kwargs:
-        if "get_chunks" in all_funcs_kwargs[func]:
+    for func in all_funcs:
+        if "get_chunks" in all_funcs[func]:
             get_chunks_funcs.append(func)
     return get_chunks_funcs
 
