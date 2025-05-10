@@ -10,34 +10,62 @@ import networkx as nx
 import nx_parallel as nxp
 
 
-def get_all_funcs_with_args(package_name="nx_parallel"):
-    """Returns a dict keyed by function names to a list of
-    the function's args names, for all the functions in
-    the package `package_name`.
-    """
-    package = importlib.import_module(package_name)
-    funcs_with_args = {}
-
-    for name, obj in inspect.getmembers(package, inspect.isfunction):
-        if not name.startswith("_"):
-            signature = inspect.signature(obj)
-            arguments = [
-                param.name
-                for param in signature.parameters.values()
-                if param.kind == inspect.Parameter.POSITIONAL_OR_KEYWORD
-            ]
-            funcs_with_args[name] = arguments
-    return funcs_with_args
-
-
 def get_functions_with_get_chunks():
     """Returns a list of function names with the `get_chunks` kwarg."""
+
+    def get_all_funcs_with_args(package_name="nx_parallel"):
+        """Returns a dict keyed by function names to a list of
+        the function's args names, for all the functions in
+        the package `package_name`.
+        """
+        package = importlib.import_module(package_name)
+        funcs_with_args = {}
+
+        for name, obj in inspect.getmembers(package, inspect.isfunction):
+            if not name.startswith("_"):
+                signature = inspect.signature(obj)
+                arguments = [
+                    param.name
+                    for param in signature.parameters.values()
+                    if param.kind == inspect.Parameter.POSITIONAL_OR_KEYWORD
+                ]
+                funcs_with_args[name] = arguments
+        return funcs_with_args
+
     all_funcs = get_all_funcs_with_args()
     get_chunks_funcs = []
     for func in all_funcs:
         if "get_chunks" in all_funcs[func]:
             get_chunks_funcs.append(func)
     return get_chunks_funcs
+
+
+def test_get_functions_with_get_chunks():
+    # TODO: Instead of `expected` use ALGORTHMS from interface.py
+    # take care of functions like `connectivity.all_pairs_node_connectivity`
+    expected = {
+        "all_pairs_all_shortest_paths",
+        "all_pairs_bellman_ford_path",
+        "all_pairs_bellman_ford_path_length",
+        "all_pairs_dijkstra",
+        "all_pairs_dijkstra_path",
+        "all_pairs_dijkstra_path_length",
+        "all_pairs_node_connectivity",
+        "all_pairs_shortest_path",
+        "all_pairs_shortest_path_length",
+        "approximate_all_pairs_node_connectivity",
+        "betweenness_centrality",
+        "closeness_vitality",
+        "edge_betweenness_centrality",
+        "is_reachable",
+        "johnson",
+        "local_efficiency",
+        "node_redundancy",
+        "number_of_isolates",
+        "square_clustering",
+        "tournament_is_strongly_connected",
+    }
+    assert set(get_functions_with_get_chunks()) == expected
 
 
 def test_get_chunks():
