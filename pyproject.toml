@@ -24,7 +24,7 @@ classifiers = [
 
 dependencies = [
     "networkx>=3.4.2",
-    "joblib>=1.4.2"
+    "joblib>=1.5.0"
 ]
 
 [[project.authors]]
@@ -84,7 +84,7 @@ attr = 'nx_parallel.__version__'
 
 [tool.ruff]
 line-length = 88
-target-version = 'py310'
+target-version = 'py311'
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ['I', 'F403', 'F401']
