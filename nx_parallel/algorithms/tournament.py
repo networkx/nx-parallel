@@ -45,8 +45,7 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(G) // n_jobs, 1)
-        node_chunks = nxp.chunks(G, num_in_chunk)
+        node_chunks = nxp.chunks(G, n_jobs)
     else:
         node_chunks = get_chunks(G)
 
@@ -83,8 +82,7 @@ def tournament_is_strongly_connected(G, get_chunks="chunks"):
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(min(len(G) // n_jobs, 10), 1)
-        node_chunks = nxp.chunks(G, num_in_chunk)
+        node_chunks = nxp.chunks(G, n_jobs)
     else:
         node_chunks = get_chunks(G)
 

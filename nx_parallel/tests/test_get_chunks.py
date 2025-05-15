@@ -44,8 +44,7 @@ def test_get_chunks():
         random.seed(42)
         random.shuffle(_nodes)
         num_chunks = nxp.get_n_jobs()
-        num_in_chunk = max(len(_nodes) // num_chunks, 1)
-        return nxp.chunks(_nodes, num_in_chunk)
+        return nxp.chunks(_nodes, num_chunks)
 
     get_chunks_funcs = get_functions_with_get_chunks()
     ignore_funcs = [
