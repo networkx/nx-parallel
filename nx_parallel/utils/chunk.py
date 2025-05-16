@@ -7,7 +7,11 @@ __all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
 
 def chunks(iterable, n_chunks, max_chunk_size=None):
-    """Yield exactly `n_chunks` chunks from `iterable`, balancing the chunk sizes."""
+    """
+    Yield chunks by splitting the iterable either into chunks of size at
+    most `max_chunk_size`, or into exactly `n_chunks` balanced chunks if
+    `max_chunk_size` is None.
+    """
     iterable = list(iterable)
     if max_chunk_size is not None:
         for chunk in itertools.batched(iterable, max_chunk_size):
