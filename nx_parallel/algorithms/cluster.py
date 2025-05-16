@@ -116,19 +116,19 @@ def triangles(G, nodes=None, get_chunks="chunks"):
         if nodes in G:
             return next(_triangles_and_degree_iter(G, nodes))[2] // 2
         return {v: t // 2 for v, d, t, _ in _triangles_and_degree_iter(G, nodes)}
+    else:
+        nodes = list(G.nodes())
 
     later_nbrs = {}
     for node, neighbors in G.adjacency():
         later_nbrs[node] = {n for n in neighbors if n not in later_nbrs and n != node}
 
     n_jobs = nxp.get_n_jobs()
-    nodes_to_process = list(G.nodes())
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(nodes_to_process) // n_jobs, 1)
-        node_iter_chunks = nxp.chunks(nodes_to_process, num_in_chunk)
+        node_iter_chunks = nxp.chunks(nodes, n_jobs)
     else:
-        node_iter_chunks = get_chunks(nodes_to_process)
+        node_iter_chunks = get_chunks(nodes)
 
     results = Parallel()(
         delayed(compute_triangles_chunk)(node_iter_chunk)
