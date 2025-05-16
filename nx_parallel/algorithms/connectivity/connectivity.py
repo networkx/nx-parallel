@@ -64,7 +64,9 @@ def all_pairs_node_connectivity(G, nbunch=None, flow_func=None, get_chunks="chun
     pairs = list(iter_func(nbunch, 2))
     n_jobs = nxp.get_n_jobs()
     if get_chunks == "chunks":
-        pairs_chunks = nxp.chunks(pairs, n_jobs)
+        num_in_chunk = max(min(len(pairs) // n_jobs, 10), 1)
+        max_chunk_size = 10 if num_in_chunk == 10 else None
+        pairs_chunks = nxp.chunks(pairs, n_jobs, max_chunk_size)
     else:
         pairs_chunks = get_chunks(pairs)
 
