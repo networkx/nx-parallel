@@ -44,8 +44,7 @@ def all_pairs_all_shortest_paths(
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(nodes) // n_jobs, 1)
-        node_chunks = nxp.chunks(nodes, num_in_chunk)
+        node_chunks = nxp.chunks(nodes, n_jobs)
     else:
         node_chunks = get_chunks(nodes)
 

@@ -6,15 +6,23 @@ import networkx as nx
 __all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
 
-def chunks(iterable, n_chunks):
-    """Yield exactly `n_chunks` chunks from `iterable`, balancing the chunk sizes."""
+def chunks(iterable, n_chunks, max_chunk_size=None):
+    """
+    Yield chunks by splitting the iterable either into chunks of size at
+    most `max_chunk_size`, or into exactly `n_chunks` balanced chunks if
+    `max_chunk_size` is None.
+    """
     iterable = list(iterable)
-    k, m = divmod(len(iterable), n_chunks)
-    it = iter(iterable)
-    for _ in range(n_chunks):
-        chunk_size = k + (1 if m > 0 else 0)
-        m -= 1
-        yield tuple(itertools.islice(it, chunk_size))
+    if max_chunk_size is not None:
+        for chunk in itertools.batched(iterable, max_chunk_size):
+            yield chunk
+    else:
+        k, m = divmod(len(iterable), n_chunks)
+        it = iter(iterable)
+        for _ in range(n_chunks):
+            chunk_size = k + (1 if m > 0 else 0)
+            m -= 1
+            yield tuple(itertools.islice(it, chunk_size))
 
 
 def get_n_jobs(n_jobs=None):
