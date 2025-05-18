@@ -38,6 +38,8 @@ ALGORITHMS = [
     "approximate_all_pairs_node_connectivity",
     # Connectivity
     "connectivity.all_pairs_node_connectivity",
+    # Diameter : unweighted undirected graphs
+    "diameter",
 ]
 
 
@@ -96,3 +98,33 @@ class BackendInterface:
         if isinstance(result, ParallelGraph):
             return result.graph_object
         return result
+
+    @staticmethod
+    def can_run(name, args, kwargs):
+        """Determine if the algorithm can be run with the given arguments."""
+        if name == "diameter":
+            # Extract the graph from args
+            if not args:
+                return False
+
+            graph = args[0]
+            if isinstance(graph, ParallelGraph):
+                graph = graph.graph_object
+
+            if graph.is_directed():
+                return (
+                    "Parallel diameter implementation only supports undirected graphs"
+                )
+
+            if kwargs.get("weight") is not None:
+                return (
+                    "Parallel diameter implementation only supports unweighted graphs"
+                )
+
+            for u, v, data in graph.edges(data=True):
+                if "weight" in data:
+                    return "Parallel diameter implementation only supports unweighted graphs"
+
+            return True
+
+        return True  # All other algorithms can run by default
