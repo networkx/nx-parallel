@@ -13,16 +13,18 @@ def chunks(iterable, n_chunks, max_chunk_size=None):
     `max_chunk_size` is None.
     """
     iterable = list(iterable)
-    if max_chunk_size is not None:
-        for chunk in itertools.batched(iterable, max_chunk_size):
-            yield chunk
-    else:
-        k, m = divmod(len(iterable), n_chunks)
-        it = iter(iterable)
-        for _ in range(n_chunks):
-            chunk_size = k + (1 if m > 0 else 0)
-            m -= 1
-            yield tuple(itertools.islice(it, chunk_size))
+    if max_chunk_size:
+        num_in_chunk = max(min(len(iterable) // n_chunks, max_chunk_size), 1)
+        if num_in_chunk == max_chunk_size:
+            yield from itertools.batched(iterable, max_chunk_size)
+            return
+
+    k, m = divmod(len(iterable), n_chunks)
+    it = iter(iterable)
+    for _ in range(n_chunks):
+        chunk_size = k + (1 if m > 0 else 0)
+        m -= 1
+        yield tuple(itertools.islice(it, chunk_size))
 
 
 def get_n_jobs(n_jobs=None):
