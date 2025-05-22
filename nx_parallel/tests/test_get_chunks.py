@@ -43,8 +43,8 @@ def test_get_chunks():
         _nodes = list(nodes).copy()
         random.seed(42)
         random.shuffle(_nodes)
-        num_chunks = nxp.get_n_jobs()
-        return nxp.chunks(_nodes, num_chunks)
+        n_jobs = nxp.get_n_jobs()
+        return nxp.chunks(_nodes, n_jobs)
 
     get_chunks_funcs = get_functions_with_get_chunks()
     ignore_funcs = [

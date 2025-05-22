@@ -6,11 +6,34 @@ import networkx as nx
 __all__ = ["chunks", "get_n_jobs", "create_iterables"]
 
 
-def chunks(iterable, n_chunks, max_chunk_size=None):
-    """
-    Yield chunks by splitting the iterable either into chunks of size at
-    most `max_chunk_size`, or into exactly `n_chunks` balanced chunks if
-    `max_chunk_size` is None.
+def chunks(iterable, n_chunks, *, max_chunk_size=None):
+    """Yield chunks from input iterable.
+
+    - If `max_chunk_size` is None (default), the iterable
+    is split into exactly `n_chunks` balanced chunks.
+    - If `max_chunk_size` is specified, it overrides `n_chunks`
+    and the iterable is split into chunks of size at most
+    `max_chunk_size`.
+
+    Parameters
+    ----------
+    iterable : Iterable
+        An iterable of inputs to be divided.
+    n_chunks : int
+        The number of chunks the iterable is divided into. Ignored
+        when `max_chunk_size` is specified.
+    max_chunk_size : int, optional
+        Maximum number of items allowed in each chunk. If None, it
+        divides the iterable into `n_chunks` chunks.
+
+    Examples
+    --------
+    >>> import nx_parallel as nxp
+    >>> data = list(range(10))
+    >>> list(nxp.chunks(data, 3))
+    [(0, 1, 2, 3), (4, 5, 6), (7, 8, 9)]
+    >>> list(nxp.chunks(data, 3, max_chunk_size=2))
+    [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9)]
     """
     iterable = list(iterable)
     if max_chunk_size:
