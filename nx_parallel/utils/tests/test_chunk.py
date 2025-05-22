@@ -45,7 +45,7 @@ def test_chunks():
     assert chunks_list == [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9)]
 
     # Test chunking with a maximum chunk size
-    chunks_list = list(nxp.chunks(data, 2, 3))
+    chunks_list = list(nxp.chunks(data, 2, max_chunk_size=3))
     assert chunks_list == [(0, 1, 2), (3, 4, 5), (6, 7, 8), (9,)]
 
 
