@@ -27,8 +27,7 @@ def number_of_isolates(G, get_chunks="chunks"):
 
     isolates_list = list(nx.isolates(G))
     if get_chunks == "chunks":
-        num_in_chunk = max(len(isolates_list) // n_jobs, 1)
-        isolate_chunks = nxp.chunks(isolates_list, num_in_chunk)
+        isolate_chunks = nxp.chunks(isolates_list, n_jobs)
     else:
         isolate_chunks = get_chunks(isolates_list)
 

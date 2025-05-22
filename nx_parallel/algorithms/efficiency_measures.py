@@ -33,8 +33,7 @@ def local_efficiency(G, get_chunks="chunks"):
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(G.nodes) // n_jobs, 1)
-        node_chunks = list(nxp.chunks(G.nodes, num_in_chunk))
+        node_chunks = list(nxp.chunks(G.nodes, n_jobs))
     else:
         node_chunks = get_chunks(G.nodes)
 

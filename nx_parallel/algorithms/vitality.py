@@ -39,8 +39,7 @@ def closeness_vitality(
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(G) // n_jobs, 1)
-        node_chunks = nxp.chunks(G.nodes, num_in_chunk)
+        node_chunks = nxp.chunks(G.nodes, n_jobs)
     else:
         node_chunks = get_chunks(G.nodes)
 
