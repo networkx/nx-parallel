@@ -9,11 +9,12 @@ __all__ = ["chunks", "get_n_jobs", "create_iterables"]
 def chunks(iterable, n_chunks, *, max_chunk_size=None):
     """Yield chunks from input iterable.
 
-    - If `max_chunk_size` is None (default), the iterable
-    is split into exactly `n_chunks` balanced chunks.
-    - If `max_chunk_size` is specified, it overrides `n_chunks`
-    and the iterable is split into chunks of size at most
-    `max_chunk_size`.
+    - If `max_chunk_size` is None (default), the iterable is split into
+    exactly `n_chunks` equally sized chunks.
+    - If `max_chunk_size` is specified and the calculated `base_chunk_size`
+    exceeds it, then priority is given to `max_chunk_size`. The iterable is
+    split into smaller chunks of size `max_chunk_size`.
+    In any other case, it falls back to the default behavior.
 
     Parameters
     ----------
@@ -21,7 +22,7 @@ def chunks(iterable, n_chunks, *, max_chunk_size=None):
         An iterable of inputs to be divided.
     n_chunks : int
         The number of chunks the iterable is divided into. Ignored
-        when `max_chunk_size` is specified.
+        when `base_chunk_size` exceeds the specified `max_chunk_size`.
     max_chunk_size : int, optional
         Maximum number of items allowed in each chunk. If None, it
         divides the iterable into `n_chunks` chunks.
@@ -36,17 +37,16 @@ def chunks(iterable, n_chunks, *, max_chunk_size=None):
     [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9)]
     """
     iterable = list(iterable)
-    if max_chunk_size:
-        num_in_chunk = max(min(len(iterable) // n_chunks, max_chunk_size), 1)
-        if num_in_chunk == max_chunk_size:
-            yield from itertools.batched(iterable, max_chunk_size)
-            return
+    base_chunk_size = max(len(iterable) // n_chunks, 1)
+    if max_chunk_size and base_chunk_size >= max_chunk_size:
+        yield from itertools.batched(iterable, max_chunk_size)
+        return
 
-    k, m = divmod(len(iterable), n_chunks)
+    extra_items = len(iterable) % n_chunks
     it = iter(iterable)
     for _ in range(n_chunks):
-        chunk_size = k + (1 if m > 0 else 0)
-        m -= 1
+        chunk_size = base_chunk_size + (1 if extra_items > 0 else 0)
+        extra_items -= 1
         yield tuple(itertools.islice(it, chunk_size))
 
 
