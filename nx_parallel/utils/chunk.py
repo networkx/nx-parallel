@@ -85,7 +85,7 @@ def get_n_jobs(n_jobs=None):
     return int(n_jobs)
 
 
-def create_iterables(G, iterator, n_cores, list_of_iterator=None):
+def create_iterables(G, iterator, n_jobs, list_of_iterator=None):
     """Create an iterable of function inputs for parallel computation
     based on the provided iterator type.
 
@@ -95,8 +95,8 @@ def create_iterables(G, iterator, n_cores, list_of_iterator=None):
         The NetworkX graph.
     iterator : str
         Type of iterator. Valid values are 'node', 'edge', 'isolate'
-    n_cores : int
-        The number of cores to use.
+    n_jobs : int
+        The number of parallel jobs to run.
     list_of_iterator : list, optional
         A precomputed list of items to iterate over. If None, it will
         be generated based on the iterator type.
@@ -125,4 +125,4 @@ def create_iterables(G, iterator, n_cores, list_of_iterator=None):
     if not list_of_iterator:
         return iter([])
 
-    return chunks(list_of_iterator, n_cores)
+    return chunks(list_of_iterator, n_jobs)
