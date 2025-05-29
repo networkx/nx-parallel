@@ -25,6 +25,9 @@ def test_get_n_jobs():
         nx.config.backends.parallel.active = True
         nx.config.backends.parallel.n_jobs = 5
         assert nxp.get_n_jobs() == 5
+        # restore nx.config
+        nx.config.backends.parallel.active = False
+        nx.config.backends.parallel.n_jobs = None
     # Test with n_jobs = 0 to raise a ValueError
     try:
         nxp.get_n_jobs(0)
