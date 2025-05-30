@@ -37,11 +37,29 @@ make install
 git checkout -b <branch_name>
 ```
 
-- Make the changes in this new feature branch and run tests before pushing them ([learn more](https://networkx.org/documentation/latest/reference/backends.html#testing-the-custom-backend)):
+- Make the changes in this new feature branch and run all tests before pushing them ([learn more](https://networkx.org/documentation/latest/reference/backends.html#testing-the-custom-backend)):
 
-```.sh
-make test
-```
+    ```.sh
+    make test
+    ```
+
+    - To only run only networkx's test suite with nx-parallel as the backend run:
+
+        ```.sh
+        make run-networkx-tests
+        ```
+    
+    - To only run nx-parallel specific tests run:
+
+        ```.sh
+        make test-only-nx-parallel
+        ```
+
+    - To run both nx-parallel specific test and networkx's test suite with the parallel backend run:
+
+        ```.sh
+        make test-backend
+        ```
 
 - If all the tests run successfully, stage your changes, then commit and push and then create a PR
 
@@ -50,6 +68,14 @@ git add .
 git commit -m"Your commit message"
 git push origin <branch_name>
 ```
+
+## Adding tests in nx-parallel
+
+- If an algorithm introduces an additional backend-specific argument make sure to add tests (using pytest) for it in a `tests` directory (in that algorithm's parent directory). For more, refer the networkx's tests.
+
+- `get_chunks` is the additional backend-specific argument for almost all the algorithms in nx-parallel and it's tested for all algorithms together in `nx_parallel/tests/test_get_chunks.py` file.
+
+- We use `@pytest.mark.order` for the tests that change the global configurations (i.e. `nx.config`) to make sure those tests run in the specified order and don't cause unexpected failures.
 
 ## Documentation syntax
 
