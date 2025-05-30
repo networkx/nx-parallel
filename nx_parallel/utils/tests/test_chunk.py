@@ -48,6 +48,9 @@ def test_chunks():
     chunks_list = list(nxp.chunks(data, 2, max_chunk_size=3))
     assert chunks_list == [(0, 1, 2), (3, 4, 5), (6, 7, 8), (9,)]
 
+    chunks_list = list(nxp.chunks(data, 5, max_chunk_size=3))
+    assert chunks_list == [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9)]
+
 
 def test_create_iterables():
     """Test `create_iterables` for different iterator types."""

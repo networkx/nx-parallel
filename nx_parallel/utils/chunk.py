@@ -11,10 +11,10 @@ def chunks(iterable, n_chunks, *, max_chunk_size=None):
 
     - If `max_chunk_size` is None (default), the iterable is split into
     exactly `n_chunks` equally sized chunks.
-    - If `max_chunk_size` is specified and the calculated `base_chunk_size`
-    exceeds it, then priority is given to `max_chunk_size`. The iterable is
-    split into smaller chunks of size `max_chunk_size`.
-    In any other case, it falls back to the default behavior.
+    - If `max_chunk_size` is specified and the default split would create
+    chunks larger than this size, the iterable is instead divided into
+    smaller chunks, each containing at most `max_chunk_size` items.
+    - In any other case, it falls back to the default behavior.
 
     Parameters
     ----------
@@ -35,9 +35,11 @@ def chunks(iterable, n_chunks, *, max_chunk_size=None):
     [(0, 1, 2, 3), (4, 5, 6), (7, 8, 9)]
     >>> list(nxp.chunks(data, 3, max_chunk_size=2))
     [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9)]
+    >>> list(nxp.chunks(data, 5, max_chunk_size=3))
+    [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9)]
     """
     iterable = list(iterable)
-    base_chunk_size, extra_items =  divmod(len(iterable), n_chunks)
+    base_chunk_size, extra_items = divmod(len(iterable), n_chunks)
     if max_chunk_size and base_chunk_size >= max_chunk_size:
         yield from itertools.batched(iterable, max_chunk_size)
         return
