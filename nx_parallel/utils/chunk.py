@@ -37,12 +37,11 @@ def chunks(iterable, n_chunks, *, max_chunk_size=None):
     [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9)]
     """
     iterable = list(iterable)
-    base_chunk_size = max(len(iterable) // n_chunks, 1)
+    base_chunk_size, extra_items =  divmod(len(iterable), n_chunks)
     if max_chunk_size and base_chunk_size >= max_chunk_size:
         yield from itertools.batched(iterable, max_chunk_size)
         return
 
-    extra_items = len(iterable) % n_chunks
     it = iter(iterable)
     for _ in range(n_chunks):
         chunk_size = base_chunk_size + (1 if extra_items > 0 else 0)
