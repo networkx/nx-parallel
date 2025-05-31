@@ -49,6 +49,13 @@ developer = [
     'pre-commit==3.8.0',
     'ruff==0.6.7',
 ]
+default = [
+    'numpy>=1.23',
+    'scipy>=1.9,!=1.11.0,!=1.11.1',
+    'matplotlib>=3.8',
+    'seaborn>=0.13.2',
+    'pandas>=2.0',
+]
 test = [
     'pytest>=7.2',
     'numpy>=1.23',
