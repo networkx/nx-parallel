@@ -13,7 +13,7 @@ import nx_parallel as nxp
 
 
 def get_functions_with_get_chunks(ignore_funcs=[], package_name="nx_parallel"):
-    """yields function names for functions with a `get_chunks` kwarg."""
+    """Yields function names for functions with a `get_chunks` kwarg."""
 
     package = importlib.import_module(package_name)
 
