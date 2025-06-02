@@ -154,8 +154,3 @@ def plot_timing_heatmap(currFunc):
     print(currFunc.__name__)
 
     plt.savefig("timing/" + "heatmap_" + currFunc.__name__ + "_timing.png")
-
-
-plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
-plot_timing_heatmap(nx.algorithms.bipartite.redundancy.node_redundancy)
-plot_timing_heatmap(nx.algorithms.centrality.betweenness.betweenness_centrality)
