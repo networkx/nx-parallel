@@ -31,6 +31,11 @@ def time_individual_function(currFunc, number_of_nodes, edge_prob, *, weighted=F
         t2 = perf_counter()
         return t2 - t1
 
+    def record_result(stdTime, parallelTime, row, col):
+        timesFaster = stdTime / parallelTime
+        speedup_df.at[row, col] = timesFaster
+        heatmap_annot.at[row, col] = f"{parallelTime:.2g}s\n{timesFaster:.2g}x"
+
     speedup_df = pd.DataFrame(index=number_of_nodes, columns=edge_prob, dtype=float)
     heatmap_annot = pd.DataFrame(index=number_of_nodes, columns=edge_prob, dtype=object)
 
@@ -93,11 +98,7 @@ def time_individual_function(currFunc, number_of_nodes, edge_prob, *, weighted=F
                 print(parallelTime)
                 stdTime = measure_time(G)
                 print(stdTime)
-                timesFaster = stdTime / parallelTime
-                speedup_df.at[number_of_nodes[num], p] = timesFaster
-                heatmap_annot.at[number_of_nodes[num], p] = (
-                    f"{parallelTime:.2g}s\n{timesFaster:.2g}x"
-                )
+                record_result(stdTime, parallelTime, number_of_nodes[num], p)
                 print("Finished " + str(currFunc))
     else:
         # for tournament graphs
@@ -109,11 +110,7 @@ def time_individual_function(currFunc, number_of_nodes, edge_prob, *, weighted=F
             print(parallelTime)
             stdTime = measure_time(G, 1, num)
             print(stdTime)
-            timesFaster = stdTime / parallelTime
-            speedup_df.at[num, edge_prob[0]] = timesFaster
-            heatmap_annot.at[num, edge_prob[0]] = (
-                f"{parallelTime:.2g}s\n{timesFaster:.2g}x"
-            )
+            record_result(stdTime, parallelTime, num, edge_prob[0])
             print("Finished " + str(currFunc))
     return (speedup_df, heatmap_annot)
 
@@ -127,6 +124,7 @@ def plot_timing_heatmap(currFunc):
     edge_prob = (
         [1, 0.8, 0.6, 0.4, 0.2] if currFunc.__name__ not in tournament_funcs else [1]
     )
+
     (speedup_df, heatmap_annot) = time_individual_function(
         currFunc, number_of_nodes, edge_prob
     )
@@ -154,3 +152,6 @@ def plot_timing_heatmap(currFunc):
     print(currFunc.__name__)
 
     plt.savefig("timing/" + "heatmap_" + currFunc.__name__ + "_timing.png")
+
+
+# plot_timing_heatmap(nx.algorithms.centrality.betweenness.betweenness_centrality)
