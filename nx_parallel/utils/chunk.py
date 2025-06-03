@@ -14,7 +14,6 @@ def chunks(iterable, n_chunks, *, max_chunk_size=None):
     - If `max_chunk_size` is specified and the default split would create
     chunks larger than this size, the iterable is instead divided into
     smaller chunks, each containing at most `max_chunk_size` items.
-    - In any other case, it falls back to the default behavior.
 
     Parameters
     ----------
@@ -22,8 +21,8 @@ def chunks(iterable, n_chunks, *, max_chunk_size=None):
         An iterable of inputs to be divided.
     n_chunks : int
         The number of chunks the iterable is divided into. Ignored
-        when `base_chunk_size` exceeds the specified `max_chunk_size`.
-    max_chunk_size : int, optional
+        if chunks' size exceed the `max_chunk_size` value.
+    max_chunk_size : int, optional (default = None)
         Maximum number of items allowed in each chunk. If None, it
         divides the iterable into `n_chunks` chunks.
 
