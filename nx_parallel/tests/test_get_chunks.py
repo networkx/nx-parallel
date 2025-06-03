@@ -76,7 +76,7 @@ def test_get_chunks(func):
     tournament_funcs = [
         "tournament_is_strongly_connected",
     ]
-    chk_dict_vals = [
+    check_dict_values_close = [
         "betweenness_centrality",
         "edge_betweenness_centrality",
     ]
@@ -94,13 +94,13 @@ def test_get_chunks(func):
         c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
         if isinstance(c1, types.GeneratorType):
             c1, c2 = dict(c1), dict(c2)
-            if func in chk_dict_vals:
+            if func in check_dict_values_close:
                 for key in c1:
                     assert math.isclose(c1[key], c2[key], abs_tol=1e-16)
             else:
                 assert c1 == c2
         else:
-            if func in chk_dict_vals:
+            if func in check_dict_values_close:
                 for key in c1:
                     assert math.isclose(c1[key], c2[key], abs_tol=1e-16)
             else:
