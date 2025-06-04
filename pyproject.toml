@@ -57,6 +57,12 @@ test = [
     'scipy>=1.9,!=1.11.0,!=1.11.1',
 ]
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    # note the use of single quote below to denote "raw" strings in TOML
+    'ignore:the hashes produced',
+]
+
 [tool.setuptools]
 zip-safe = false
 include-package-data = false

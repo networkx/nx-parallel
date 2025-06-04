@@ -28,13 +28,16 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
         for v in node_iter_chunk:
             clustering = 0
             potential = 0
-            for u, w in combinations(G[v], 2):
-                squares = len((set(G[u]) & set(G[w])) - {v})
+            v_nbrs = G_nbrs_as_sets[v]
+            for u, w in combinations(v_nbrs, 2):
+                u_nbrs = G_nbrs_as_sets[u]
+                w_nbrs = G_nbrs_as_sets[w]
+                squares = len((u_nbrs & w_nbrs) - {v})
                 clustering += squares
                 degm = squares + 1
-                if w in G[u]:
+                if w in u_nbrs:
                     degm += 1
-                potential += (len(G[u]) - degm) + (len(G[w]) - degm) + squares
+                potential += (len(u_nbrs) - degm) + (len(w_nbrs) - degm) + squares
             if potential > 0:
                 clustering /= potential
             result_chunk += [(v, clustering)]
@@ -42,6 +45,9 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
 
     if hasattr(G, "graph_object"):
         G = G.graph_object
+
+    # ignore self-loops as per networkx 3.5
+    G_nbrs_as_sets = {node: set(G[node]) - {node} for node in G}
 
     if nodes is None:
         node_iter = list(G)
