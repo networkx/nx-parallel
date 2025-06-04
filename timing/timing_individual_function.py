@@ -41,50 +41,49 @@ def time_individual_function(currFunc, number_of_nodes, edge_prob, *, weighted=F
 
     if currFunc.__name__ not in tournament_funcs:
         for p in edge_prob:
-            for num in range(len(number_of_nodes)):
+            for ind, num in enumerate(number_of_nodes):
                 # for bipartite graphs
                 if currFunc.__name__ in bipartite_funcs:
                     n = [50, 100, 200, 400]
                     m = [25, 50, 100, 200]
-                    print(n[num] + m[num])
+                    print(n[ind] + m[ind])
                     G = nx.bipartite.random_graph(
-                        n[num], m[num], p, seed=42, directed=True
+                        n[ind], m[ind], p, seed=42, directed=True
                     )
-                    for i in G.nodes:
-                        neighbors = list(G.neighbors(i))
+                    for cur_node in G.nodes:
+                        neighbors = list(G.neighbors(cur_node))
                         # Have atleast 2 outgoing edges
                         if len(neighbors) == 0:
                             G.add_edge(
-                                i, random.choice([node for node in G if node != i])
+                                cur_node,
+                                random.choice([node for node in G if node != cur_node]),
                             )
                             G.add_edge(
-                                i,
+                                cur_node,
                                 random.choice(
                                     [
                                         node
                                         for node in G.nodes
-                                        if node != i
-                                        and node not in list(G.neighbors(i))
+                                        if node != cur_node
+                                        and node not in list(G.neighbors(cur_node))
                                     ]
                                 ),
                             )
                         elif len(neighbors) == 1:
                             G.add_edge(
-                                i,
+                                cur_node,
                                 random.choice(
                                     [
                                         node
                                         for node in G.nodes
-                                        if node != i
-                                        and node not in list(G.neighbors(i))
+                                        if node != cur_node
+                                        and node not in list(G.neighbors(cur_node))
                                     ]
                                 ),
                             )
                 else:
-                    print(number_of_nodes[num])
-                    G = nx.fast_gnp_random_graph(
-                        number_of_nodes[num], p, seed=42, directed=True
-                    )
+                    print(num)
+                    G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
 
                 # for weighted graphs
                 if weighted:
