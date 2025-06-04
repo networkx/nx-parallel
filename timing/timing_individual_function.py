@@ -148,17 +148,15 @@ def plot_timing_heatmap(targetFunc):
 
     # Plot the heatmap with performance speedup values
     plt.figure(figsize=(20, 4))
-    hm = sns.heatmap(
+    sns.heatmap(
         data=speedup_df.T, annot=heatmap_annot.T, fmt="", cmap="RdYlGn", cbar=True
     )
 
-    # Set tick labels for y-axis (edge probabilities) and x-axis (number of nodes)
-    hm.set_xticklabels(number_of_nodes)
-    hm.set_yticklabels(edge_prob)
+    plt.xticks(
+        ticks=np.arange(len(number_of_nodes)) + 0.5, labels=number_of_nodes, rotation=45
+    )
+    plt.yticks(ticks=np.arange(len(edge_prob)) + 0.5, labels=edge_prob, rotation=20)
 
-    # Improve readability by rotating axis tick labels
-    plt.xticks(rotation=45)
-    plt.yticks(rotation=20)
     plt.title(
         "Small Scale Demo: Times Speedups of "
         + targetFunc.__name__
@@ -171,4 +169,4 @@ def plot_timing_heatmap(targetFunc):
     plt.savefig("timing/" + "heatmap_" + targetFunc.__name__ + "_timing.png")
 
 
-# plot_timing_heatmap(nx.algorithms.centrality.betweenness.betweenness_centrality)
+# plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
