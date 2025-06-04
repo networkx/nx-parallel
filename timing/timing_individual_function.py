@@ -11,6 +11,8 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 import nx_parallel as nxp
 import joblib
+import numpy as np
+from collections import defaultdict
 
 # Default Config
 joblib.parallel_config(n_jobs=-1)
@@ -22,28 +24,22 @@ tournament_funcs = ["is_reachable", "tournament_is_strongly_connected"]
 bipartite_funcs = ["node_redundancy"]
 
 
-def time_individual_function(currFunc, number_of_nodes, edge_prob, *, weighted=False):
+def time_individual_function(
+    targetFunc, nx_times, parallel_times, number_of_nodes, edge_prob, *, weighted=False
+):
     def measure_time(G, *args):
         t1 = perf_counter()
-        c1 = currFunc(G, *args)
+        c1 = targetFunc(G, *args)
         if isinstance(c1, types.GeneratorType):
             _ = dict(c1)
         t2 = perf_counter()
         return t2 - t1
 
-    def record_result(stdTime, parallelTime, row, col):
-        timesFaster = stdTime / parallelTime
-        speedup_df.at[row, col] = timesFaster
-        heatmap_annot.at[row, col] = f"{parallelTime:.2g}s\n{timesFaster:.2g}x"
-
-    speedup_df = pd.DataFrame(index=number_of_nodes, columns=edge_prob, dtype=float)
-    heatmap_annot = pd.DataFrame(index=number_of_nodes, columns=edge_prob, dtype=object)
-
-    if currFunc.__name__ not in tournament_funcs:
+    if targetFunc.__name__ not in tournament_funcs:
         for p in edge_prob:
             for ind, num in enumerate(number_of_nodes):
                 # for bipartite graphs
-                if currFunc.__name__ in bipartite_funcs:
+                if targetFunc.__name__ in bipartite_funcs:
                     n = [50, 100, 200, 400]
                     m = [25, 50, 100, 200]
                     print(n[ind] + m[ind])
@@ -97,8 +93,9 @@ def time_individual_function(currFunc, number_of_nodes, edge_prob, *, weighted=F
                 print(parallelTime)
                 stdTime = measure_time(G)
                 print(stdTime)
-                record_result(stdTime, parallelTime, number_of_nodes[num], p)
-                print("Finished " + str(currFunc))
+                nx_times[(num, p)].append(stdTime)
+                parallel_times[(num, p)].append(parallelTime)
+                print("Finished " + str(targetFunc))
     else:
         # for tournament graphs
         for num in number_of_nodes:
@@ -109,24 +106,45 @@ def time_individual_function(currFunc, number_of_nodes, edge_prob, *, weighted=F
             print(parallelTime)
             stdTime = measure_time(G, 1, num)
             print(stdTime)
-            record_result(stdTime, parallelTime, num, edge_prob[0])
-            print("Finished " + str(currFunc))
-    return (speedup_df, heatmap_annot)
+            nx_times[(num, edge_prob[0])].append(stdTime)
+            parallel_times[(num, edge_prob[0])].append(parallelTime)
+            print("Finished " + str(targetFunc))
 
 
-def plot_timing_heatmap(currFunc):
+def plot_timing_heatmap(targetFunc):
     number_of_nodes = (
         [10, 50, 100, 300, 500]
-        if currFunc.__name__ not in bipartite_funcs
+        if targetFunc.__name__ not in bipartite_funcs
         else [75, 150, 300, 600]
     )
     edge_prob = (
-        [1, 0.8, 0.6, 0.4, 0.2] if currFunc.__name__ not in tournament_funcs else [1]
+        [1, 0.8, 0.6, 0.4, 0.2] if targetFunc.__name__ not in tournament_funcs else [1]
     )
 
-    (speedup_df, heatmap_annot) = time_individual_function(
-        currFunc, number_of_nodes, edge_prob
+    speedup_df = pd.DataFrame(
+        np.inf, index=number_of_nodes, columns=edge_prob, dtype=float
     )
+    heatmap_annot = pd.DataFrame(index=number_of_nodes, columns=edge_prob, dtype=object)
+    nx_times = defaultdict(list)
+    parallel_times = defaultdict(list)
+
+    trials = 5
+    for trial in range(trials):
+        print(f"Trial {trial+1} of {trials}")
+        time_individual_function(
+            targetFunc, nx_times, parallel_times, number_of_nodes, edge_prob
+        )
+
+    for row in number_of_nodes:
+        for col in edge_prob:
+            key = (row, col)
+            minStdTime = min(nx_times[key])
+            minParallelTime = min(parallel_times[key])
+            timesFaster = minStdTime / minParallelTime
+            speedup_df.at[key] = timesFaster
+            heatmap_annot.at[key] = (
+                f"{minParallelTime:.2g}s\n{speedup_df.at[row, col]:.2g}x"
+            )
 
     # Plot the heatmap with performance speedup values
     plt.figure(figsize=(20, 4))
@@ -143,14 +161,14 @@ def plot_timing_heatmap(currFunc):
     plt.yticks(rotation=20)
     plt.title(
         "Small Scale Demo: Times Speedups of "
-        + currFunc.__name__
+        + targetFunc.__name__
         + " compared to NetworkX"
     )
     plt.xlabel("Number of Vertices")
     plt.ylabel("Edge Probability")
-    print(currFunc.__name__)
+    print(targetFunc.__name__)
 
-    plt.savefig("timing/" + "heatmap_" + currFunc.__name__ + "_timing.png")
+    plt.savefig("timing/" + "heatmap_" + targetFunc.__name__ + "_timing.png")
 
 
 # plot_timing_heatmap(nx.algorithms.centrality.betweenness.betweenness_centrality)
