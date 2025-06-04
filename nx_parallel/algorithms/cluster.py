@@ -135,7 +135,7 @@ def triangles(G, nodes=None, get_chunks="chunks"):
         for node_iter_chunk in node_iter_chunks
     )
 
-    triangle_counts = Counter()
+    triangle_counts = Counter(dict.fromkeys(G, 0))
     for result in results:
         triangle_counts.update(result)
     return {node: count for node, count in sorted(triangle_counts.items())}
