@@ -89,7 +89,7 @@ attr = 'nx_parallel.__version__'
 
 [tool.ruff]
 line-length = 88
-target-version = 'py311'
+target-version = 'py312'
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ['I', 'F403', 'F401']
