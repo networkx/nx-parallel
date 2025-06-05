@@ -1,7 +1,7 @@
 ## Installation
 
 It is recommended to first refer the [NetworkX's INSTALL.rst](https://github.com/networkx/networkx/blob/main/INSTALL.rst).
-nx-parallel requires Python >=3.11. Right now, the only dependencies of nx-parallel are networkx and joblib.
+nx-parallel requires Python >=3.12. Right now, the only dependencies of nx-parallel are networkx and joblib.
 
 ### Installing nx-parallel using `pip`
 
