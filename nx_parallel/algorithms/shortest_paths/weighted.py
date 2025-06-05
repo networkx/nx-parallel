@@ -55,8 +55,7 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(nodes) // n_jobs, 1)
-        node_chunks = nxp.chunks(nodes, num_in_chunk)
+        node_chunks = nxp.chunks(nodes, n_jobs)
     else:
         node_chunks = get_chunks(nodes)
 
@@ -106,8 +105,7 @@ def all_pairs_dijkstra_path_length(
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(nodes) // n_jobs, 1)
-        node_chunks = nxp.chunks(nodes, num_in_chunk)
+        node_chunks = nxp.chunks(nodes, n_jobs)
     else:
         node_chunks = get_chunks(nodes)
 
@@ -150,8 +148,7 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(nodes) // n_jobs, 1)
-        node_chunks = nxp.chunks(nodes, num_in_chunk)
+        node_chunks = nxp.chunks(nodes, n_jobs)
     else:
         node_chunks = get_chunks(nodes)
 
@@ -194,8 +191,7 @@ def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(nodes) // n_jobs, 1)
-        node_chunks = nxp.chunks(nodes, num_in_chunk)
+        node_chunks = nxp.chunks(nodes, n_jobs)
     else:
         node_chunks = get_chunks(nodes)
 
@@ -238,8 +234,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
     n_jobs = nxp.get_n_jobs()
 
     if get_chunks == "chunks":
-        num_in_chunk = max(len(nodes) // n_jobs, 1)
-        node_chunks = nxp.chunks(nodes, num_in_chunk)
+        node_chunks = nxp.chunks(nodes, n_jobs)
     else:
         node_chunks = get_chunks(nodes)
 
@@ -292,8 +287,7 @@ def johnson(G, weight="weight", get_chunks="chunks"):
 
     n_jobs = nxp.get_n_jobs()
     if get_chunks == "chunks":
-        num_in_chunk = max(len(G.nodes) // n_jobs, 1)
-        node_chunks = nxp.chunks(G.nodes, num_in_chunk)
+        node_chunks = nxp.chunks(G.nodes, n_jobs)
     else:
         node_chunks = get_chunks(G.nodes)
 

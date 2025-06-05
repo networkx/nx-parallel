@@ -34,8 +34,7 @@ def node_redundancy(G, nodes=None, get_chunks="chunks"):
         )
     n_jobs = nxp.get_n_jobs()
     if get_chunks == "chunks":
-        num_in_chunk = max(len(nodes) // n_jobs, 1)
-        node_chunks = nxp.chunks(nodes, num_in_chunk)
+        node_chunks = nxp.chunks(nodes, n_jobs)
     else:
         node_chunks = get_chunks(nodes)
     node_redundancies = Parallel()(

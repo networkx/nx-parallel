@@ -69,9 +69,8 @@ def test_get_chunks(func):
         _nodes = list(nodes).copy()
         random.seed(42)
         random.shuffle(_nodes)
-        num_chunks = nxp.get_n_jobs()
-        num_in_chunk = max(len(_nodes) // num_chunks, 1)
-        return nxp.chunks(_nodes, num_in_chunk)
+        n_jobs = nxp.get_n_jobs()
+        return nxp.chunks(_nodes, n_jobs)
 
     tournament_funcs = [
         "tournament_is_strongly_connected",
