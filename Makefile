@@ -1,5 +1,4 @@
 install:
-	python3 -m pip install -e '.[default]'
 	python3 -m pip install -e '.[test]'
 	python -m pip install git+https://github.com/networkx/networkx.git@main
 	python -m pip install git+https://github.com/joblib/joblib.git@main
