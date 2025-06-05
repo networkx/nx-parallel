@@ -1,5 +1,8 @@
 """
-Performance analysis of parallel and NetworkX implementations of the input function
+Performance analysis of parallel and NetworkX implementations of the input function.
+
+To generate heatmaps for performance visualization, make sure to run:
+    python3 -m pip install -e '.[heatmap]'
 """
 
 from time import perf_counter
