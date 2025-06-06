@@ -97,7 +97,7 @@ def triangles(G, nodes=None, get_chunks="chunks"):
     This function uses parallel processing via joblib for efficiency.
     """
 
-    def compute_triangles_chunk(node_iter_chunk):
+    def compute_triangles_chunk(node_iter_chunk, later_nbrs):
         triangle_counts = Counter()
         for node1 in node_iter_chunk:
             neighbors = later_nbrs[node1]
@@ -131,11 +131,11 @@ def triangles(G, nodes=None, get_chunks="chunks"):
         node_iter_chunks = get_chunks(nodes)
 
     results = Parallel()(
-        delayed(compute_triangles_chunk)(node_iter_chunk)
+        delayed(compute_triangles_chunk)(node_iter_chunk, later_nbrs)
         for node_iter_chunk in node_iter_chunks
     )
 
     triangle_counts = Counter(dict.fromkeys(G, 0))
     for result in results:
         triangle_counts.update(result)
-    return {node: count for node, count in sorted(triangle_counts.items())}
+    return triangle_counts
