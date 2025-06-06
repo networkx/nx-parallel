@@ -1,110 +1,175 @@
-import time
+"""
+Performance analysis of parallel and NetworkX implementations of the input function.
 
+To generate heatmaps for performance visualization, make sure to run:
+    python3 -m pip install -e '.[heatmap]'
+"""
+
+from time import perf_counter
+import random
+import types
 import networkx as nx
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
-
 import nx_parallel as nxp
+import joblib
+import numpy as np
+from collections import defaultdict
 
-# Code to create README heatmaps for individual function currFun
-heatmapDF = pd.DataFrame()
-# for bipartite graphs
-# n = [50, 100, 200, 400]
-# m = [25, 50, 100, 200]
-number_of_nodes_list = [200, 400, 800, 1600]
-weighted = False
-pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.tournament.is_reachable
-"""
-for p in pList:
-    for num in range(len(number_of_nodes_list)):
-        # create original and parallel graphs
-        G = nx.fast_gnp_random_graph(
-            number_of_nodes_list[num], p, seed=42, directed=True
+# Default Config
+joblib.parallel_config(n_jobs=-1)
+# To use NetworkX's parallel backend, set the following configuration.
+# nx.config.backends.parallel.active = True
+# nx.config.backends.parallel.n_jobs = -1
+
+tournament_funcs = ["is_reachable", "tournament_is_strongly_connected"]
+bipartite_funcs = ["node_redundancy"]
+
+
+def time_individual_function(
+    targetFunc, nx_times, parallel_times, number_of_nodes, edge_prob, *, weighted=False
+):
+    def measure_time(G, *args):
+        t1 = perf_counter()
+        c1 = targetFunc(G, *args)
+        if isinstance(c1, types.GeneratorType):
+            _ = dict(c1)
+        t2 = perf_counter()
+        return t2 - t1
+
+    if targetFunc.__name__ not in tournament_funcs:
+        for p in edge_prob:
+            for ind, num in enumerate(number_of_nodes):
+                # for bipartite graphs
+                if targetFunc.__name__ in bipartite_funcs:
+                    n = [200, 400, 800, 1600]
+                    m = [100, 200, 400, 800]
+                    print(n[ind] + m[ind])
+                    G = nx.bipartite.random_graph(
+                        n[ind], m[ind], p, seed=42, directed=True
+                    )
+                    for cur_node in G.nodes:
+                        neighbors = list(G.neighbors(cur_node))
+                        # Have atleast 2 outgoing edges
+                        if len(neighbors) == 0:
+                            G.add_edge(
+                                cur_node,
+                                random.choice([node for node in G if node != cur_node]),
+                            )
+                            G.add_edge(
+                                cur_node,
+                                random.choice(
+                                    [
+                                        node
+                                        for node in G.nodes
+                                        if node != cur_node
+                                        and node not in list(G.neighbors(cur_node))
+                                    ]
+                                ),
+                            )
+                        elif len(neighbors) == 1:
+                            G.add_edge(
+                                cur_node,
+                                random.choice(
+                                    [
+                                        node
+                                        for node in G.nodes
+                                        if node != cur_node
+                                        and node not in list(G.neighbors(cur_node))
+                                    ]
+                                ),
+                            )
+                else:
+                    print(num)
+                    G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
+
+                # for weighted graphs
+                if weighted:
+                    random.seed(42)
+                    for u, v in G.edges():
+                        G[u][v]["weight"] = random.random()
+
+                H = nxp.ParallelGraph(G)
+                # time both versions and update speedup_df
+                parallelTime = measure_time(H)
+                print(parallelTime)
+                stdTime = measure_time(G)
+                print(stdTime)
+                nx_times[(num, p)].append(stdTime)
+                parallel_times[(num, p)].append(parallelTime)
+                print("Finished " + str(targetFunc))
+    else:
+        # for tournament graphs
+        for num in number_of_nodes:
+            print(num)
+            G = nx.tournament.random_tournament(num, seed=42)
+            H = nxp.ParallelGraph(G)
+            parallelTime = measure_time(H, 1, num)
+            print(parallelTime)
+            stdTime = measure_time(G, 1, num)
+            print(stdTime)
+            nx_times[(num, edge_prob[0])].append(stdTime)
+            parallel_times[(num, edge_prob[0])].append(parallelTime)
+            print("Finished " + str(targetFunc))
+
+
+def plot_timing_heatmap(targetFunc):
+    number_of_nodes = (
+        [200, 400, 800, 1600]
+        if targetFunc.__name__ not in bipartite_funcs
+        else [300, 600, 1200, 2400]
+    )
+    edge_prob = (
+        [1, 0.8, 0.6, 0.4, 0.2] if targetFunc.__name__ not in tournament_funcs else [1]
+    )
+
+    speedup_df = pd.DataFrame(
+        np.inf, index=number_of_nodes, columns=edge_prob, dtype=float
+    )
+    heatmap_annot = pd.DataFrame(index=number_of_nodes, columns=edge_prob, dtype=object)
+    nx_times = defaultdict(list)
+    parallel_times = defaultdict(list)
+
+    trials = 5
+    for trial in range(trials):
+        print(f"Trial {trial+1} of {trials}")
+        time_individual_function(
+            targetFunc, nx_times, parallel_times, number_of_nodes, edge_prob
         )
 
+    for row in number_of_nodes:
+        for col in edge_prob:
+            key = (row, col)
+            minStdTime = min(nx_times[key])
+            minParallelTime = min(parallel_times[key])
+            timesFaster = minStdTime / minParallelTime
+            speedup_df.at[key] = timesFaster
+            heatmap_annot.at[key] = (
+                f"{minParallelTime:.2g}s\n{speedup_df.at[row, col]:.2g}x"
+            )
 
-        # for bipartite.node_redundancy
-        G = nx.bipartite.random_graph(n[num], m[num], p, seed=42, directed=True)
-        for i in G.nodes:
-            l = list(G.neighbors(i))
-            if len(l) == 0:
-                v = random.choice(list(G.nodes) - [i,])
-                G.add_edge(i, v)
-                G.add_edge(i, random.choice([node for node in G.nodes if node != i]))
-            elif len(l) == 1:
-                G.add_edge(i, random.choice([node for node in G.nodes if node != i and node not in list(G.neighbors(i))]))
+    # Plot the heatmap with performance speedup values
+    plt.figure(figsize=(20, 4))
+    sns.heatmap(
+        data=speedup_df.T, annot=heatmap_annot.T, fmt="", cmap="RdYlGn", cbar=True
+    )
 
-        # for weighted graphs
-        if weighted:
-            random.seed(42)
-            for u, v in G.edges():
-                G[u][v]["weight"] = random.random()
+    plt.xticks(
+        ticks=np.arange(len(number_of_nodes)) + 0.5, labels=number_of_nodes, rotation=45
+    )
+    plt.yticks(ticks=np.arange(len(edge_prob)) + 0.5, labels=edge_prob, rotation=20)
 
-        H = nxp.ParallelGraph(G)
+    plt.title(
+        "Small Scale Demo: Times Speedups of "
+        + targetFunc.__name__
+        + " compared to NetworkX"
+    )
+    plt.xlabel("Number of Vertices")
+    plt.ylabel("Edge Probability")
+    print(targetFunc.__name__)
 
-        # time both versions and update heatmapDF
-        t1 = time.time()
-        c1 = currFun(H)
-        if isinstance(c1, types.GeneratorType):
-            d = dict(c1)
-        t2 = time.time()
-        parallelTime = t2 - t1
-        t1 = time.time()
-        c2 = currFun(G)
-        if isinstance(c2, types.GeneratorType):
-            d = dict(c2)
-        t2 = time.time()
-        stdTime = t2 - t1
-        timesFaster = stdTime / parallelTime
-        heatmapDF.at[number_of_nodes_list[num], p] = timesFaster
-        print("Finished " + str(currFun))
-"""
+    plt.savefig("timing/" + "heatmap_" + targetFunc.__name__ + "_timing.png")
 
-# Code to create for row of heatmap specifically for tournaments
-for num in number_of_nodes_list:
-    print(num)
-    G = nx.tournament.random_tournament(num, seed=42)
-    H = nxp.ParallelGraph(G)
-    t1 = time.time()
-    c = currFun(H, 1, num)
-    t2 = time.time()
-    parallelTime = t2 - t1
-    print(parallelTime)
-    t1 = time.time()
-    c = currFun(G, 1, num)
-    t2 = time.time()
-    stdTime = t2 - t1
-    print(stdTime)
-    timesFaster = stdTime / parallelTime
-    heatmapDF.at[num, 3] = timesFaster
-    print("Finished " + str(currFun))
 
-# plotting the heatmap with numbers and a green color scheme
-plt.figure(figsize=(20, 4))
-hm = sns.heatmap(data=heatmapDF.T, annot=True, cmap="Greens", cbar=True)
-
-# Remove the tick labels on both axes
-hm.set_yticklabels(
-    [
-        3,
-    ]
-)
-
-# Adding x-axis labels
-hm.set_xticklabels(number_of_nodes_list)
-
-# Rotating the x-axis labels for better readability (optional)
-plt.xticks(rotation=45)
-plt.yticks(rotation=20)
-plt.title(
-    "Small Scale Demo: Times Speedups of " + currFun.__name__ + " compared to NetworkX"
-)
-plt.xlabel("Number of Vertices")
-plt.ylabel("Edge Probability")
-print(currFun.__name__)
-
-# displaying the plotted heatmap
-plt.tight_layout()
-plt.savefig("timing/" + "heatmap_" + currFun.__name__ + "_timing.png")
+# plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
