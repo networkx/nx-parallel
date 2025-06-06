@@ -53,6 +53,7 @@ def test_get_functions_with_get_chunks():
         "number_of_isolates",
         "square_clustering",
         "tournament_is_strongly_connected",
+        "triangles",
     }
     assert set(get_functions_with_get_chunks()) == expected
 
