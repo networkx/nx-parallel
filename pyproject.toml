@@ -76,6 +76,7 @@ packages = [
     'nx_parallel.algorithms.approximation',
     'nx_parallel.algorithms.bipartite',
     'nx_parallel.algorithms.centrality',
+    'nx_parallel.algorithms.components',
     'nx_parallel.algorithms.connectivity',
     'nx_parallel.algorithms.shortest_paths',
     'nx_parallel.utils',
