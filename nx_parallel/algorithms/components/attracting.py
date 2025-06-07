@@ -20,7 +20,7 @@ def number_attracting_components(G, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of attracting components as input and returns
         an iterable `node_iter_chunks`. The default chunking is done by slicing the
-        list of attarcting components into `n_jobs` number of chunks.
+        list of attracting components into `n_jobs` number of chunks.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object
