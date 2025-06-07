@@ -202,6 +202,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
                 },
             },
+            "number_strongly_connected_components": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/components/strongly_connected.py#L13",
+                "additional_docs": "The parallel computation is implemented by dividing the list of strongly connected components into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of strongly connected components as input and returns an iterable `component_chunks`. The default chunking is done by slicing the list of attracting components into `n_jobs` number of chunks."
+                },
+            },
             "square_clustering": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L14",
                 "additional_docs": "The nodes are chunked into `node_chunks` and then the square clustering coefficient for all `node_chunks` are computed in parallel over `n_jobs` number of CPU cores.",
