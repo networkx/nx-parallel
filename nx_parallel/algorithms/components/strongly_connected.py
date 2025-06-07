@@ -22,7 +22,8 @@ def number_strongly_connected_components(G, get_chunks="chunks"):
     get_chunks : str, function (default = "chunks")
         A function that takes in a list of strongly connected components as input
         and returns an iterable `component_chunks`. The default chunking is done
-        by slicing the list of attracting components into `n_jobs` number of chunks.
+        by slicing the list of strongly connected components into `n_jobs` number
+        of chunks.
     """
     if hasattr(G, "graph_object"):
         G = G.graph_object

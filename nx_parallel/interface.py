@@ -24,6 +24,8 @@ ALGORITHMS = [
     "number_connected_components",
     # Components : strongly connected
     "number_strongly_connected_components",
+    # Components : weakly connected
+    "number_weakly_connected_components",
     # Efficiency
     "local_efficiency",
     # Shortest Paths : generic
