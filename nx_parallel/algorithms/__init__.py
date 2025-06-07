@@ -4,6 +4,7 @@ from .centrality import *
 from .shortest_paths import *
 from .approximation import *
 from .connectivity import *
+from .components import *
 
 # modules
 from .efficiency_measures import *

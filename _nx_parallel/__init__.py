@@ -160,6 +160,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in an iterable of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `G.nodes` (or `nodes`) into `n_jobs` number of chunks."
                 },
             },
+            "number_attracting_components": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/components/attracting.py#L11",
+                "additional_docs": "The parallel computation is implemented by dividing the list of nodes into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of attracting components as input and returns an iterable `node_iter_chunks`. The default chunking is done by slicing the list of attarcting components into `n_jobs` number of chunks."
+                },
+            },
             "number_of_isolates": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L9",
                 "additional_docs": "The parallel computation is implemented by dividing the list of isolated nodes into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
