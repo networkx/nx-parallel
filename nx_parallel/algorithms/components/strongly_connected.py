@@ -1,14 +1,12 @@
 from networkx.algorithms.components.strongly_connected import (
     strongly_connected_components,
 )
-from networkx.utils.decorators import not_implemented_for
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 
 __all__ = ["number_strongly_connected_components"]
 
 
-@not_implemented_for("undirected")
 @nxp._configure_if_nx_active()
 def number_strongly_connected_components(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the list

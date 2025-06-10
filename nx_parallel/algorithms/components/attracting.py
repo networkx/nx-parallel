@@ -1,12 +1,10 @@
 from networkx.algorithms.components.attracting import attracting_components
-from networkx.utils.decorators import not_implemented_for
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 
 __all__ = ["number_attracting_components"]
 
 
-@not_implemented_for("undirected")
 @nxp._configure_if_nx_active()
 def number_attracting_components(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the list
