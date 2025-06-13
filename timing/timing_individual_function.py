@@ -1,21 +1,20 @@
 """
-Performance analysis of parallel and NetworkX implementations of the input function.
+Performance analysis of parallel and NetworkX implementations of the target function.
 
 To generate heatmaps for performance visualization, make sure to run:
     python3 -m pip install -e '.[heatmap]'
 """
 
+import networkx as nx
+import nx_parallel as nxp
+from matplotlib import pyplot as plt, patches as mpatches
+import seaborn as sns
+import numpy as np
+import pandas as pd
+import joblib
 import timeit
-import matplotlib.patches as mpatches
 import random
 import types
-import networkx as nx
-import pandas as pd
-import seaborn as sns
-from matplotlib import pyplot as plt
-import nx_parallel as nxp
-import joblib
-import numpy as np
 
 # Default Config
 joblib.parallel_config(n_jobs=-1)
@@ -58,7 +57,7 @@ def time_individual_function(
                     G = nx.bipartite.random_graph(n[ind], m[ind], p, directed=True)
                     for cur_node in G.nodes:
                         neighbors = set(G.neighbors(cur_node))
-                        # Have atleast 2 outgoing edges
+                        # have atleast 2 outgoing edges
                         while len(neighbors) < 2:
                             new_neighbor = random.choice(
                                 [
@@ -161,6 +160,4 @@ def plot_timing_heatmap(targetFunc):
     plt.savefig("timing/" + "heatmap_" + targetFunc.__name__ + "_timing.png")
 
 
-plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
-# nx.algorithms.centrality.betweenness.betweenness_centrality
-# nx.algorithms.tournament.is_reachable
+# plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
