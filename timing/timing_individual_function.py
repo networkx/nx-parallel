@@ -55,36 +55,18 @@ def time_individual_function(
                         n[ind], m[ind], p, seed=42, directed=True
                     )
                     for cur_node in G.nodes:
-                        neighbors = list(G.neighbors(cur_node))
+                        neighbors = set(G.neighbors(cur_node))
                         # Have atleast 2 outgoing edges
-                        if len(neighbors) == 0:
-                            G.add_edge(
-                                cur_node,
-                                random.choice([node for node in G if node != cur_node]),
+                        while len(neighbors) < 2:
+                            new_neighbor = random.choice(
+                                [
+                                    node
+                                    for node in G.nodes
+                                    if node != cur_node and node not in neighbors
+                                ]
                             )
-                            G.add_edge(
-                                cur_node,
-                                random.choice(
-                                    [
-                                        node
-                                        for node in G.nodes
-                                        if node != cur_node
-                                        and node not in list(G.neighbors(cur_node))
-                                    ]
-                                ),
-                            )
-                        elif len(neighbors) == 1:
-                            G.add_edge(
-                                cur_node,
-                                random.choice(
-                                    [
-                                        node
-                                        for node in G.nodes
-                                        if node != cur_node
-                                        and node not in list(G.neighbors(cur_node))
-                                    ]
-                                ),
-                            )
+                            G.add_edge(cur_node, new_neighbor)
+                            neighbors.add(new_neighbor)
                 else:
                     print(num)
                     G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
