@@ -6,6 +6,7 @@ To generate heatmaps for performance visualization, make sure to run:
 """
 
 import timeit
+import matplotlib.patches as mpatches
 import random
 import types
 import networkx as nx
@@ -24,24 +25,27 @@ joblib.parallel_config(n_jobs=-1)
 
 tournament_funcs = ["is_reachable", "tournament_is_strongly_connected"]
 bipartite_funcs = ["node_redundancy"]
+random.seed(42)
 
 
 def time_individual_function(
     targetFunc, number_of_nodes, edge_prob, speedup_df, heatmap_annot, *, weighted=False
 ):
     def measure_time(G, *args):
+        repeat = 5
+
         def wrapper():
             result = targetFunc(G, *args)
             if isinstance(result, types.GeneratorType):
                 _ = dict(result)
 
-        times = timeit.repeat(wrapper, repeat=5, number=1)
+        times = timeit.repeat(wrapper, repeat=repeat, number=1)
         return min(times)
 
     def record_result(stdTime, parallelTime, row, col):
         timesFaster = stdTime / parallelTime
         speedup_df.at[row, col] = timesFaster
-        heatmap_annot.at[row, col] = f"{parallelTime:.2g}s\n{timesFaster:.2g}x"
+        heatmap_annot.at[row, col] = f"{parallelTime:.2g}s\n\n{timesFaster:.2g}x"
 
     if targetFunc.__name__ not in tournament_funcs:
         for p in edge_prob:
@@ -51,9 +55,7 @@ def time_individual_function(
                     n = [200, 400, 800, 1600]
                     m = [100, 200, 400, 800]
                     print(n[ind] + m[ind])
-                    G = nx.bipartite.random_graph(
-                        n[ind], m[ind], p, seed=42, directed=True
-                    )
+                    G = nx.bipartite.random_graph(n[ind], m[ind], p, directed=True)
                     for cur_node in G.nodes:
                         neighbors = set(G.neighbors(cur_node))
                         # Have atleast 2 outgoing edges
@@ -69,7 +71,7 @@ def time_individual_function(
                             neighbors.add(new_neighbor)
                 else:
                     print(num)
-                    G = nx.fast_gnp_random_graph(num, p, seed=42, directed=True)
+                    G = nx.fast_gnp_random_graph(num, p, directed=True)
 
                 # for weighted graphs
                 if weighted:
@@ -89,7 +91,7 @@ def time_individual_function(
         # for tournament graphs
         for num in number_of_nodes:
             print(num)
-            G = nx.tournament.random_tournament(num, seed=42)
+            G = nx.tournament.random_tournament(num)
             H = nxp.ParallelGraph(G)
             parallelTime = measure_time(H, 1, num)
             print(parallelTime)
@@ -116,28 +118,49 @@ def plot_timing_heatmap(targetFunc):
         targetFunc, number_of_nodes, edge_prob, speedup_df, heatmap_annot
     )
 
-    # Plot the heatmap with performance speedup values
-    plt.figure(figsize=(20, 4))
-    sns.heatmap(
-        data=speedup_df.T, annot=heatmap_annot.T, fmt="", cmap="Greens", cbar=True
+    plt.rcParams["font.family"] = "Arial Rounded MT Bold"
+    plt.figure(figsize=(20, 6))
+    ax = sns.heatmap(
+        data=speedup_df.T,
+        annot=heatmap_annot.T,
+        annot_kws={"size": 12, "weight": "bold"},
+        fmt="",
+        cmap="Greens",
+        cbar=True,
     )
 
-    plt.xticks(
-        ticks=np.arange(len(number_of_nodes)) + 0.5, labels=number_of_nodes, rotation=45
-    )
-    plt.yticks(ticks=np.arange(len(edge_prob)) + 0.5, labels=edge_prob, rotation=20)
+    ax.set_xticks(np.arange(len(number_of_nodes)) + 0.5)
+    ax.set_xticklabels(number_of_nodes, rotation=45)
+    ax.set_yticks(np.arange(len(edge_prob)) + 0.5)
+    ax.set_yticklabels(edge_prob, rotation=20)
 
-    plt.title(
-        "Small Scale Demo: Times Speedups of "
-        + targetFunc.__name__
-        + " compared to NetworkX for n_jobs="
-        + str(nxp.get_n_jobs())
-    )
-    plt.xlabel("Number of Vertices")
-    plt.ylabel("Edge Probability")
-    print(targetFunc.__name__)
+    ax.set_xlabel("Number of Vertices", fontweight="bold", fontsize=12)
+    ax.set_ylabel("Edge Probability", fontweight="bold", fontsize=12)
 
+    n_jobs = nxp.get_n_jobs()
+    ax.set_title(
+        f"Small Scale Demo: Time Speedups of {targetFunc.__name__} compared to NetworkX on {n_jobs} cores",
+        fontweight="bold",
+        fontsize=14,
+        loc="left",
+    )
+
+    legend_patches = [
+        mpatches.Patch(color="none", label="Top Line: Parallel runtime (s)"),
+        mpatches.Patch(color="none", label="Bottom Line: Speed-up"),
+    ]
+    ax.legend(
+        handles=legend_patches,
+        loc="lower right",
+        bbox_to_anchor=(1.0, 1.02),
+        title="Cell Annotation Format",
+        prop={"size": 12, "weight": "bold"},
+    )
+
+    plt.tight_layout(rect=[0, 0, 1, 0.94])
     plt.savefig("timing/" + "heatmap_" + targetFunc.__name__ + "_timing.png")
 
 
 plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
+# nx.algorithms.centrality.betweenness.betweenness_centrality
+# nx.algorithms.tournament.is_reachable
