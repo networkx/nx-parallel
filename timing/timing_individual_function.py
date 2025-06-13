@@ -5,7 +5,7 @@ To generate heatmaps for performance visualization, make sure to run:
     python3 -m pip install -e '.[heatmap]'
 """
 
-from time import perf_counter
+import timeit
 import random
 import types
 import networkx as nx
@@ -15,7 +15,6 @@ from matplotlib import pyplot as plt
 import nx_parallel as nxp
 import joblib
 import numpy as np
-from collections import defaultdict
 
 # Default Config
 joblib.parallel_config(n_jobs=-1)
@@ -28,15 +27,21 @@ bipartite_funcs = ["node_redundancy"]
 
 
 def time_individual_function(
-    targetFunc, nx_times, parallel_times, number_of_nodes, edge_prob, *, weighted=False
+    targetFunc, number_of_nodes, edge_prob, speedup_df, heatmap_annot, *, weighted=False
 ):
     def measure_time(G, *args):
-        t1 = perf_counter()
-        c1 = targetFunc(G, *args)
-        if isinstance(c1, types.GeneratorType):
-            _ = dict(c1)
-        t2 = perf_counter()
-        return t2 - t1
+        def wrapper():
+            result = targetFunc(G, *args)
+            if isinstance(result, types.GeneratorType):
+                _ = dict(result)
+
+        times = timeit.repeat(wrapper, repeat=5, number=1)
+        return min(times)
+
+    def record_result(stdTime, parallelTime, row, col):
+        timesFaster = stdTime / parallelTime
+        speedup_df.at[row, col] = timesFaster
+        heatmap_annot.at[row, col] = f"{parallelTime:.2g}s\n{timesFaster:.2g}x"
 
     if targetFunc.__name__ not in tournament_funcs:
         for p in edge_prob:
@@ -96,8 +101,7 @@ def time_individual_function(
                 print(parallelTime)
                 stdTime = measure_time(G)
                 print(stdTime)
-                nx_times[(num, p)].append(stdTime)
-                parallel_times[(num, p)].append(parallelTime)
+                record_result(stdTime, parallelTime, num, p)
                 print("Finished " + str(targetFunc))
     else:
         # for tournament graphs
@@ -109,8 +113,7 @@ def time_individual_function(
             print(parallelTime)
             stdTime = measure_time(G, 1, num)
             print(stdTime)
-            nx_times[(num, edge_prob[0])].append(stdTime)
-            parallel_times[(num, edge_prob[0])].append(parallelTime)
+            record_result(stdTime, parallelTime, num, edge_prob[0])
             print("Finished " + str(targetFunc))
 
 
@@ -124,35 +127,17 @@ def plot_timing_heatmap(targetFunc):
         [1, 0.8, 0.6, 0.4, 0.2] if targetFunc.__name__ not in tournament_funcs else [1]
     )
 
-    speedup_df = pd.DataFrame(
-        np.inf, index=number_of_nodes, columns=edge_prob, dtype=float
-    )
+    speedup_df = pd.DataFrame(index=number_of_nodes, columns=edge_prob, dtype=float)
     heatmap_annot = pd.DataFrame(index=number_of_nodes, columns=edge_prob, dtype=object)
-    nx_times = defaultdict(list)
-    parallel_times = defaultdict(list)
 
-    trials = 5
-    for trial in range(trials):
-        print(f"Trial {trial+1} of {trials}")
-        time_individual_function(
-            targetFunc, nx_times, parallel_times, number_of_nodes, edge_prob
-        )
-
-    for row in number_of_nodes:
-        for col in edge_prob:
-            key = (row, col)
-            minStdTime = min(nx_times[key])
-            minParallelTime = min(parallel_times[key])
-            timesFaster = minStdTime / minParallelTime
-            speedup_df.at[key] = timesFaster
-            heatmap_annot.at[key] = (
-                f"{minParallelTime:.2g}s\n{speedup_df.at[row, col]:.2g}x"
-            )
+    time_individual_function(
+        targetFunc, number_of_nodes, edge_prob, speedup_df, heatmap_annot
+    )
 
     # Plot the heatmap with performance speedup values
     plt.figure(figsize=(20, 4))
     sns.heatmap(
-        data=speedup_df.T, annot=heatmap_annot.T, fmt="", cmap="RdYlGn", cbar=True
+        data=speedup_df.T, annot=heatmap_annot.T, fmt="", cmap="Greens", cbar=True
     )
 
     plt.xticks(
@@ -163,7 +148,8 @@ def plot_timing_heatmap(targetFunc):
     plt.title(
         "Small Scale Demo: Times Speedups of "
         + targetFunc.__name__
-        + " compared to NetworkX"
+        + " compared to NetworkX for n_jobs="
+        + str(nxp.get_n_jobs())
     )
     plt.xlabel("Number of Vertices")
     plt.ylabel("Edge Probability")
@@ -172,4 +158,4 @@ def plot_timing_heatmap(targetFunc):
     plt.savefig("timing/" + "heatmap_" + targetFunc.__name__ + "_timing.png")
 
 
-# plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
+plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
