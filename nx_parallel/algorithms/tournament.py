@@ -1,7 +1,6 @@
 from joblib import Parallel, delayed, dump, load
 import nx_parallel as nxp
 import networkx as nx
-import numpy as np
 import tempfile
 import shutil
 import os
@@ -30,16 +29,17 @@ def is_reachable(G, s, t, get_chunks="chunks"):
 
     def two_neighborhood_close(adjM_filepath, chunk):
         adjM = load(adjM_filepath, mmap_mode="r")
+        node_indices = range(adjM.shape[0])
         tnc = []
         for v in chunk:
             S = {
                 x
-                for x in (range(adjM.shape[0]))
+                for x in node_indices
                 if x == v
                 or adjM[v, x]
-                or any(adjM[v, z] and adjM[z, x] for z in range(adjM.shape[0]))
+                or any(adjM[v, z] and adjM[z, x] for z in node_indices)
             }
-            tnc.append(not (is_closed(adjM, S) and s in S and t not in S))
+            tnc.append(not (is_closed(adjM, S) and s_ind in S and t_ind not in S))
         return all(tnc)
 
     def is_closed(adjM, nodes):
@@ -49,7 +49,12 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    adjM = nx.to_numpy_array(G, dtype=np.uint8)
+    adjM = nx.to_numpy_array(G, dtype=bool)
+    nodelist = list(G)
+    nodemap = {n: i for i, n in enumerate(nodelist)}
+    s_ind = nodemap[s]
+    t_ind = nodemap[t]
+
     temp_folder = tempfile.mkdtemp()
     adjM_filepath = os.path.join(temp_folder, "adjMatrix.mmap")
     dump(adjM, adjM_filepath)
