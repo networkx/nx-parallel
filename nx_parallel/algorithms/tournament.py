@@ -49,8 +49,8 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    adjM = nx.to_numpy_array(G, dtype=bool)
     nodelist = list(G)
+    adjM = nx.to_numpy_array(G, dtype=bool, nodelist=nodelist)
     nodemap = {n: i for i, n in enumerate(nodelist)}
     s_ind = nodemap[s]
     t_ind = nodemap[t]
