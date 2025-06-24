@@ -1,5 +1,4 @@
 from importlib.metadata import entry_points, EntryPoint
-import pytest
 
 
 def test_backends_ep():
@@ -16,7 +15,6 @@ def test_backend_info_ep():
     )
 
 
-@pytest.mark.order(1)
 def test_config_init():
     import networkx as nx
 
