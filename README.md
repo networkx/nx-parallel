@@ -66,7 +66,7 @@ import nx_parallel as nxp
 # enabling networkx's config for nx-parallel
 nx.config.backends.parallel.active = True
 
-# setting `n_jobs` (by default, `n_jobs=None`)
+# setting `n_jobs` (by default, `n_jobs=-1`)
 nx.config.backends.parallel.n_jobs = 4
 
 G = nx.path_graph(4)

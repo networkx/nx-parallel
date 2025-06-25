@@ -24,6 +24,9 @@ def test_get_n_jobs():
             assert nxp.get_n_jobs() == 3
 
         # Test with nx-parallel's context
+        with nx.config.backends.parallel(active=True):
+            assert nxp.get_n_jobs() == os.cpu_count()
+
         with nx.config.backends.parallel(active=True, n_jobs=5):
             assert nxp.get_n_jobs() == 5
 

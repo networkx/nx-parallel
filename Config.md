@@ -47,7 +47,7 @@ NetworkXConfig(
         parallel=ParallelConfig(
             active=False,
             backend="loky",
-            n_jobs=None,
+            n_jobs=-1,
             verbose=0,
             temp_folder=None,
             max_nbytes="1M",
@@ -82,7 +82,17 @@ with nxp_config(n_jobs=7, verbose=0):
     nx.square_clustering(H)
 ```
 
-The configuration parameters are the same as `joblib.parallel_config`, so you can refer to the [official joblib's documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand these config parameters.
+The default value of `n_jobs` depends on the active configuration system. If `active` flag is set to `True` in `nx.config.backends.parallel`, `n_jobs` is `-1` (uses all available CPUs). Otherwise, `n_jobs` is `None`, following the default `joblib` configuration.
+
+```python
+with joblib.parallel_config():
+    print(nxp.get_n_jobs())  # Output: 1, because n_jobs = None
+
+with nx.config.backends.parallel(active=True):
+    print(nxp.get_n_jobs())  # Output : os.cpu_count(), because n_jobs = -1
+```
+
+All other configuration parameters are the same as `joblib.parallel_config`, so you can refer to the [official joblib's documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand these config parameters.
 
 ### 2.3 How Does NetworkX's Configuration Work in nx-parallel?
 
