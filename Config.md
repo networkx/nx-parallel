@@ -85,8 +85,7 @@ with nxp_config(n_jobs=7, verbose=0):
 The default value of `n_jobs` depends on the active configuration system. If `active` flag is set to `True` in `nx.config.backends.parallel`, `n_jobs` is `-1` (uses all available CPUs). Otherwise, `n_jobs` is `None`, following the default `joblib` configuration.
 
 ```python
-with joblib.parallel_config():
-    print(nxp.get_n_jobs())  # Output: 1, because n_jobs = None
+print(nxp.get_n_jobs())  # Output: 1, because n_jobs = None
 
 with nx.config.backends.parallel(active=True):
     print(nxp.get_n_jobs())  # Output : os.cpu_count(), because n_jobs = -1
