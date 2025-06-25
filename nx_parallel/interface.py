@@ -18,6 +18,14 @@ ALGORITHMS = [
     # Centrality
     "betweenness_centrality",
     "edge_betweenness_centrality",
+    # Components : attracting
+    "number_attracting_components",
+    # Components : connected
+    "number_connected_components",
+    # Components : strongly connected
+    "number_strongly_connected_components",
+    # Components : weakly connected
+    "number_weakly_connected_components",
     # Efficiency
     "local_efficiency",
     # Shortest Paths : generic
@@ -96,3 +104,8 @@ class BackendInterface:
         if isinstance(result, ParallelGraph):
             return result.graph_object
         return result
+
+    @classmethod
+    def should_run(cls, name, args, kwargs):
+        """Should this backend run the specified algorithms with the given arguments?"""
+        return getattr(cls, name).should_run(*args, **kwargs)
