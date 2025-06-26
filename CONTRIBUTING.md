@@ -75,8 +75,6 @@ git push origin <branch_name>
 
 - `get_chunks` is the additional backend-specific argument for almost all the algorithms in nx-parallel and it's tested for all algorithms together in `nx_parallel/tests/test_get_chunks.py` file.
 
-- We use `@pytest.mark.order` for the tests that change the global configurations (i.e. `nx.config`) to make sure those tests run in the specified order and don't cause unexpected failures.
-
 ## Documentation syntax
 
 For displaying a small note about nx-parallel's implementation at the end of the main NetworkX documentation, we use the `backend_info` [entry_point](https://packaging.python.org/en/latest/specifications/entry-points/#entry-points) (in the `pyproject.toml` file). The [`get_info` function](./_nx_parallel/__init__.py) is used to parse the docstrings of all the algorithms in nx-parallel and display the nx-parallel specific documentation on the NetworkX's main docs, in the "Additional Backend implementations" box, as shown in the screenshot below.
@@ -110,7 +108,9 @@ def parallel_func(G, nx_arg, additional_backend_arg_1, additional_backend_arg_2=
 
 In parallel computing, "chunking" refers to dividing a large task into smaller, more manageable chunks that can be processed simultaneously by multiple computing units, such as CPU cores or distributed computing nodes. It's like breaking down a big task into smaller pieces so that multiple workers can work on different pieces at the same time, and in the case of nx-parallel, this usually speeds up the overall process.
 
-The default chunking in nx-parallel is done by slicing the list of nodes (or edges or any other iterator) into `n_jobs` number of chunks. (ref. [chunk.py](./nx_parallel/utils/chunk.py)). By default, `n_jobs` is determined by the active configuration system (i.e `joblib` or `Networkx`). To learn about how you can modify the value of `n_jobs` and other config options refer [`Config.md`](./Config.md). The default chunking can be overridden by the user by passing a custom `get_chunks` function to the algorithm as a kwarg. While adding a new algorithm, you can change this default chunking, if necessary (ref. [PR](https://github.com/networkx/nx-parallel/pull/33)).
+The default chunking in nx-parallel is done by slicing the list of nodes (or edges or any other iterator) into chunks equal to the number of available CPUs (ref. [chunk.py](./nx_parallel/utils/chunk.py)). This is because, by default, nx-parallel uses the NetworkX configuration system, which sets `n_jobs=-1` (i.e., uses all available cores). If `nx.config.backends.parallel.active` is explicitly set to `False`, then joblib's configuration system takes over, in which case `n_jobs` defaults to `None`. To learn about how you can modify the value of `n_jobs` and other config options refer [`Config.md`](./Config.md). 
+
+The default chunking can be overridden by the user by passing a custom `get_chunks` function to the algorithm as a kwarg. While adding a new algorithm, you can change this default chunking, if necessary (ref. [PR](https://github.com/networkx/nx-parallel/pull/33)).
 
 ## General guidelines on adding a new algorithm
 

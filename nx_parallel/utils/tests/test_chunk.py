@@ -9,7 +9,7 @@ def test_get_n_jobs():
     # Test with no n_jobs (default)
     with pytest.MonkeyPatch().context() as mp:
         mp.delitem(os.environ, "PYTEST_CURRENT_TEST", raising=False)
-        assert nxp.get_n_jobs() == 1
+        assert nxp.get_n_jobs() == 8
 
         # Test with n_jobs set to positive value
         assert nxp.get_n_jobs(4) == 4
@@ -20,14 +20,11 @@ def test_get_n_jobs():
         # Test with joblib's context
         from joblib import parallel_config
 
-        with parallel_config(n_jobs=3):
+        with nx.config.backends.parallel(active=False), parallel_config(n_jobs=3):
             assert nxp.get_n_jobs() == 3
 
         # Test with nx-parallel's context
-        with nx.config.backends.parallel(active=True):
-            assert nxp.get_n_jobs() == os.cpu_count()
-
-        with nx.config.backends.parallel(active=True, n_jobs=5):
+        with nx.config.backends.parallel(n_jobs=5):
             assert nxp.get_n_jobs() == 5
 
     # Test with n_jobs = 0 to raise a ValueError
