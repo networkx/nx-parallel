@@ -9,7 +9,7 @@ def test_get_n_jobs():
     # Test with no n_jobs (default)
     with pytest.MonkeyPatch().context() as mp:
         mp.delitem(os.environ, "PYTEST_CURRENT_TEST", raising=False)
-        assert nxp.get_n_jobs() == 8
+        assert nxp.get_n_jobs() == os.cpu_count()
 
         # Test with n_jobs set to positive value
         assert nxp.get_n_jobs(4) == 4
