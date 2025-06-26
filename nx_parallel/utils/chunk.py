@@ -59,7 +59,8 @@ def get_n_jobs(n_jobs=None):
 
     - If running under pytest, it returns 2 jobs.
     - If the `active` configuration in NetworkX's config is `True`, `n_jobs`
-      is extracted from the NetworkX config.
+      is extracted from the NetworkX config, which defaults to -1 (all
+      available CPUs).
     - Otherwise, `n_jobs` is obtained from joblib's active backend.
     - `ValueError` is raised if `n_jobs` is 0.
     """
