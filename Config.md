@@ -30,7 +30,7 @@ with parallel_config(n_jobs=7, verbose=0):
 ```python
 from joblib import parallel_config
 
-# Setting configs in NetworkX's context
+# Switching from a NetworkX to a joblib config context
 with nx.config.backends.parallel(active=False), parallel_config(n_jobs=7, verbose=50):
     nx.square_clustering(H)
 ```
