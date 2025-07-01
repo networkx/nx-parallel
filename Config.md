@@ -14,10 +14,10 @@ To use [`joblib.parallel_config`](https://joblib.readthedocs.io/en/latest/genera
 ```python
 from joblib import parallel_config
 
-# Setting global configs for NetworkX
+# Turning off global configs via NetworkX
 nx.config.backends.parallel.active = False
 
-# Setting global configs for Joblib
+# Setting global configs via joblib
 parallel_config(n_jobs=5, verbose=50)
 nx.square_clustering(H)
 
