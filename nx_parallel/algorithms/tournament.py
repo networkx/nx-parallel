@@ -39,12 +39,13 @@ def is_reachable(G, s, t, get_chunks="chunks"):
                 or adjM[v, x]
                 or any(adjM[v, z] and adjM[z, x] for z in node_indices)
             }
-            tnc.append(not (is_closed(adjM, S) and s_ind in S and t_ind not in S))
+            tnc.append(
+                not (s_ind in S and t_ind not in S and is_closed(adjM, node_indices, S))
+            )
         return all(tnc)
 
-    def is_closed(adjM, nodes):
-        other_nodes = set(range(adjM.shape[0])) - nodes
-        return all(adjM[u, v] for u in other_nodes for v in nodes)
+    def is_closed(adjM, node_indices, nodes):
+        return all(adjM[u, v] for u in set(node_indices) - nodes for v in nodes)
 
     if hasattr(G, "graph_object"):
         G = G.graph_object

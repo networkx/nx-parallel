@@ -196,7 +196,7 @@ def get_info():
                 },
             },
             "tournament_is_strongly_connected": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L77",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L78",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and then checking whether each node is reachable from each other node in parallel.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
