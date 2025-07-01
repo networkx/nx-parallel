@@ -21,7 +21,7 @@ nx.config.backends.parallel.active = False
 parallel_config(n_jobs=5, verbose=50)
 nx.square_clustering(H)
 
-# Setting configs in Joblib's context
+# Setting configs within a block of code using a joblib context
 with parallel_config(n_jobs=7, verbose=0):
     nx.square_clustering(H)
 ```
