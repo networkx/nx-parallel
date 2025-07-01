@@ -6,7 +6,9 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 import nx_parallel as nxp
+import joblib
 
+joblib.parallel_config(n_jobs=-1)
 # Code to create README heatmaps for individual function currFun
 heatmapDF = pd.DataFrame()
 # for bipartite graphs
@@ -68,12 +70,12 @@ for num in number_of_nodes_list:
     G = nx.tournament.random_tournament(num, seed=42)
     H = nxp.ParallelGraph(G)
     t1 = time.time()
-    c = currFun(H, 1, num)
+    c = currFun(H, 1, num - 1)
     t2 = time.time()
     parallelTime = t2 - t1
     print(parallelTime)
     t1 = time.time()
-    c = currFun(G, 1, num)
+    c = currFun(G, 1, num - 1)
     t2 = time.time()
     stdTime = t2 - t1
     print(stdTime)
