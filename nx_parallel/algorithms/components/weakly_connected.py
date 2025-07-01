@@ -1,6 +1,4 @@
-from networkx.algorithms.components.weakly_connected import (
-    weakly_connected_components,
-)
+from networkx import weakly_connected_components
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 

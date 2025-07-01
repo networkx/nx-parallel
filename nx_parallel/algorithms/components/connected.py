@@ -1,4 +1,4 @@
-from networkx.algorithms.components.connected import connected_components
+from networkx import connected_components
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 
