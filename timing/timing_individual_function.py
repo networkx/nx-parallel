@@ -1,7 +1,5 @@
 """
-Performance analysis of parallel and NetworkX implementations of the target function.
-
-To generate heatmaps for performance visualization, make sure to run:
+To generate heatmaps comparing the performance of nx-parallel and NetworkX implementations, make sure to run:
     python3 -m pip install -e '.[heatmap]'
 """
 
