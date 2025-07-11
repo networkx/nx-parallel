@@ -130,7 +130,7 @@ def plot_timing_heatmap(targetFunc):
     ax.set_xlabel("Number of Vertices", fontweight="bold", fontsize=12)
     ax.set_ylabel("Edge Probability", fontweight="bold", fontsize=12)
 
-    n_jobs = nxp.get_n_jobs()
+    n_jobs = nx.config.backends.parallel.n_jobs
     ax.set_title(
         f"Small Scale Demo: Time Speedups of {targetFunc.__name__} compared to NetworkX on {n_jobs} cores",
         fontweight="bold",
