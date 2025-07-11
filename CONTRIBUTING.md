@@ -108,9 +108,9 @@ def parallel_func(G, nx_arg, additional_backend_arg_1, additional_backend_arg_2=
 
 In parallel computing, "chunking" refers to dividing a large task into smaller, more manageable chunks that can be processed simultaneously by multiple computing units, such as CPU cores or distributed computing nodes. It's like breaking down a big task into smaller pieces so that multiple workers can work on different pieces at the same time, and in the case of nx-parallel, this usually speeds up the overall process.
 
-The default chunking in nx-parallel is done by slicing the list of nodes (or edges or any other iterator) into chunks equal to the number of available CPUs (ref. [chunk.py](./nx_parallel/utils/chunk.py)). This is because, by default, nx-parallel uses the NetworkX configuration system, which sets `n_jobs=-1` (i.e., uses all available cores). If `nx.config.backends.parallel.active` is explicitly set to `False`, then joblib's configuration system takes over, in which case `n_jobs` defaults to `None`. To learn about how you can modify the value of `n_jobs` and other config options refer [`Config.md`](./Config.md). 
+The default chunking in nx-parallel is done by slicing the list of nodes (or edges or any other iterator) into chunks equal to the number of available CPU cores (ref. [chunk.py](./nx_parallel/utils/chunk.py)). By default, this uses the NetworkX configuration (`n_jobs=-1`). If `nx.config.backends.parallel.active` is `False`, then Joblib’s `n_jobs=None` setting is used. To learn about how you can modify the value of `n_jobs` and other config options refer [`Config.md`](./Config.md). 
 
-The default chunking can be overridden by the user by passing a custom `get_chunks` function to the algorithm as a kwarg. While adding a new algorithm, you can change this default chunking, if necessary (ref. [PR](https://github.com/networkx/nx-parallel/pull/33)).
+The default chunking can be overridden by the user by passing a custom `get_chunks` function to the algorithm as a kwarg. While adding a new algorithm, you can change this default chunking, if necessary (ref. [PR#33](https://github.com/networkx/nx-parallel/pull/33)).
 
 ## General guidelines on adding a new algorithm
 
