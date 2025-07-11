@@ -9,20 +9,13 @@ from matplotlib import pyplot as plt, patches as mpatches
 import seaborn as sns
 import numpy as np
 import pandas as pd
-import joblib
 import timeit
 import random
 import types
 
-# Default Config
-joblib.parallel_config(n_jobs=-1)
-# To use NetworkX's parallel backend, set the following configuration.
-# nx.config.backends.parallel.active = True
-# nx.config.backends.parallel.n_jobs = -1
-
+seed = random.Random(42)
 tournament_funcs = ["is_reachable", "tournament_is_strongly_connected"]
 bipartite_funcs = ["node_redundancy"]
-random.seed(42)
 
 
 def time_individual_function(
@@ -51,13 +44,15 @@ def time_individual_function(
                 if targetFunc.__name__ in bipartite_funcs:
                     n = [200, 400, 800, 1600]
                     m = [100, 200, 400, 800]
-                    print(n[ind] + m[ind])
-                    G = nx.bipartite.random_graph(n[ind], m[ind], p, directed=True)
+                    print(f"Number of Nodes: {n[ind] + m[ind]}")
+                    G = nx.bipartite.random_graph(
+                        n[ind], m[ind], p, directed=True, seed=seed
+                    )
                     for cur_node in G.nodes:
                         neighbors = set(G.neighbors(cur_node))
                         # have atleast 2 outgoing edges
                         while len(neighbors) < 2:
-                            new_neighbor = random.choice(
+                            new_neighbor = seed.choice(
                                 [
                                     node
                                     for node in G.nodes
@@ -67,12 +62,13 @@ def time_individual_function(
                             G.add_edge(cur_node, new_neighbor)
                             neighbors.add(new_neighbor)
                 else:
-                    print(num)
-                    G = nx.fast_gnp_random_graph(num, p, directed=True)
+                    print(f"Number of Nodes: {num}")
+                    G = nx.fast_gnp_random_graph(num, p, directed=True, seed=seed)
+                print(f"Edge Probability: {p}")
 
                 # for weighted graphs
                 if weighted:
-                    random.seed(42)
+                    seed.random()
                     for u, v in G.edges():
                         G[u][v]["weight"] = random.random()
 
@@ -87,12 +83,13 @@ def time_individual_function(
     else:
         # for tournament graphs
         for num in number_of_nodes:
-            print(num)
-            G = nx.tournament.random_tournament(num)
+            print(f"Number of Nodes: {num}")
+            G = nx.tournament.random_tournament(num, seed=seed)
             H = nxp.ParallelGraph(G)
-            parallelTime = measure_time(H, 1, num)
+            source, target = seed.sample(range(num), 2)
+            parallelTime = measure_time(H, source, target)
             print(parallelTime)
-            stdTime = measure_time(G, 1, num)
+            stdTime = measure_time(G, source, target)
             print(stdTime)
             record_result(stdTime, parallelTime, num, edge_prob[0])
             print("Finished " + str(targetFunc))
@@ -115,7 +112,7 @@ def plot_timing_heatmap(targetFunc):
         targetFunc, number_of_nodes, edge_prob, speedup_df, heatmap_annot
     )
 
-    plt.rcParams["font.family"] = "Arial Rounded MT Bold"
+    plt.rcParams["font.family"] = "DejaVu Sans"
     plt.figure(figsize=(20, 6))
     ax = sns.heatmap(
         data=speedup_df.T,
@@ -143,14 +140,14 @@ def plot_timing_heatmap(targetFunc):
     )
 
     legend_patches = [
-        mpatches.Patch(color="none", label="Top Line: Parallel runtime (s)"),
-        mpatches.Patch(color="none", label="Bottom Line: Speed-up"),
+        mpatches.Patch(color="none", label="Top value: Parallel runtime (s)"),
+        mpatches.Patch(color="none", label="Bottom value: Speed-up"),
     ]
     ax.legend(
         handles=legend_patches,
         loc="lower right",
         bbox_to_anchor=(1.0, 1.02),
-        title="Cell Annotation Format",
+        title="Cell Values",
         prop={"size": 12, "weight": "bold"},
     )
 
