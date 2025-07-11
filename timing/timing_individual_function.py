@@ -35,7 +35,7 @@ def time_individual_function(
     def record_result(stdTime, parallelTime, row, col):
         timesFaster = stdTime / parallelTime
         speedup_df.at[row, col] = timesFaster
-        heatmap_annot.at[row, col] = f"{parallelTime:.2g}s\n\n{timesFaster:.2g}x"
+        heatmap_annot.at[row, col] = f"{parallelTime:.2g}s | {timesFaster:.2g}x"
 
     if targetFunc.__name__ not in tournament_funcs:
         for p in edge_prob:
@@ -112,7 +112,6 @@ def plot_timing_heatmap(targetFunc):
         targetFunc, number_of_nodes, edge_prob, speedup_df, heatmap_annot
     )
 
-    plt.rcParams["font.family"] = "DejaVu Sans"
     plt.figure(figsize=(20, 6))
     ax = sns.heatmap(
         data=speedup_df.T,
@@ -140,15 +139,15 @@ def plot_timing_heatmap(targetFunc):
     )
 
     legend_patches = [
-        mpatches.Patch(color="none", label="Top value: Parallel runtime (s)"),
-        mpatches.Patch(color="none", label="Bottom value: Speed-up"),
+        mpatches.Patch(color="none", label="Left: Parallel runtime (s)"),
+        mpatches.Patch(color="none", label="Right: Speed-up"),
     ]
     ax.legend(
         handles=legend_patches,
         loc="lower right",
         bbox_to_anchor=(1.0, 1.02),
         title="Cell Values",
-        prop={"size": 12, "weight": "bold"},
+        prop={"size": 12},
     )
 
     plt.tight_layout(rect=[0, 0, 1, 0.94])
