@@ -79,14 +79,14 @@ nxp.betweenness_centrality(G)
 nxp.betweenness_centrality(H)
 ```
 
-Optional Configuration:
+### Setting Configurations
 ```py
 # modify number of jobs, if you want to limit the number of cores used
 nx.config.backends.parallel.n_jobs = 4
 ```
 For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md)! 
 
-Additionally, refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more on functionalities provided by networkx for backends and configs like logging, `backend_priority`, etc. Another way to configure nx-parallel is by using [`joblib.parallel_config`](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html).
+Additionally, refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
 
 ### Notes
 
