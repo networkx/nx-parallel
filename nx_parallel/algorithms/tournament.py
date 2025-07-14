@@ -30,7 +30,6 @@ def is_reachable(G, s, t, get_chunks="chunks"):
     def two_neighborhood_close(adjM_filepath, chunk):
         adjM = load(adjM_filepath, mmap_mode="r")
         node_indices = range(adjM.shape[0])
-        tnc = []
         for v in chunk:
             S = {
                 x
@@ -39,13 +38,12 @@ def is_reachable(G, s, t, get_chunks="chunks"):
                 or adjM[v, x]
                 or any(adjM[v, z] and adjM[z, x] for z in node_indices)
             }
-            tnc.append(
-                not (s_ind in S and t_ind not in S and is_closed(adjM, node_indices, S))
-            )
-        return all(tnc)
+            if s_ind in S and t_ind not in S and is_closed(adjM, node_indices, S):
+                return False
+        return True
 
-    def is_closed(adjM, node_indices, nodes):
-        return all(adjM[u, v] for u in set(node_indices) - nodes for v in nodes)
+    def is_closed(adjM, node_indices, S):
+        return all(u in S or adjM[u, v] for u in node_indices for v in S)
 
     if hasattr(G, "graph_object"):
         G = G.graph_object
