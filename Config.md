@@ -60,8 +60,6 @@ with nxp_config(n_jobs=7, verbose=0):
     nx.square_clustering(H)
 ```
 
-All configuration parameters are the same as `joblib.parallel_config`, so you can refer to the [official joblib's documentation](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html) to better understand these config parameters.
-
 ### 1.3 How Does NetworkX's Configuration Work in nx-parallel?
 
 In `nx-parallel`, there's a `_configure_if_nx_active` decorator applied to all algorithms. This decorator checks the value of `active` (in `nx.config.backends.parallel`) and then accordingly uses the appropriate configuration system (`joblib` or `networkx`). Since `active=True` by default, it extracts the configs from `nx.config.backends.parallel` and passes them in a `joblib.parallel_config` context manager and calls the function within this context. If the `active` flag is set to `False`, it simply calls the function, assuming that you(user) have set the desired configurations in `joblib.parallel_config`.
@@ -72,7 +70,7 @@ Another way to configure `nx-parallel` is by using [`joblib.parallel_config`](ht
 
 ### 2.1 Usage
 
-To use `joblib.parallel_config` with `nx-parallel`, set `nx.config.backends.parallel.active = False`. This disables the default NetworkX configuration so joblib settings can take effect. This can be done globally or within a context manager.
+To use `joblib.parallel_config` with `nx-parallel`, you need to disable NetworkX's built in parallel config by setting `nx.config.backends.parallel.active = False`. This ensures that Joblib’s settings take effect instead. There are two ways to disable the NetworkX config: globally for your whole script, or temporarily using a context manager.
 
 **2.1.1 Disable NetworkX config globally**
 ```python
