@@ -86,15 +86,6 @@ def triangles(G, nodes=None, get_chunks="chunks"):
         A function that takes in a list of all the nodes (or nbunch) as input and
         returns an iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
-
-    Returns
-    -------
-    triangles : dict
-        A dictionary mapping each node to its triangle count.
-
-    Notes
-    -----
-    This function uses parallel processing via joblib for efficiency.
     """
 
     def compute_triangles_chunk(node_iter_chunk, later_nbrs):
