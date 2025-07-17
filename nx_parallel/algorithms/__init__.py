@@ -11,4 +11,3 @@ from .isolate import *
 from .tournament import *
 from .vitality import *
 from .cluster import *
-from .cluster import triangles
