@@ -17,3 +17,6 @@ class Cluster(Benchmark):
 
     def time_square_clustering(self, backend, num_nodes, edge_prob):
         _ = nx.square_clustering(self.G, backend=backend)
+
+    def time_triangles(self, backend, num_nodes, edge_prob):
+        _ = nx.triangles(self.G, backend=backend)
