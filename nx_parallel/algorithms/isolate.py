@@ -33,8 +33,3 @@ def number_of_isolates(G, get_chunks="chunks"):
 
     results = Parallel()(delayed(len)(chunk) for chunk in isolate_chunks)
     return sum(results)
-
-
-@number_of_isolates._should_run
-def _(G):
-    return "Fast algorithm; not worth converting"
