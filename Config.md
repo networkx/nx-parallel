@@ -18,7 +18,7 @@ print(nx.config)
 
 Output:
 
-```
+```sh
 NetworkXConfig(
     backend_priority=BackendPriorities(
         algos=[],
@@ -47,7 +47,7 @@ NetworkXConfig(
 
 ### 1.2 Usage
 
-```python
+```py
 # Setting global configs
 nxp_config = nx.config.backends.parallel
 nxp_config.n_jobs = 3
@@ -70,10 +70,9 @@ Another way to configure `nx-parallel` is by using [`joblib.parallel_config`](ht
 
 ### 2.1 Usage
 
-To use `joblib.parallel_config` with `nx-parallel`, you need to disable NetworkX's built in parallel config by setting `nx.config.backends.parallel.active = False`. This ensures that Joblib’s settings take effect instead. There are two ways to disable the NetworkX config: globally for your whole script, or temporarily using a context manager.
+To use `joblib.parallel_config` with `nx-parallel`, you need to disable NetworkX's config by setting `nx.config.backends.parallel.active = False`. There are two ways to do this: globally for your whole script, or temporarily using a context manager. This ensures that Joblib’s settings take effect instead. 
 
-**2.1.1 Disable NetworkX config globally**
-```python
+```py
 from joblib import parallel_config
 
 # Setting global configs for NetworkX
@@ -85,15 +84,6 @@ nx.square_clustering(H)
 
 # Setting configs in Joblib's context
 with parallel_config(n_jobs=7, verbose=0):
-    nx.square_clustering(H)
-```
-
-**2.1.2 Disable NetworkX config in a context**
-```python
-from joblib import parallel_config
-
-# Setting configs in NetworkX's context
-with nx.config.backends.parallel(active=False), parallel_config(n_jobs=7, verbose=50):
     nx.square_clustering(H)
 ```
 
@@ -145,7 +135,7 @@ To understand using `joblib.parallel_config` within `nx-parallel`, see [the usag
 
 - **Default `n_jobs`**: In the NetworkX configuration system, `n_jobs=-1` by default, i.e uses all available CPU cores, whereas `joblib.parallel_config` defaults to `n_jobs=None`. So, parallelism is enabled by default in NetworkX, but must be manually configured when using `joblib.parallel_config`.
 
-    ```python
+    ```py
     # NetworkX
     print(nx.config.backends.parallel.n_jobs)  # Output : -1
 
@@ -162,7 +152,7 @@ When the only networkx backend you're using is `nx-parallel`, then either of the
 
 But, when working with multiple NetworkX backends, it's crucial to ensure compatibility among the backends to avoid conflicts between different configurations. In such cases, using NetworkX's configuration system to configure `nx-parallel` is recommended. This approach helps maintain consistency across backends. For example:
 
-```python
+```py
 nx.config.backend_priority = ["another_nx_backend", "parallel"]
 nx.config.backends.another_nx_backend.config_1 = "xyz"
 nx.config.backends.parallel.active = False
