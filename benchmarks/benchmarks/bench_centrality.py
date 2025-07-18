@@ -23,3 +23,12 @@ class Betweenness(Benchmark):
 
     def time_edge_betweenness_centrality(self, backend, num_nodes, edge_prob):
         _ = nx.edge_betweenness_centrality(self.G_weighted, backend=backend)
+
+
+class Harmonic(Benchmark):
+    params = [(backends), (num_nodes), (edge_prob)]
+    param_names = ["backend", "num_nodes", "edge_prob"]
+
+    def time_harmonic_centrality(self, backend, num_nodes, edge_prob):
+        G = get_cached_gnp_random_graph(num_nodes, edge_prob)
+        _ = nx.harmonic_centrality(G, backend=backend)
