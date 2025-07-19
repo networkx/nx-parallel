@@ -57,7 +57,7 @@ You can run your networkx code with nx-parallel backend by:
 export NETWORKX_AUTOMATIC_BACKENDS="parallel" && python nx_code.py
 ```
 
-Note that for all functions inside `nx_code.py` that do not have an nx-parallel implementation their original networkx implementation will be executed. You can also use the nx-parallel backend in your code for only some specific function calls in the following ways:
+Note that for all functions inside `nx_code.py` that do not have an nx-parallel implementation, their original networkx implementation will be executed. You can also use the nx-parallel backend in your code for only some specific function calls in the following ways:
 
 ```py
 import networkx as nx
@@ -79,7 +79,7 @@ nxp.betweenness_centrality(G)
 nxp.betweenness_centrality(H)
 ```
 
-You can measure the performance gains of parallel algorithms by comparing them to their sequential counter parts. Following is a simple benchmarking setup:
+You can also measure the performance gains of parallel algorithms by comparing them to their sequential counter parts. Following is a simple benchmarking setup:
 
 ```py
 import networkx as nx
@@ -104,6 +104,9 @@ Parallel:   0.62s
 ```
 
 ### Setting Configurations
+
+You can modify the default NetworkX configuration and observe internal behavior by enabling logging. This is useful for understanding which backend is being used and how tasks are scheduled:
+
 ```py
 import networkx as nx
 import nx_parallel as nxp
