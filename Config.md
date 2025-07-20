@@ -75,7 +75,7 @@ To use `joblib.parallel_config` with `nx-parallel`, you need to disable NetworkX
 ```py
 from joblib import parallel_config
 
-# Disable NetworkX configs
+# Disabling NetworkX configs
 nx.config.backends.parallel.active = False
 
 # Setting global configs for Joblib

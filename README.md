@@ -89,7 +89,7 @@ from timeit import timeit
 G = nx.erdos_renyi_graph(1000, 0.01)
 H = nxp.ParallelGraph(G)
 
-# By default, nx-parallel uses all available cores
+# by default, nx-parallel uses all available cores
 sequential = timeit(lambda: nx.betweenness_centrality(G), number=1)
 print(f"Sequential: {sequential:.2f}s")
 
@@ -105,27 +105,31 @@ Parallel:   0.62s
 
 ### Setting Configurations
 
-You can modify the default NetworkX configuration and observe internal behavior by enabling logging. This is useful for understanding which backend is being used and how tasks are scheduled:
+You can modify the default NetworkX cofigurations to control how parallel execution behaves.
 
+Example :
 ```py
 import networkx as nx
 import nx_parallel as nxp
-import logging
 
 G = nx.path_graph(4)
-H = nxp.ParallelGraph(G)
 
-# setting up logging
-nxl = logging.getLogger("networkx")
-nxl.addHandler(logging.StreamHandler())
-nxl.setLevel(logging.DEBUG)
-
-# setting NetworkX configs
 with nx.config.backends.parallel(n_jobs=2, verbose=10):
     nx.betweenness_centrality(G, backend="parallel")
 ```
+For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md). Additionally, refer to the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
 
-Output :
+You can also enable logging to observe which backend is used and how tasks are scheduled. Make sure to configure logging in the following way, before making any backend-related calls:
+
+```py
+import logging
+
+nxl = logging.getLogger("networkx")
+nxl.addHandler(logging.StreamHandler())
+nxl.setLevel(logging.DEBUG)
+```
+
+With logging enabled, the example output is as follows:
 ```sh
 Converting input graphs from 'networkx' backend to 'parallel' backend for call to 'betweenness_centrality'
 Using backend 'parallel' for call to 'betweenness_centrality' with arguments: (G=<nx_parallel.interface.ParallelGraph object at 0x1027cc5f0>, k=None, normalized=True, weight=None, endpoints=False, seed=<random.Random object at 0x1588a9e20>)
@@ -133,10 +137,7 @@ Using backend 'parallel' for call to 'betweenness_centrality' with arguments: (G
 [Parallel(n_jobs=2)]: Batch computation too fast (0.16860580444335938s.) Setting batch_size=2.
 [Parallel(n_jobs=2)]: Done   2 out of   2 | elapsed:    0.2s finished
 ```
-
-For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md)! 
-
-Additionally, refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
+Refer to [Introspection and Logging section](https://networkx.org/documentation/stable/reference/backends.html#introspection-and-logging) in NetworkX's backend documentation for more.
 
 ### Notes
 
