@@ -25,12 +25,12 @@ def harmonic_centrality(
 
     def process_chunk(chunk):
         hc = {}
-        for src in chunk:
-            dist = spl(src)
-            for tgt, dst in dist.items():
-                if tgt in nbunch and dst != 0:
-                    node = src if transposed else tgt
-                    hc[node] = hc.get(node, 0) + 1 / dst
+        for v in chunk:
+            dist = spl(v)
+            for u, d_uv in dist.items():
+                if u in nbunch and d_uv != 0:
+                    node = v if transposed else u
+                    hc[node] = (hc[node] + 1 / d_uv) if node in hc else (1 / d_uv)
         return hc
 
     if hasattr(G, "graph_object"):
