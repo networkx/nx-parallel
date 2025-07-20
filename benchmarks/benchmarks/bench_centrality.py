@@ -29,6 +29,8 @@ class Harmonic(Benchmark):
     params = [(backends), (num_nodes), (edge_prob)]
     param_names = ["backend", "num_nodes", "edge_prob"]
 
+    def setup(self, backend, num_nodes, edge_prob):
+        self.G = get_cached_gnp_random_graph(num_nodes, edge_prob)
+
     def time_harmonic_centrality(self, backend, num_nodes, edge_prob):
-        G = get_cached_gnp_random_graph(num_nodes, edge_prob)
-        _ = nx.harmonic_centrality(G, backend=backend)
+        _ = nx.harmonic_centrality(self.G, backend=backend)
