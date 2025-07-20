@@ -28,7 +28,7 @@ def harmonic_centrality(
         for v in chunk:
             dist = spl(v)
             for u, d_uv in dist.items():
-                if u in nbunch and d_uv != 0:
+                if d_uv != 0 and u in nbunch:
                     node = v if transposed else u
                     hc[node] = (hc[node] + 1 / d_uv) if node in hc else (1 / d_uv)
         return hc
