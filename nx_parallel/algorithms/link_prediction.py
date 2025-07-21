@@ -43,7 +43,7 @@ def _apply_prediction(G, func, ebunch=None, get_chunks="chunks"):
 
     results = Parallel()(delayed(_process_pair_chunk)(chunk) for chunk in pairs_chunks)
 
-    return itertools.chain.from_iterable(results)
+    return sorted(list(itertools.chain.from_iterable(results)))
 
 
 @nxp._configure_if_nx_active()
