@@ -13,6 +13,13 @@ def get_info():
         "short_summary": "A networkx backend that uses joblib to run graph algorithms in parallel. Find the nx-parallel's configuration guide `here <https://github.com/networkx/nx-parallel/blob/main/Config.md>`_",
         "default_config": _config,
         "functions": {
+            "adamic_adar_index": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L103",
+                "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the adamic adar index for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
+                },
+            },
             "all_pairs_all_shortest_paths": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/generic.py#L11",
                 "additional_docs": "The parallel implementation first divides the nodes into chunks and then creates a generator to lazily compute all shortest paths between all nodes for each node in `node_chunk`, and then employs joblib's `Parallel` function to execute these computations in parallel across `n_jobs` number of CPU cores.",
@@ -111,6 +118,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "jaccard_coefficient": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L75",
+                "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the jaccard coefficient for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
+                },
+            },
             "johnson": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L251",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing the shortest paths using Johnson's Algorithm for each chunk in parallel.",
@@ -137,6 +151,20 @@ def get_info():
                 "additional_docs": "The parallel computation is implemented by dividing the list of isolated nodes into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the isolated nodes as input and returns an iterable `isolate_chunks`. The default chunking is done by slicing the `isolates` into `n_jobs` number of chunks."
+                },
+            },
+            "preferential_attachment": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L128",
+                "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the preferential attachment for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
+                },
+            },
+            "resource_allocation_index": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L50",
+                "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the resource allocation index for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
                 },
             },
             "square_clustering": {
