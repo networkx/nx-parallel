@@ -88,7 +88,7 @@ def triangles(G, nodes=None, get_chunks="chunks"):
         `nodes` into `n_jobs` number of chunks.
     """
 
-    def compute_triangles_chunk(node_iter_chunk, later_nbrs):
+    def _compute_triangles_chunk(node_iter_chunk, later_nbrs):
         triangle_counts = Counter()
         for node1 in node_iter_chunk:
             neighbors = later_nbrs[node1]
@@ -122,7 +122,7 @@ def triangles(G, nodes=None, get_chunks="chunks"):
         node_iter_chunks = get_chunks(nodes)
 
     results = Parallel()(
-        delayed(compute_triangles_chunk)(node_iter_chunk, later_nbrs)
+        delayed(_compute_triangles_chunk)(node_iter_chunk, later_nbrs)
         for node_iter_chunk in node_iter_chunks
     )
 
