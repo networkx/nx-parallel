@@ -23,7 +23,7 @@ def harmonic_centrality(
         `nodes` into `n_jobs` number of chunks.
     """
 
-    def process_chunk(chunk):
+    def _process_chunk(chunk):
         hc = {}
         for v in chunk:
             dist = spl(v)
@@ -54,7 +54,7 @@ def harmonic_centrality(
         node_chunks = get_chunks(sources)
 
     spl = partial(nx.shortest_path_length, G, weight=distance)
-    results = Parallel()(delayed(process_chunk)(chunk) for chunk in node_chunks)
+    results = Parallel()(delayed(_process_chunk)(chunk) for chunk in node_chunks)
 
     harmonic = dict.fromkeys(nbunch, 0)
     for result in results:
