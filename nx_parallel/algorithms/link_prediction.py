@@ -32,7 +32,7 @@ def _apply_prediction(G, func, ebunch=None, get_chunks="chunks"):
 
     ebunch = list(ebunch)
     if not ebunch:
-        return iter([])
+        return []
 
     n_jobs = nxp.get_n_jobs()
 
