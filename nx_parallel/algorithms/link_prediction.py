@@ -280,6 +280,9 @@ def within_inter_cluster(
     if delta <= 0:
         raise nx.NetworkXAlgorithmError("Delta must be greater than zero")
 
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     def predict(u, v):
         Cu = _community(G, u, community)
         Cv = _community(G, v, community)
