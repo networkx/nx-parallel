@@ -10,6 +10,7 @@ __all__ = [
     "jaccard_coefficient",
     "adamic_adar_index",
     "preferential_attachment",
+    "common_neighbor_centrality",
 ]
 
 
@@ -145,5 +146,47 @@ def preferential_attachment(G, ebunch=None, get_chunks="chunks"):
 
     if hasattr(G, "graph_object"):
         G = G.graph_object
+
+    return _apply_prediction(G, predict, ebunch, get_chunks)
+
+
+@nxp._configure_if_nx_active()
+def common_neighbor_centrality(G, ebunch=None, alpha=0.8, get_chunks="chunks"):
+    """The edge pairs are chunked into `pairs_chunks` and then the
+    common neighbor centrality for all `pairs_chunks` is computed
+    in parallel over `n_jobs` number of CPU cores.
+
+    networkx.common_neighbor_centrality: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.link_prediction.common_neighbor_centrality.html
+
+    Parameters
+    ----------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in a list of all the edges (or ebunch) as input and
+        returns an iterable `pairs_chunks`. The default chunking is done by slicing
+        `ebunch` into `n_jobs` number of chunks.
+    """
+
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
+    if alpha == 1:
+
+        def predict(u, v):
+            if u == v:
+                raise nx.NetworkXAlgorithmError("Self loops are not supported")
+
+            return len(nx.common_neighbors(G, u, v))
+
+    else:
+        spl = dict(nx.shortest_path_length(G))
+        inf = float("inf")
+
+        def predict(u, v):
+            if u == v:
+                raise nx.NetworkXAlgorithmError("Self loops are not supported")
+            path_len = spl[u].get(v, inf)
+
+            n_nbrs = len(nx.common_neighbors(G, u, v))
+            return alpha * n_nbrs + (1 - alpha) * len(G) / path_len
 
     return _apply_prediction(G, predict, ebunch, get_chunks)
