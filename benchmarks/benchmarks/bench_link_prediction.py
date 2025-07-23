@@ -14,6 +14,9 @@ class LinkPrediction(Benchmark):
 
     def setup(self, backend, num_nodes, edge_prob):
         self.G = get_cached_gnp_random_graph(num_nodes, edge_prob)
+        self.G_community = self.G.copy()
+        for i, node in enumerate(self.G_community.nodes()):
+            self.G_community.nodes[node]["community"] = i % 4
 
     def time_resource_allocation_index(self, backend, num_nodes, edge_prob):
         _ = nx.resource_allocation_index(self.G, backend=backend)
@@ -29,3 +32,12 @@ class LinkPrediction(Benchmark):
 
     def time_common_neighbor_centrality(self, backend, num_nodes, edge_prob):
         _ = nx.common_neighbor_centrality(self.G, backend=backend)
+
+    def time_cn_soundarajan_hopcroft(self, backend, num_nodes, edge_prob):
+        _ = nx.cn_soundarajan_hopcroft(self.G_community, backend=backend)
+
+    def time_ra_index_soundarajan_hopcroft(self, backend, num_nodes, edge_prob):
+        _ = nx.ra_index_soundarajan_hopcroft(self.G_community, backend=backend)
+
+    def time_within_inter_cluster(self, backend, num_nodes, edge_prob):
+        _ = nx.within_inter_cluster(self.G_community, backend=backend)
