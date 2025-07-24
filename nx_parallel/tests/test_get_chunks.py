@@ -31,7 +31,7 @@ def get_functions_with_get_chunks(ignore_funcs=[], package_name="nx_parallel"):
 
 
 def test_get_functions_with_get_chunks():
-    expected = {attr.rsplit(".", 1)[-1] for attr in ALGORITHMS}
+    expected = {algo.rsplit(".", 1)[-1] for algo in ALGORITHMS}
     assert set(get_functions_with_get_chunks()) == expected
 
 
