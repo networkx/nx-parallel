@@ -37,4 +37,4 @@ def number_of_isolates(G, get_chunks="chunks"):
 
 @number_of_isolates._should_run
 def _(G):
-    return "Fast algorithm; not worth converting"
+    return "Fast algorithm; skip parallel execution"
