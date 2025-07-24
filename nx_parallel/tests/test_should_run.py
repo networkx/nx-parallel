@@ -2,7 +2,6 @@ import inspect
 import pytest
 import networkx as nx
 import nx_parallel as nxp
-from nx_parallel.utils.decorators import _default_should_run
 from nx_parallel import algorithms
 
 
@@ -10,7 +9,7 @@ def get_functions_with_custom_should_run():
     """Yields names of functions with a custom `should_run`"""
 
     for name, obj in inspect.getmembers(algorithms, inspect.isfunction):
-        if obj.should_run is not _default_should_run:
+        if obj.should_run is not True:
             yield name
 
 
