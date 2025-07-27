@@ -105,7 +105,7 @@ Parallel:   0.62s
 
 ### Setting Configurations
 
-You can modify the default NetworkX cofigurations to control how parallel execution behaves.
+You can modify the default NetworkX configurations to control how parallel execution behaves.
 
 Example :
 ```py
@@ -117,7 +117,7 @@ G = nx.path_graph(4)
 with nx.config.backends.parallel(n_jobs=2, verbose=10):
     nx.betweenness_centrality(G, backend="parallel")
 ```
-For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md). Additionally, refer to the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
+For more on how to play with configurations in nx-parallel, see [Config.md](./Config.md). Additionally, refer to the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
 
 You can also enable logging to observe which backend is used and how tasks are scheduled. Make sure to configure logging in the following way, before making any backend-related calls:
 
