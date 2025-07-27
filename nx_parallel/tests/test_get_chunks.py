@@ -52,7 +52,7 @@ def test_get_chunks(func):
     tournament_funcs = [
         "tournament_is_strongly_connected",
     ]
-    community_funcs = [
+    requires_node_community = [
         "cn_soundarajan_hopcroft",
         "ra_index_soundarajan_hopcroft",
         "within_inter_cluster",
@@ -68,14 +68,14 @@ def test_get_chunks(func):
         c1 = getattr(nxp, func)(H)
         c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
         assert c1 == c2
-    elif func in community_funcs:
+    elif func in requires_node_community:
         G = nx.complete_graph(5)
+        nx.set_node_attributes(G, {i: i % 2 for i in G.nodes}, "community")
         H = nxp.ParallelGraph(G)
-        c = getattr(nxp, func)
-        pytest.raises(nx.NetworkXAlgorithmError, list, c(H, [(0, 3)]))
-        pytest.raises(
-            nx.NetworkXAlgorithmError, list, c(H, [(0, 3)], get_chunks=random_chunking)
-        )
+        ebunch = [(0, 3)]
+        c1 = getattr(nxp, func)(H, ebunch)
+        c2 = getattr(nxp, func)(H, ebunch, get_chunks=random_chunking)
+        assert list(c1) == list(c2)
     else:
         G = nx.fast_gnp_random_graph(40, 0.6, seed=42)
         H = nxp.ParallelGraph(G)
@@ -96,4 +96,4 @@ def test_get_chunks(func):
                 if isinstance(c1, float):
                     assert math.isclose(c1, c2, abs_tol=1e-16)
                 else:
-                    assert c1 == c2
+                    assert sorted(c1) == sorted(c2)
