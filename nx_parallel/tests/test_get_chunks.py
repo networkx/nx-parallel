@@ -73,7 +73,9 @@ def test_get_chunks(func):
         H = nxp.ParallelGraph(G)
         c = getattr(nxp, func)
         pytest.raises(nx.NetworkXAlgorithmError, list, c(H, [(0, 3)]))
-        pytest.raises(nx.NetworkXAlgorithmError, list, c(H, [(0, 3)], get_chunks=random_chunking))
+        pytest.raises(
+            nx.NetworkXAlgorithmError, list, c(H, [(0, 3)], get_chunks=random_chunking)
+        )
     else:
         G = nx.fast_gnp_random_graph(40, 0.6, seed=42)
         H = nxp.ParallelGraph(G)
