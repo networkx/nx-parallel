@@ -24,7 +24,7 @@ def _apply_prediction(G, func, ebunch=None, get_chunks="chunks"):
     """
 
     def _process_pair_chunk(pairs_chunk):
-        return ((u, v, func(u, v)) for u, v in pairs_chunk)
+        return [(u, v, func(u, v)) for u, v in pairs_chunk]
 
     if ebunch is None:
         ebunch = nx.non_edges(G)
