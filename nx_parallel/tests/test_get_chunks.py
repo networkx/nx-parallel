@@ -52,6 +52,11 @@ def test_get_chunks(func):
     tournament_funcs = [
         "tournament_is_strongly_connected",
     ]
+    community_funcs = [
+        "cn_soundarajan_hopcroft",
+        "ra_index_soundarajan_hopcroft",
+        "within_inter_cluster",
+    ]
     check_dict_values_close = [
         "betweenness_centrality",
         "edge_betweenness_centrality",
@@ -63,6 +68,12 @@ def test_get_chunks(func):
         c1 = getattr(nxp, func)(H)
         c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
         assert c1 == c2
+    elif func in community_funcs:
+        G = nx.complete_graph(5)
+        H = nxp.ParallelGraph(G)
+        c = getattr(nxp, func)
+        pytest.raises(nx.NetworkXAlgorithmError, list, c(H, [(0, 3)]))
+        pytest.raises(nx.NetworkXAlgorithmError, list, c(H, [(0, 3)], get_chunks=random_chunking))
     else:
         G = nx.fast_gnp_random_graph(40, 0.6, seed=42)
         H = nxp.ParallelGraph(G)
