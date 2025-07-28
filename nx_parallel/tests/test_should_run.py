@@ -16,6 +16,7 @@ def get_functions_with_custom_should_run():
 def test_get_functions_with_custom_should_run():
     expected = {
         "number_of_isolates",
+        "all_pairs_shortest_path_length",
     }
     assert set(get_functions_with_custom_should_run()) == expected
 
