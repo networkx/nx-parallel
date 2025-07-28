@@ -119,7 +119,7 @@ with nx.config.backends.parallel(n_jobs=2, verbose=10):
 ```
 For more on how to play with configurations in nx-parallel, see [Config.md](./Config.md). Additionally, refer to the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
 
-You can also enable logging to observe which backend is used and how tasks are scheduled. Make sure to configure logging in the following way, before making any backend-related calls:
+You can also enable logging to observe which backend is used and how tasks are scheduled. Enable and configure logging in the following way:
 
 ```py
 import logging
