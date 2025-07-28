@@ -8,7 +8,7 @@ from joblib import parallel_config
 __all__ = ["_configure_if_nx_active"]
 
 
-def _configure_if_nx_active():
+def _configure_if_nx_active(should_run=None):
     """Decorator to set the configuration for the parallel computation
     of the nx-parallel algorithms.
     """
@@ -29,17 +29,9 @@ def _configure_if_nx_active():
                     return func(*args, **kwargs)
             return func(*args, **kwargs)
 
-        def _should_run(custom_should_run):
-            if not custom_should_run.__name__.startswith("_"):
-                raise ValueError(
-                    "The name of the function used by `_should_run` must begin with '_'; "
-                    f"got: {custom_should_run.__name__!r}"
-                )
-            wrapper.should_run = custom_should_run
-            return custom_should_run
-
         wrapper.should_run = True
-        wrapper._should_run = _should_run
+        if should_run:
+            wrapper.should_run = should_run
 
         return wrapper
 

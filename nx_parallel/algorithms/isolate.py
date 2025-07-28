@@ -1,11 +1,12 @@
 import networkx as nx
 from joblib import Parallel, delayed
 import nx_parallel as nxp
+from nx_parallel.utils.should_run_policies import should_skip_parallel
 
 __all__ = ["number_of_isolates"]
 
 
-@nxp._configure_if_nx_active()
+@nxp._configure_if_nx_active(should_run=should_skip_parallel)
 def number_of_isolates(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the list
     of isolated nodes into chunks and then finding the length of each chunk in parallel
@@ -33,8 +34,3 @@ def number_of_isolates(G, get_chunks="chunks"):
 
     results = Parallel()(delayed(len)(chunk) for chunk in isolate_chunks)
     return sum(results)
-
-
-@number_of_isolates._should_run
-def _(G):
-    return "Fast algorithm; skip parallel execution"
