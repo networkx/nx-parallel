@@ -23,8 +23,14 @@ def test_get_functions_with_custom_should_run():
 
 @pytest.mark.parametrize("func", get_functions_with_custom_should_run())
 def test_should_run(func):
-    # [TO DO]: modify graphs based on whether the func is a tournament
-    G = nx.fast_gnp_random_graph(40, 0.6, seed=42)
+    tournament_funcs = [
+        "tournament_is_strongly_connected",
+    ]
+
+    if func in tournament_funcs:
+        G = nx.tournament.random_tournament(15, seed=42)
+    else:
+        G = nx.fast_gnp_random_graph(40, 0.6, seed=42)
     H = nxp.ParallelGraph(G)
     func = getattr(nxp, func)
 
