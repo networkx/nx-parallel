@@ -3,10 +3,18 @@ from collections import Counter
 from joblib import Parallel, delayed
 from networkx.algorithms.cluster import _triangles_and_degree_iter
 import nx_parallel as nxp
+from networkx.algorithms.cluster import (
+    _directed_weighted_triangles_and_degree_iter,
+    _directed_triangles_and_degree_iter,
+    _weighted_triangles_and_degree_iter,
+    _triangles_and_degree_iter,
+)
+from collections.abc import Iterable
 
 __all__ = [
     "square_clustering",
     "triangles",
+    "clustering",
 ]
 
 
@@ -99,7 +107,7 @@ def triangles(G, nodes=None, get_chunks="chunks"):
                 triangle_counts[node2] += m
                 triangle_counts.update(third_nodes)
         return triangle_counts
-
+    
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
@@ -132,3 +140,72 @@ def triangles(G, nodes=None, get_chunks="chunks"):
     for result in results:
         triangle_counts.update(result)
     return triangle_counts
+
+
+@nxp._configure_if_nx_active()
+def clustering(G, nodes=None, weight=None, get_chunks="chunks"):
+    """The nodes are chunked into `node_chunks` and then the clustering
+    coefficient for all `node_chunks` is computed in parallel over `n_jobs`
+    number of CPU cores.
+
+    networkx.clustering: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.clustering.html
+
+    Parameters
+    ----------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in a list of all the nodes (or nbunch) as input and
+        returns an iterable `node_chunks`. The default chunking is done by slicing the
+        `nodes` into `n_jobs` number of chunks.
+    """
+    
+    def _compute_chunk(chunk):
+        if G.is_directed():
+            if weight is not None:
+                td_iter = _directed_weighted_triangles_and_degree_iter(G, chunk, weight)
+                clusterc = {
+                    v: 0 if t == 0 else t / ((dt * (dt - 1) - 2 * db) * 2)
+                    for v, dt, db, t in td_iter
+                }
+            else:
+                td_iter = _directed_triangles_and_degree_iter(G, chunk)
+                clusterc = {
+                    v: 0 if t == 0 else t / ((dt * (dt - 1) - 2 * db) * 2)
+                    for v, dt, db, t in td_iter
+                }
+        else:
+            # The formula 2*T/(d*(d-1)) from docs is t/(d*(d-1)) here b/c t==2*T
+            if weight is not None:
+                td_iter = _weighted_triangles_and_degree_iter(G, chunk, weight)
+                clusterc = {
+                    v: 0 if t == 0 else t / (d * (d - 1)) for v, d, t in td_iter
+                }
+            else:
+                td_iter = _triangles_and_degree_iter(G, chunk)
+                clusterc = {
+                    v: 0 if t == 0 else t / (d * (d - 1)) for v, d, t, _ in td_iter
+                }
+        return clusterc
+    
+    n_jobs = nxp.get_n_jobs()
+
+    if nodes is None:
+        nodes_to_chunk = list(G)
+    elif isinstance(nodes, str) or not isinstance(nodes, Iterable):
+        nodes_to_chunk = [nodes]
+    else:
+        nodes_to_chunk = list(nodes)
+
+    if get_chunks == "chunks":
+        node_chunks = nxp.chunks(nodes_to_chunk, n_jobs)
+    else:
+        node_chunks = get_chunks(nodes_to_chunk)
+
+    results = Parallel()(delayed(_compute_chunk)(chunk) for chunk in node_chunks)
+
+    clusterc = {}
+    for result in results:
+        clusterc.update(result)
+
+    if nodes in G:
+        return clusterc[nodes]
+    return clusterc

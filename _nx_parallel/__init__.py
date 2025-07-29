@@ -132,6 +132,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
                 },
             },
+            "clustering": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L84",
+                "additional_docs": "The nodes are chunked into `node_chunks` and then the clustering coefficient for all `node_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "edge_betweenness_centrality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L103",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing edge betweenness centrality for each chunk concurrently.",
