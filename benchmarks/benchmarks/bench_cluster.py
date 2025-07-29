@@ -20,3 +20,9 @@ class Cluster(Benchmark):
 
     def time_triangles(self, backend, num_nodes, edge_prob):
         _ = nx.triangles(self.G, backend=backend)
+        
+    def time_clustering(self, backend, num_nodes, edge_prob):
+        _ = nx.clustering(self.G, backend=backend)
+        
+    def time_average_clustering(self, backend, num_nodes, edge_prob):
+        _ = nx.average_clustering(self.G, backend=backend)
