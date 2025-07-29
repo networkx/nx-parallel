@@ -37,7 +37,7 @@ ALGORITHMS = [
     # Approximation
     "approximate_all_pairs_node_connectivity",
     # Connectivity
-    "connectivity.all_pairs_node_connectivity",
+    "all_pairs_node_connectivity",
 ]
 
 
@@ -69,9 +69,7 @@ class ParallelGraph:
 def assign_algorithms(cls):
     """Class decorator to assign algorithms to the class attributes."""
     for attr in ALGORITHMS:
-        # get the function name by parsing the module hierarchy
-        func_name = attr.rsplit(".", 1)[-1]
-        setattr(cls, func_name, attrgetter(attr)(algorithms))
+        setattr(cls, attr, attrgetter(attr)(algorithms))
     return cls
 
 
