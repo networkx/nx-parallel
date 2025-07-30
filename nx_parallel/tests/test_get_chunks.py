@@ -68,32 +68,31 @@ def test_get_chunks(func):
         c1 = getattr(nxp, func)(H)
         c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
         assert c1 == c2
-    elif func in requires_node_community:
-        G = nx.complete_graph(5)
-        nx.set_node_attributes(G, {i: i % 2 for i in G.nodes}, "community")
-        H = nxp.ParallelGraph(G)
-        ebunch = [(0, 3)]
-        c1 = getattr(nxp, func)(H, ebunch)
-        c2 = getattr(nxp, func)(H, ebunch, get_chunks=random_chunking)
-        assert list(c1) == list(c2)
     else:
         G = nx.fast_gnp_random_graph(40, 0.6, seed=42)
         H = nxp.ParallelGraph(G)
-        c1 = getattr(nxp, func)(H)
-        c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
-        if isinstance(c1, types.GeneratorType):
-            c1, c2 = dict(c1), dict(c2)
-            if func in check_dict_values_close:
-                for key in c1:
-                    assert math.isclose(c1[key], c2[key], abs_tol=1e-16)
-            else:
-                assert c1 == c2
+        if func in requires_node_community:
+            nx.set_node_attributes(H, {i: i % 2 for i in H.nodes}, "community")
+            ebunch = [(0, 3)]
+            c1 = getattr(nxp, func)(H, ebunch)
+            c2 = getattr(nxp, func)(H, ebunch, get_chunks=random_chunking)
+            assert list(c1) == list(c2)
         else:
-            if func in check_dict_values_close:
-                for key in c1:
-                    assert math.isclose(c1[key], c2[key], abs_tol=1e-16)
-            else:
-                if isinstance(c1, float):
-                    assert math.isclose(c1, c2, abs_tol=1e-16)
+            c1 = getattr(nxp, func)(H)
+            c2 = getattr(nxp, func)(H, get_chunks=random_chunking)
+            if isinstance(c1, types.GeneratorType):
+                c1, c2 = dict(c1), dict(c2)
+                if func in check_dict_values_close:
+                    for key in c1:
+                        assert math.isclose(c1[key], c2[key], abs_tol=1e-16)
                 else:
-                    assert sorted(c1) == sorted(c2)
+                    assert c1 == c2
+            else:
+                if func in check_dict_values_close:
+                    for key in c1:
+                        assert math.isclose(c1[key], c2[key], abs_tol=1e-16)
+                else:
+                    if isinstance(c1, float):
+                        assert math.isclose(c1, c2, abs_tol=1e-16)
+                    else:
+                        assert sorted(c1) == sorted(c2)
