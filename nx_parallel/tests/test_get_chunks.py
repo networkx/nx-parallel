@@ -31,7 +31,7 @@ def get_functions_with_get_chunks(ignore_funcs=[], package_name="nx_parallel"):
 
 
 def test_get_functions_with_get_chunks():
-    assert get_functions_with_get_chunks() == ALGORITHMS
+    assert list(get_functions_with_get_chunks()) == ALGORITHMS
 
 
 ignore_funcs = [
