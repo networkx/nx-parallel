@@ -14,5 +14,5 @@ def should_run_if_large(G, *_):
 def default_should_run(*_):
     n_jobs = nxp.get_n_jobs()
     if n_jobs in (None, 0, 1):
-        return "Set `n_jobs` > 1 to use the parallel backend."
+        return "Parallel backend requires `n_jobs` > 1 to run"
     return True
