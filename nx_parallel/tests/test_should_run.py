@@ -3,6 +3,8 @@ import pytest
 import networkx as nx
 import nx_parallel as nxp
 from nx_parallel import algorithms
+import joblib
+from nx_parallel.interface import ALGORITHMS
 
 
 def get_functions_with_custom_should_run():
@@ -14,11 +16,8 @@ def get_functions_with_custom_should_run():
 
 
 def test_get_functions_with_custom_should_run():
-    expected = {
-        "number_of_isolates",
-        "all_pairs_shortest_path_length",
-    }
-    assert set(get_functions_with_custom_should_run()) == expected
+    with joblib.parallel_config(n_jobs=4):
+        assert set(get_functions_with_custom_should_run()) == set(ALGORITHMS)
 
 
 @pytest.mark.parametrize("func", get_functions_with_custom_should_run())

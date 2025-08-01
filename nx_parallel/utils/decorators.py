@@ -3,6 +3,7 @@ from dataclasses import asdict
 from functools import wraps
 import networkx as nx
 from joblib import parallel_config
+from nx_parallel.utils.should_run_policies import default_should_run
 
 
 __all__ = ["_configure_if_nx_active"]
@@ -29,7 +30,7 @@ def _configure_if_nx_active(should_run=None):
                     return func(*args, **kwargs)
             return func(*args, **kwargs)
 
-        wrapper.should_run = True
+        wrapper.should_run = default_should_run
         if should_run:
             wrapper.should_run = should_run
 
