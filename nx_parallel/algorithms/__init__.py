@@ -3,6 +3,7 @@ from .bipartite import *
 from .centrality import *
 from .shortest_paths import *
 from .approximation import *
+from .assortativity import *
 from .connectivity import *
 
 # modules
