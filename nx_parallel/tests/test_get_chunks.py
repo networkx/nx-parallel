@@ -72,7 +72,7 @@ def test_get_chunks(func):
         G = nx.fast_gnp_random_graph(40, 0.6, seed=42)
         H = nxp.ParallelGraph(G)
         if func in requires_node_community:
-            nx.set_node_attributes(H, {i: i % 2 for i in H.nodes}, "community")
+            nx.set_node_attributes(G, {i: i % 2 for i in G.nodes}, "community")
             ebunch = [(0, 3)]
             c1 = getattr(nxp, func)(H, ebunch)
             c2 = getattr(nxp, func)(H, ebunch, get_chunks=random_chunking)
