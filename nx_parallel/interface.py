@@ -1,4 +1,3 @@
-from operator import attrgetter
 import networkx as nx
 from nx_parallel import algorithms
 
@@ -66,14 +65,6 @@ class ParallelGraph:
         return f"Parallel{self.graph_object}"
 
 
-def assign_algorithms(cls):
-    """Class decorator to assign algorithms to the class attributes."""
-    for attr in ALGORITHMS:
-        setattr(cls, attr, attrgetter(attr)(algorithms))
-    return cls
-
-
-@assign_algorithms
 class BackendInterface:
     """BackendInterface class for parallel algorithms."""
 
@@ -94,3 +85,7 @@ class BackendInterface:
         if isinstance(result, ParallelGraph):
             return result.graph_object
         return result
+
+
+for attr in ALGORITHMS:
+    setattr(BackendInterface, attr, getattr(algorithms, attr))
