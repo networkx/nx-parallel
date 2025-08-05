@@ -26,6 +26,9 @@ ALGORITHMS = [
     # Centrality
     "betweenness_centrality",
     "edge_betweenness_centrality",
+    # Dag
+    "colliders",
+    "v_structures",
     # Efficiency
     "local_efficiency",
     # Shortest Paths : generic
