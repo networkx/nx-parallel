@@ -1,4 +1,3 @@
-from operator import attrgetter
 import networkx as nx
 from nx_parallel import algorithms
 
@@ -89,4 +88,4 @@ class BackendInterface:
 
 
 for attr in ALGORITHMS:
-    setattr(BackendInterface, attr, attrgetter(attr)(algorithms))
+    setattr(BackendInterface, attr, getattr(algorithms, attr))
