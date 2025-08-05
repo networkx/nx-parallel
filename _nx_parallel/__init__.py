@@ -97,6 +97,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "colliders": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L33",
+                "additional_docs": "Yields 3-node tuples that represent the colliders in `G` in parallel.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
+                },
+            },
             "edge_betweenness_centrality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L103",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing edge betweenness centrality for each chunk concurrently.",
@@ -151,6 +158,13 @@ def get_info():
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and then checking whether each node is reachable from each other node in parallel.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
+            "v_structures": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L12",
+                "additional_docs": "Yields 3-node tuples that represent the v-structures in `G` in parallel.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
                 },
             },
         },
