@@ -14,10 +14,10 @@ heatmapDF = pd.DataFrame()
 # for bipartite graphs
 # n = [50, 100, 200, 400]
 # m = [25, 50, 100, 200]
-number_of_nodes_list = [50, 100, 200, 400]
+number_of_nodes_list = [100, 200, 400, 800]
 weighted = False
 pList = [1, 0.8, 0.6, 0.4, 0.2]
-currFun = nx.dag.v_structures
+currFun = nx.dag.colliders
 
 for p in pList:
     for num in range(len(number_of_nodes_list)):
@@ -45,7 +45,7 @@ for p in pList:
                 G[u][v]["weight"] = random.random()
 
         H = nxp.ParallelGraph(G)
-
+        print(number_of_nodes_list[num])
         # time both versions and update heatmapDF
         t1 = time.time()
         c1 = currFun(H)
@@ -53,19 +53,17 @@ for p in pList:
             d1 = list(c1)
         t2 = time.time()
         parallelTime = t2 - t1
+        print(parallelTime)
         t1 = time.time()
         c2 = currFun(G)
         if isinstance(c2, types.GeneratorType):
             d2 = list(c2)
         t2 = time.time()
         stdTime = t2 - t1
+        print(stdTime)
         timesFaster = stdTime / parallelTime
         heatmapDF.at[number_of_nodes_list[num], p] = timesFaster
         print("Finished " + str(currFun))
-        print(p, number_of_nodes_list[num])
-        print(timesFaster, stdTime, parallelTime)
-        assert d1 == d2
-        print()
 
 """
 # Code to create for row of heatmap specifically for tournaments
