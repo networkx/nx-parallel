@@ -15,6 +15,7 @@ __all__ = [
     "square_clustering",
     "triangles",
     "clustering",
+    "average_clustering",
 ]
 
 
@@ -209,3 +210,31 @@ def clustering(G, nodes=None, weight=None, get_chunks="chunks"):
     if nodes in G:
         return clusterc[nodes]
     return clusterc
+
+
+@nxp._configure_if_nx_active()
+def average_clustering(
+    G, nodes=None, weight=None, count_zeros=True, get_chunks="chunks"
+):
+    """The nodes are chunked into `node_chunks` and then the average clustering
+    coefficient for all `node_chunks` is computed in parallel over `n_jobs`
+    number of CPU cores.
+
+    networkx.average_clustering: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.average_clustering.html
+
+    Parameters
+    ----------
+    get_chunks : str, function (default = "chunks")
+        A function that takes in a list of all the nodes (or nbunch) as input and
+        returns an iterable `node_chunks`. The default chunking is done by slicing the
+        `nodes` into `n_jobs` number of chunks.
+    """
+
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
+    c = clustering(G, nodes, weight=weight).values()
+    if not count_zeros:
+        c = [v for v in c if abs(v) > 0]
+
+    return sum(c) / len(c)
