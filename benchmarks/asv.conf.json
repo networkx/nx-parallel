@@ -3,7 +3,7 @@
     "project": "nx-parallel",
     "project_url": "https://github.com/networkx/nx-parallel",
     "repo": "..",
-    "branches": ["main"],
+    "branches": ["dag_algos"],
     "build_command": [
         "python -m pip install build",
         "python -m build --wheel -o {build_cache_dir} {build_dir}"

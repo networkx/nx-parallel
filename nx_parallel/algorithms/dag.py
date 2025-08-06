@@ -1,6 +1,7 @@
-from itertools import combinations, chain
+from itertools import combinations
 from joblib import Parallel, delayed
 import nx_parallel as nxp
+
 
 __all__ = [
     "v_structures",
@@ -12,6 +13,8 @@ __all__ = [
 def v_structures(G, get_chunks="chunks"):
     """Yields 3-node tuples that represent the v-structures in `G` in parallel.
 
+    networkx.v_structures: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.dag.v_structures.html
+
     Parameters
     ----------
     get_chunks : str, function (default = "chunks")
@@ -19,12 +22,10 @@ def v_structures(G, get_chunks="chunks"):
         returns an iterable `node_chunks`. The default chunking is done
         by slicing the nodes into `n_jobs` number of chunks.
     """
-    colliders_gen = colliders(G, get_chunks=get_chunks)
-
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    for p1, c, p2 in colliders_gen:
+    for p1, c, p2 in colliders(G, get_chunks=get_chunks):
         if not (G.has_edge(p1, p2) or G.has_edge(p2, p1)):
             yield (p1, c, p2)
 
@@ -32,6 +33,8 @@ def v_structures(G, get_chunks="chunks"):
 @nxp._configure_if_nx_active()
 def colliders(G, get_chunks="chunks"):
     """Yields 3-node tuples that represent the colliders in G in parallel.
+
+    networkx.colliders: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.dag.colliders.html
 
     Parameters
     ----------
@@ -64,5 +67,6 @@ def colliders(G, get_chunks="chunks"):
         delayed(_process_chunk)(chunk) for chunk in node_chunks
     )
 
-    for collider in chain.from_iterable(collider_chunks):
-        yield collider
+    for chunk in collider_chunks:
+        for collider in chunk:
+            yield collider

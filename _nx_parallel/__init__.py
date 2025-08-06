@@ -119,7 +119,7 @@ def get_info():
                 },
             },
             "colliders": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L33",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L34",
                 "additional_docs": "Yields 3-node tuples that represent the colliders in G in parallel.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
@@ -224,7 +224,7 @@ def get_info():
                 },
             },
             "v_structures": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L12",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L13",
                 "additional_docs": "Yields 3-node tuples that represent the v-structures in `G` in parallel.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
