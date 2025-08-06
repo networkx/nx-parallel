@@ -83,6 +83,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in `list(iter_func(nbunch, 2))` as input and returns an iterable `pairs_chunks`, here `iter_func` is `permutations` in case of directed graphs and `combinations` in case of undirected graphs. The default is to create chunks by slicing the list into `n_jobs` chunks, such that size of each chunk is atmost 10, and at least 1."
                 },
             },
+            "average_clustering": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L157",
+                "additional_docs": "The nodes are chunked into `node_chunks` and then the average clustering coefficient for all `node_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "betweenness_centrality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L20",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing betweenness centrality for each chunk concurrently.",
@@ -98,7 +105,7 @@ def get_info():
                 },
             },
             "clustering": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L84",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L85",
                 "additional_docs": "The nodes are chunked into `node_chunks` and then the clustering coefficient for all `node_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
@@ -147,7 +154,7 @@ def get_info():
                 },
             },
             "square_clustering": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L19",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L20",
                 "additional_docs": "The nodes are chunked into `node_chunks` and then the square clustering coefficient for all `node_chunks` are computed in parallel over `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
