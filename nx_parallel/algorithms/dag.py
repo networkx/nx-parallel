@@ -13,7 +13,7 @@ __all__ = [
 def v_structures(G, get_chunks="chunks"):
     """Yields 3-node tuples that represent the v-structures in `G` in parallel.
 
-    networkx.v_structures: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.dag.v_structures.html
+    networkx.dag.v_structures: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.dag.v_structures.html
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def v_structures(G, get_chunks="chunks"):
 def colliders(G, get_chunks="chunks"):
     """Yields 3-node tuples that represent the colliders in G in parallel.
 
-    networkx.colliders: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.dag.colliders.html
+    networkx.dag.colliders: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.dag.colliders.html
 
     Parameters
     ----------

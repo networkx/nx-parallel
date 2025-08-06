@@ -16,7 +16,7 @@ class DAG(Benchmark):
         self.G = get_cached_gnp_random_graph(num_nodes, edge_prob, is_directed=True)
 
     def time_colliders(self, backend, num_nodes, edge_prob):
-        _ = nx.colliders(self.G, backend=backend)
+        _ = nx.dag.colliders(self.G, backend=backend)
 
     def time_v_structures(self, backend, num_nodes, edge_prob):
-        _ = nx.v_structures(self.G, backend=backend)
+        _ = nx.dag.v_structures(self.G, backend=backend)
