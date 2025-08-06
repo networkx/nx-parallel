@@ -11,7 +11,10 @@ __all__ = [
 
 @nxp._configure_if_nx_active()
 def v_structures(G, get_chunks="chunks"):
-    """Yields 3-node tuples that represent the v-structures in `G` in parallel.
+    """The parallel implementation first divides the nodes into chunks and then
+    creates a generator to lazily yield 3-node tuples that represent v_structures
+    for each `node_chunk`, and then employs joblib's `Parallel` function to
+    execute these computations in parallel across `n_jobs` number of CPU cores.
 
     networkx.dag.v_structures: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.dag.v_structures.html
 
@@ -32,7 +35,10 @@ def v_structures(G, get_chunks="chunks"):
 
 @nxp._configure_if_nx_active()
 def colliders(G, get_chunks="chunks"):
-    """Yields 3-node tuples that represent the colliders in G in parallel.
+    """The parallel implementation first divides the nodes into chunks and then
+    creates a generator to lazily yield 3-node tuples that represent colliders
+    for each `node_chunk`, and then employs joblib's `Parallel` function to execute
+    these computations in parallel across `n_jobs` number of CPU cores.
 
     networkx.dag.colliders: https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.dag.colliders.html
 
@@ -63,10 +69,8 @@ def colliders(G, get_chunks="chunks"):
     else:
         node_chunks = get_chunks(nodes)
 
-    collider_chunks = Parallel()(
-        delayed(_process_chunk)(chunk) for chunk in node_chunks
-    )
+    collider_chunks = (delayed(_process_chunk)(chunk) for chunk in node_chunks)
 
-    for chunk in collider_chunks:
+    for chunk in Parallel()(collider_chunks):
         for collider in chunk:
             yield collider
