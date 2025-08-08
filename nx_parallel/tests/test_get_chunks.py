@@ -91,7 +91,7 @@ def test_get_chunks(func):
     if isinstance(c1, types.GeneratorType):
         c1_list, c2_list = list(c1), list(c2)
         try:
-            c1, c2 = dict(c1), dict(c2)
+            c1, c2 = dict(c1_list), dict(c2_list)
         except ValueError:
             assert sorted(c1_list) == sorted(c2_list)
         else:
