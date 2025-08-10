@@ -3,6 +3,7 @@ from collections import Counter
 from joblib import Parallel, delayed
 from networkx.algorithms.cluster import _triangles_and_degree_iter
 import nx_parallel as nxp
+import networkx as nx
 from networkx.algorithms.cluster import (
     _directed_weighted_triangles_and_degree_iter,
     _directed_triangles_and_degree_iter,
@@ -230,10 +231,30 @@ def average_clustering(
         `nodes` into `n_jobs` number of chunks.
     """
 
+    def _compute_chunk(chunk):
+        return nx.clustering(G, chunk, weight=weight)
+
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    c = clustering(G, nodes, weight=weight).values()
+    n_jobs = nxp.get_n_jobs()
+
+    if nodes is None:
+        nodes = list(G)
+
+    if get_chunks == "chunks":
+        node_chunks = nxp.chunks(nodes, n_jobs)
+    else:
+        node_chunks = get_chunks(nodes)
+
+    results = Parallel()(delayed(_compute_chunk)(chunk) for chunk in node_chunks)
+
+    clustering = {}
+    for result in results:
+        clustering.update(result)
+
+    c = clustering.values()
+
     if not count_zeros:
         c = [v for v in c if abs(v) > 0]
 
