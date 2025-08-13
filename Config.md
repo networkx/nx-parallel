@@ -1,7 +1,8 @@
 # Configuring nx-parallel
 
 `nx-parallel` provides flexible parallel computing capabilities, allowing you to control settings like `backend`, `n_jobs`, `verbose`, and more. This can be done through two configuration systems: `joblib` and `NetworkX`. This guide explains how to configure `nx-parallel` using both systems.
-Note that both NetworkX’s and Joblib’s config systems offer the same parameters and behave similarly; which one to use depends on your use case. See Section 3 below for more.
+Note that both NetworkX’s and Joblib’s config systems offer the same parameters and behave similarly; which one to use depends on your use case. See [Section 3](#3-comparing-networkx-and-joblib-configuration-systems) below for more.
+
 ## 1. Setting configs using NetworkX (`nx.config`)
 
 By default, `nx-parallel` uses NetworkX's configuration system. Please refer to the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more on the configuration system.
@@ -70,12 +71,12 @@ Another way to configure `nx-parallel` is by using [`joblib.parallel_config`](ht
 
 ### 2.1 Usage
 
-To use `joblib.parallel_config` with `nx-parallel`, you need to disable NetworkX's config by setting `nx.config.backends.parallel.active = False`. There are two ways to do this: globally, or temporarily using a context manager. This ensures that Joblib’s settings take effect instead. 
+To use `joblib.parallel_config` with `nx-parallel`, you need to disable NetworkX's config by setting `nx.config.backends.parallel.active = False`. There are two ways to do this: globally, or temporarily using a context manager. 
 
 ```py
 from joblib import parallel_config
 
-# Disabling NetworkX configs
+# Disabling NetworkX configs globally
 nx.config.backends.parallel.active = False
 
 # Setting global configs for Joblib

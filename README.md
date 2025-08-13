@@ -89,10 +89,10 @@ from timeit import timeit
 G = nx.erdos_renyi_graph(1000, 0.01)
 H = nxp.ParallelGraph(G)
 
-# by default, nx-parallel uses all available cores
 sequential = timeit(lambda: nx.betweenness_centrality(G), number=1)
 print(f"Sequential: {sequential:.2f}s")
 
+# by default, nx-parallel uses all available cores
 parallel = timeit(lambda: nx.betweenness_centrality(H), number=1)
 print(f"Parallel:   {parallel:.2f}s")
 ```
@@ -108,6 +108,7 @@ Parallel:   0.62s
 You can modify the default NetworkX configurations to control how parallel execution behaves.
 
 Example :
+
 ```py
 import networkx as nx
 import nx_parallel as nxp
