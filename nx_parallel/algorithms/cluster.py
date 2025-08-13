@@ -108,7 +108,7 @@ def triangles(G, nodes=None, get_chunks="chunks"):
             return next(_triangles_and_degree_iter(G, nodes))[2] // 2
         return {v: t // 2 for v, d, t, _ in _triangles_and_degree_iter(G, nodes)}
     else:
-        nodes = list(G.nodes())
+        nodes = list(G)
 
     later_nbrs = {}
     for node, neighbors in G.adjacency():
