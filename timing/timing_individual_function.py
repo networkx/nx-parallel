@@ -16,6 +16,7 @@ import types
 seed = random.Random(42)
 tournament_funcs = ["is_reachable", "tournament_is_strongly_connected"]
 bipartite_funcs = ["node_redundancy"]
+not_implemented_undirected = []
 
 
 def time_individual_function(
@@ -63,7 +64,12 @@ def time_individual_function(
                             neighbors.add(new_neighbor)
                 else:
                     print(f"Number of Nodes: {num}")
-                    G = nx.fast_gnp_random_graph(num, p, directed=True, seed=seed)
+                    G = nx.fast_gnp_random_graph(
+                        num,
+                        p,
+                        directed=targetFunc.__name__ in not_implemented_undirected,
+                        seed=seed,
+                    )
                 print(f"Edge Probability: {p}")
 
                 # for weighted graphs
@@ -117,7 +123,6 @@ def plot_timing_heatmap(targetFunc):
         data=speedup_df.T,
         annot=heatmap_annot.T,
         annot_kws={"size": 12, "weight": "bold"},
-        fmt="",
         cmap="Greens",
         cbar=True,
     )
