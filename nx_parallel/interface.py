@@ -14,6 +14,15 @@ ALGORITHMS = [
     # Tournament
     "is_reachable",
     "tournament_is_strongly_connected",
+    # Link Prediction
+    "resource_allocation_index",
+    "jaccard_coefficient",
+    "adamic_adar_index",
+    "preferential_attachment",
+    "common_neighbor_centrality",
+    "cn_soundarajan_hopcroft",
+    "ra_index_soundarajan_hopcroft",
+    "within_inter_cluster",
     # Centrality
     "betweenness_centrality",
     "edge_betweenness_centrality",
