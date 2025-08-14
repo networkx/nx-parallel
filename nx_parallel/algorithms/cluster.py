@@ -10,7 +10,6 @@ from networkx.algorithms.cluster import (
     _weighted_triangles_and_degree_iter,
     _triangles_and_degree_iter,
 )
-from collections.abc import Iterable
 
 __all__ = [
     "square_clustering",
@@ -190,12 +189,7 @@ def clustering(G, nodes=None, weight=None, get_chunks="chunks"):
     
     n_jobs = nxp.get_n_jobs()
 
-    if nodes is None:
-        nodes_to_chunk = list(G)
-    elif isinstance(nodes, str) or not isinstance(nodes, Iterable):
-        nodes_to_chunk = [nodes]
-    else:
-        nodes_to_chunk = list(nodes)
+    nodes_to_chunk = list(G.nbunch_iter(nodes))
 
     if get_chunks == "chunks":
         node_chunks = nxp.chunks(nodes_to_chunk, n_jobs)
