@@ -43,8 +43,8 @@ def time_individual_function(
             for ind, num in enumerate(number_of_nodes):
                 # for bipartite graphs
                 if targetFunc.__name__ in bipartite_funcs:
-                    n = [200, 400, 800, 1600]
-                    m = [100, 200, 400, 800]
+                    n = [50, 100, 200, 400]
+                    m = [25, 50, 100, 200]
                     print(f"Number of Nodes: {n[ind] + m[ind]}")
                     G = nx.bipartite.random_graph(
                         n[ind], m[ind], p, directed=True, seed=seed
@@ -105,7 +105,7 @@ def plot_timing_heatmap(targetFunc):
     number_of_nodes = (
         [200, 400, 800, 1600]
         if targetFunc.__name__ not in bipartite_funcs
-        else [300, 600, 1200, 2400]
+        else [75, 150, 300, 600]
     )
     edge_prob = (
         [1, 0.8, 0.6, 0.4, 0.2] if targetFunc.__name__ not in tournament_funcs else [1]
@@ -124,6 +124,7 @@ def plot_timing_heatmap(targetFunc):
         annot=heatmap_annot.T,
         annot_kws={"size": 12, "weight": "bold"},
         cmap="Greens",
+        fmt="",
         cbar=True,
     )
 
