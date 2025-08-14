@@ -49,10 +49,7 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     # ignore self-loops as per networkx 3.5
     G_nbrs_as_sets = {node: set(G[node]) - {node} for node in G}
 
-    if nodes is None:
-        node_iter = list(G)
-    else:
-        node_iter = list(G.nbunch_iter(nodes))
+    node_iter = list(G.nbunch_iter(nodes))
 
     n_jobs = nxp.get_n_jobs()
 
