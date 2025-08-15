@@ -9,16 +9,14 @@ from nx_parallel.interface import ALGORITHMS
 from nx_parallel.utils import should_run_if_large, should_skip_parallel
 
 
-def get_functions_with_custom_should_run():
-    """Yields names of functions with a custom `should_run`"""
-
+def get_functions_with_should_run():
     for name, obj in inspect.getmembers(algorithms, inspect.isfunction):
         if callable(obj.should_run):
             yield name
 
 
 def test_get_functions_with_custom_should_run():
-    assert set(get_functions_with_custom_should_run()) == set(ALGORITHMS)
+    assert set(get_functions_with_should_run()) == set(ALGORITHMS)
 
 
 def test_default_should_run():
@@ -57,7 +55,7 @@ def test_should_run_if_large():
     assert dummy_if_large.should_run(largeG)
 
 
-@pytest.mark.parametrize("func", get_functions_with_custom_should_run())
+@pytest.mark.parametrize("func", get_functions_with_should_run())
 def test_should_run(func):
     tournament_funcs = [
         "tournament_is_strongly_connected",
