@@ -20,8 +20,10 @@ edge_prob = [0.8, 0.6, 0.4, 0.2]
 
 
 @lru_cache(typed=True)
-def get_cached_gnp_random_graph(num_nodes, edge_prob, is_weighted=False):
-    G = nx.fast_gnp_random_graph(num_nodes, edge_prob, seed=42, directed=False)
+def get_cached_gnp_random_graph(
+    num_nodes, edge_prob, is_weighted=False, is_directed=False
+):
+    G = nx.fast_gnp_random_graph(num_nodes, edge_prob, seed=42, directed=is_directed)
     if is_weighted:
         random.seed(42)
         for u, v in G.edges():
