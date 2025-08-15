@@ -107,4 +107,4 @@ print(currFun.__name__)
 
 # displaying the plotted heatmap
 plt.tight_layout()
-plt.savefig("timing/" + "heatmap_" + currFun.__name__ + "_timing.png")
+plt.savefig("timing/old_heatmaps/" + "heatmap_" + currFun.__name__ + "_timing.png")
