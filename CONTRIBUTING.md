@@ -123,7 +123,7 @@ The default chunking in nx-parallel is done by slicing the list of nodes (or edg
   - [ ] update the `__init__.py` files accordingly
   - [ ] docstring following the above format
   - [ ] add additional test, if needed. The smoke tests for the additional parameter `get_chunks` are done [here](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/tests/test_get_chunks.py) together for all the algorithms.
-  - [ ] run the [timing script](./timing/timing_individual_function.py) to get the performance heatmap (ref. [Issue#51](https://github.com/networkx/nx-parallel/issues/51))
+  - [ ] run the [timing script](./timing/new_heatmaps/timing_individual_function.py) to get the performance heatmap.
   - [ ] add benchmark(s) for the new function(ref. the README in `benchmarks` folder for more details)
 
 Happy contributing! 🎉

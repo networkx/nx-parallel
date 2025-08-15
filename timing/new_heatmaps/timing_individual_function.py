@@ -157,7 +157,9 @@ def plot_timing_heatmap(targetFunc):
     )
 
     plt.tight_layout(rect=[0, 0, 1, 0.94])
-    plt.savefig("timing/" + "heatmap_" + targetFunc.__name__ + "_timing.png")
+    plt.savefig(
+        "timing/new_heatmaps/" + "heatmap_" + targetFunc.__name__ + "_timing.png"
+    )
 
 
 # plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
