@@ -43,7 +43,7 @@ for p in pList:
                 G[u][v]["weight"] = random.random()
 
         H = nxp.ParallelGraph(G)
-        print(number_of_nodes_list[num])
+
         # time both versions and update heatmapDF
         t1 = time.time()
         c1 = currFun(H)
@@ -51,14 +51,12 @@ for p in pList:
             d = dict(c1)
         t2 = time.time()
         parallelTime = t2 - t1
-        print(parallelTime)
         t1 = time.time()
         c2 = currFun(G)
         if isinstance(c2, types.GeneratorType):
             d = dict(c2)
         t2 = time.time()
         stdTime = t2 - t1
-        print(stdTime)
         timesFaster = stdTime / parallelTime
         heatmapDF.at[number_of_nodes_list[num], p] = timesFaster
         print("Finished " + str(currFun))

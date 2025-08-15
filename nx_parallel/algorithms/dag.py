@@ -1,4 +1,4 @@
-from itertools import combinations, chain
+from itertools import combinations
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 
