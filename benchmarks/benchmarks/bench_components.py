@@ -9,7 +9,7 @@ import networkx as nx
 
 
 class Attracting(Benchmark):
-    params = [(backends), (num_nodes), (edge_prob)]
+    params = [backends, num_nodes, edge_prob]
     param_names = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
@@ -20,7 +20,7 @@ class Attracting(Benchmark):
 
 
 class Connected(Benchmark):
-    params = [(backends), (num_nodes), (edge_prob)]
+    params = [backends, num_nodes, edge_prob]
     param_names = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
@@ -31,7 +31,7 @@ class Connected(Benchmark):
 
 
 class StronglyConnected(Benchmark):
-    params = [(backends), (num_nodes), (edge_prob)]
+    params = [backends, num_nodes, edge_prob]
     param_names = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
@@ -42,7 +42,7 @@ class StronglyConnected(Benchmark):
 
 
 class WeaklyConnected(Benchmark):
-    params = [(backends), (num_nodes), (edge_prob)]
+    params = [backends, num_nodes, edge_prob]
     param_names = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):

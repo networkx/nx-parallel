@@ -26,11 +26,11 @@ def number_weakly_connected_components(G, get_chunks="chunks"):
 
     n_jobs = nxp.get_n_jobs()
 
-    weakly_connected_comp_list = list(weakly_connected_components(G))
+    wcc = list(weakly_connected_components(G))
     if get_chunks == "chunks":
-        component_chunks = nxp.chunks(weakly_connected_comp_list, n_jobs)
+        component_chunks = nxp.chunks(wcc, n_jobs)
     else:
-        component_chunks = get_chunks(weakly_connected_comp_list)
+        component_chunks = get_chunks(wcc)
 
     results = Parallel()(delayed(len)(chunk) for chunk in component_chunks)
     return sum(results)

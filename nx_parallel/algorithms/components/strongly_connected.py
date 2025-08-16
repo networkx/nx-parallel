@@ -26,11 +26,11 @@ def number_strongly_connected_components(G, get_chunks="chunks"):
 
     n_jobs = nxp.get_n_jobs()
 
-    strongly_connected_comp_list = list(strongly_connected_components(G))
+    scc = list(strongly_connected_components(G))
     if get_chunks == "chunks":
-        component_chunks = nxp.chunks(strongly_connected_comp_list, n_jobs)
+        component_chunks = nxp.chunks(scc, n_jobs)
     else:
-        component_chunks = get_chunks(strongly_connected_comp_list)
+        component_chunks = get_chunks(scc)
 
     results = Parallel()(delayed(len)(chunk) for chunk in component_chunks)
     return sum(results)
