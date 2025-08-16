@@ -133,7 +133,7 @@ def get_info():
                 },
             },
             "number_of_isolates": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L10",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L9",
                 "additional_docs": "The parallel computation is implemented by dividing the list of isolated nodes into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the isolated nodes as input and returns an iterable `isolate_chunks`. The default chunking is done by slicing the `isolates` into `n_jobs` number of chunks."
