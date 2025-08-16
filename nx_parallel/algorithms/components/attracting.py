@@ -25,11 +25,11 @@ def number_attracting_components(G, get_chunks="chunks"):
 
     n_jobs = nxp.get_n_jobs()
 
-    attracting_comp_list = list(attracting_components(G))
+    ac = list(attracting_components(G))
     if get_chunks == "chunks":
-        component_chunks = nxp.chunks(attracting_comp_list, n_jobs)
+        component_chunks = nxp.chunks(ac, n_jobs)
     else:
-        component_chunks = get_chunks(attracting_comp_list)
+        component_chunks = get_chunks(ac)
 
     results = Parallel()(delayed(len)(chunk) for chunk in component_chunks)
     return sum(results)
