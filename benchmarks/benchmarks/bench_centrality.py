@@ -26,7 +26,7 @@ class Betweenness(Benchmark):
 
 
 class Harmonic(Benchmark):
-    params = [(backends), (num_nodes), (edge_prob)]
+    params = [backends, num_nodes, edge_prob]
     param_names = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
