@@ -6,7 +6,7 @@ import os
 import joblib
 import networkx as nx
 from nx_parallel.interface import ALGORITHMS
-from nx_parallel.utils import should_run_if_large, should_skip_parallel
+from nx_parallel import should_run_if_large, should_skip_parallel
 
 
 def get_functions_with_should_run():

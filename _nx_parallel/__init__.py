@@ -63,14 +63,14 @@ def get_info():
                 },
             },
             "all_pairs_shortest_path": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L63",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L62",
                 "additional_docs": "The parallel implementation first divides the nodes into chunks and then creates a generator to lazily compute shortest paths for each `node_chunk`, and then employs joblib's `Parallel` function to execute these computations in parallel across `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in an iterable of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `G.nodes` into `n_jobs` number of chunks."
                 },
             },
             "all_pairs_shortest_path_length": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L20",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L19",
                 "additional_docs": "The parallel implementation first divides the nodes into chunks and then creates a generator to lazily compute shortest paths lengths for each node in `node_chunk`, and then employs joblib's `Parallel` function to execute these computations in parallel across `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in an iterable of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `G.nodes` into `n_jobs` number of chunks."
