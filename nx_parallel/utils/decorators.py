@@ -3,7 +3,7 @@ from dataclasses import asdict
 from functools import wraps
 import networkx as nx
 from joblib import parallel_config
-from nx_parallel import default_should_run
+from nx_parallel.utils.should_run_policies import default_should_run
 
 
 __all__ = ["_configure_if_nx_active"]
