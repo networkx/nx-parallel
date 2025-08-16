@@ -17,6 +17,7 @@ ALGORITHMS = [
     # Centrality
     "betweenness_centrality",
     "edge_betweenness_centrality",
+    "harmonic_centrality",
     # Efficiency
     "local_efficiency",
     # Shortest Paths : generic
