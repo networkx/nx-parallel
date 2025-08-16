@@ -1,16 +1,14 @@
-import inspect
 import nx_parallel as nxp
-from nx_parallel import algorithms
+from nx_parallel.interface import ALGORITHMS
+import networkx as nx
+import inspect
 import pytest
 import os
 import joblib
-import networkx as nx
-from nx_parallel.interface import ALGORITHMS
-from nx_parallel import should_run_if_large, should_skip_parallel
 
 
 def get_functions_with_should_run():
-    for name, obj in inspect.getmembers(algorithms, inspect.isfunction):
+    for name, obj in inspect.getmembers(nxp.algorithms, inspect.isfunction):
         if callable(obj.should_run):
             yield name
 
@@ -36,7 +34,7 @@ def test_default_should_run():
 
 
 def test_skip_parallel_backend():
-    @nxp._configure_if_nx_active(should_run=should_skip_parallel)
+    @nxp._configure_if_nx_active(should_run=nxp.should_skip_parallel)
     def dummy_skip_parallel():
         pass
 
@@ -44,7 +42,7 @@ def test_skip_parallel_backend():
 
 
 def test_should_run_if_large():
-    @nxp._configure_if_nx_active(should_run=should_run_if_large)
+    @nxp._configure_if_nx_active(should_run=nxp.should_run_if_large)
     def dummy_if_large(G):
         pass
 
@@ -55,18 +53,18 @@ def test_should_run_if_large():
     assert dummy_if_large.should_run(largeG)
 
 
-@pytest.mark.parametrize("func", get_functions_with_should_run())
-def test_should_run(func):
+@pytest.mark.parametrize("func_name", get_functions_with_should_run())
+def test_should_run(func_name):
     tournament_funcs = [
         "tournament_is_strongly_connected",
     ]
 
-    if func in tournament_funcs:
+    if func_name in tournament_funcs:
         G = nx.tournament.random_tournament(15, seed=42)
     else:
         G = nx.fast_gnp_random_graph(40, 0.6, seed=42)
     H = nxp.ParallelGraph(G)
-    func = getattr(nxp, func)
+    func = getattr(nxp, func_name)
 
     result = func.should_run(H)
     if not isinstance(result, (bool, str)):
