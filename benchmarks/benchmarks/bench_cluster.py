@@ -9,9 +9,11 @@ import networkx as nx
 
 
 class Cluster(Benchmark):
-    params = [(backends), (num_nodes), (edge_prob)]
+    params = [backends, num_nodes, edge_prob]
     param_names = ["backend", "num_nodes", "edge_prob"]
 
+    def setup(self, backend, num_nodes, edge_prob):
+        self.G = get_cached_gnp_random_graph(num_nodes, edge_prob)
+
     def time_square_clustering(self, backend, num_nodes, edge_prob):
-        G = get_cached_gnp_random_graph(num_nodes, edge_prob)
-        _ = nx.square_clustering(G, backend=backend)
+        _ = nx.square_clustering(self.G, backend=backend)
