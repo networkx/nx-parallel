@@ -19,4 +19,4 @@ class Connectivity(Benchmark):
             self.G = nxp.ParallelGraph(self.G)
 
     def time_all_pairs_node_connectivity(self, backend, num_nodes, edge_prob):
-        _ = nx.algorithms.connectivity.connectivity.all_pairs_node_connectivity(self.G)
+        _ = nx.all_pairs_node_connectivity(self.G)

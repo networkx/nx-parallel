@@ -21,4 +21,4 @@ class Connectivity(Benchmark):
     def time_approximate_all_pairs_node_connectivity(
         self, backend, num_nodes, edge_prob
     ):
-        _ = nx.algorithms.approximation.connectivity.all_pairs_node_connectivity(self.G)
+        _ = nx.approximation.all_pairs_node_connectivity(self.G)
