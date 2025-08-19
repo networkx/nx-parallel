@@ -15,7 +15,7 @@ __all__ = [
 ]
 
 
-@nxp._configure_if_nx_active()
+@nxp._configure_if_nx_active(should_run=nxp.should_skip_parallel)
 def all_pairs_shortest_path_length(G, cutoff=None, get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily compute shortest paths lengths for each node in
