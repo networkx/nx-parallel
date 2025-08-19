@@ -6,7 +6,7 @@ from joblib import Parallel, delayed
 __all__ = ["average_neighbor_degree"]
 
 
-@nxp._configure_if_nx_active()
+@nxp._configure_if_nx_active(nxp.should_skip_parallel)
 def average_neighbor_degree(
     G, source="out", target="out", nodes=None, weight=None, get_chunks="chunks"
 ):
