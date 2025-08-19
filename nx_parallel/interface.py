@@ -39,6 +39,7 @@ ALGORITHMS = [
     "johnson",
     # Clustering
     "square_clustering",
+    "triangles",
     # Shortest Paths : unweighted graphs
     "all_pairs_shortest_path",
     "all_pairs_shortest_path_length",
@@ -94,6 +95,30 @@ class BackendInterface:
         if isinstance(result, ParallelGraph):
             return result.graph_object
         return result
+
+    @classmethod
+    def should_run(cls, name, args, kwargs):
+        """Determine whether this backend should run the specified algorithm
+        with the given arguments.
+
+        Parameters
+        ----------
+        cls : type
+            `BackendInterface` class
+        name : str
+            Name of the target algorithm
+        args : tuple
+            Positional arguments passed to the algorithm's `should_run`.
+        kwargs : dict
+            Keyword arguments passed to the algorithm's `should_run`.
+
+        Returns
+        -------
+        bool or str
+            If the algorithm should run, returns True.
+            Otherwise, returns a string explaining why parallel execution is skipped.
+        """
+        return getattr(cls, name).should_run(*args, **kwargs)
 
 
 for attr in ALGORITHMS:
