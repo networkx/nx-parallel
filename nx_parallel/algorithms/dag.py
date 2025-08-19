@@ -9,7 +9,7 @@ __all__ = [
 ]
 
 
-@nxp._configure_if_nx_active()
+@nxp._configure_if_nx_active(nxp.should_skip_parallel)
 def v_structures(G, get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily yield 3-node tuples that represent v_structures
@@ -33,7 +33,7 @@ def v_structures(G, get_chunks="chunks"):
             yield (p1, c, p2)
 
 
-@nxp._configure_if_nx_active()
+@nxp._configure_if_nx_active(nxp.should_skip_parallel)
 def colliders(G, get_chunks="chunks"):
     """The parallel implementation first divides the nodes into chunks and then
     creates a generator to lazily yield 3-node tuples that represent colliders
