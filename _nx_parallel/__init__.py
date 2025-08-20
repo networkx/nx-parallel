@@ -181,6 +181,20 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the isolated nodes as input and returns an iterable `isolate_chunks`. The default chunking is done by slicing the `isolates` into `n_jobs` number of chunks."
                 },
             },
+            "number_strongly_connected_components": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/components/strongly_connected.py#L9",
+                "additional_docs": "The parallel computation is implemented by dividing the list of strongly connected components into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of strongly connected components as input and returns an iterable `component_chunks`. The default chunking is done by slicing the list of strongly connected components into `n_jobs` number of chunks."
+                },
+            },
+            "number_weakly_connected_components": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/components/weakly_connected.py#L9",
+                "additional_docs": "The parallel computation is implemented by dividing the list of weakly connected components into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of weakly connected components as input and returns an iterable `component_chunks`. The default chunking is done by slicing the list of weakly connected components into `n_jobs` number of chunks."
+                },
+            },
             "preferential_attachment": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L133",
                 "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the preferential attachment for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
@@ -200,20 +214,6 @@ def get_info():
                 "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the resource allocation index for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
-                },
-            },
-            "number_strongly_connected_components": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/components/strongly_connected.py#L9",
-                "additional_docs": "The parallel computation is implemented by dividing the list of strongly connected components into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
-                "additional_parameters": {
-                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of strongly connected components as input and returns an iterable `component_chunks`. The default chunking is done by slicing the list of strongly connected components into `n_jobs` number of chunks."
-                },
-            },
-            "number_weakly_connected_components": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/components/weakly_connected.py#L9",
-                "additional_docs": "The parallel computation is implemented by dividing the list of weakly connected components into chunks and then finding the length of each chunk in parallel and then adding all the lengths at the end.",
-                "additional_parameters": {
-                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of weakly connected components as input and returns an iterable `component_chunks`. The default chunking is done by slicing the list of weakly connected components into `n_jobs` number of chunks."
                 },
             },
             "square_clustering": {
