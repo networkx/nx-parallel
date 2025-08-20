@@ -19,9 +19,9 @@ def test_config_init():
     import networkx as nx
 
     assert dict(nx.config.backends.parallel) == {
-        "active": False,
+        "active": True,
         "backend": "loky",
-        "n_jobs": None,
+        "n_jobs": -1,
         "verbose": 0,
         "temp_folder": None,
         "max_nbytes": "1M",

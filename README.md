@@ -5,25 +5,25 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
 ## Algorithms in nx-parallel
 
 - [all_pairs_all_shortest_paths](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/generic.py#L11)
-- [all_pairs_bellman_ford_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L212)
-- [all_pairs_bellman_ford_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L168)
+- [all_pairs_bellman_ford_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L208)
+- [all_pairs_bellman_ford_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L165)
 - [all_pairs_dijkstra](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L29)
-- [all_pairs_dijkstra_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L124)
-- [all_pairs_dijkstra_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L73)
+- [all_pairs_dijkstra_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L122)
+- [all_pairs_dijkstra_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L72)
 - [all_pairs_node_connectivity](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/connectivity/connectivity.py#L18)
-- [all_pairs_shortest_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L63)
+- [all_pairs_shortest_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L62)
 - [all_pairs_shortest_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/unweighted.py#L19)
-- [approximate_all_pairs_node_connectivity](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/approximation/connectivity.py#L13)
+- [approximate_all_pairs_node_connectivity](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/approximation/connectivity.py#L14)
 - [betweenness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L20)
 - [closeness_vitality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L10)
-- [edge_betweenness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L96)
+- [edge_betweenness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L103)
 - [is_reachable](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L13)
-- [johnson](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L256)
-- [local_efficiency](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L10)
+- [johnson](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L251)
+- [local_efficiency](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L11)
 - [node_redundancy](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/bipartite/redundancy.py#L12)
 - [number_of_isolates](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L9)
 - [square_clustering](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L11)
-- [tournament_is_strongly_connected](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L59)
+- [tournament_is_strongly_connected](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L58)
 
 <details>
 <summary>Script used to generate the above list</summary>
@@ -49,7 +49,7 @@ conda install nx-parallel
 
 For more, see [INSTALL.md](./INSTALL.md).
 
-## Backend usage
+## Usage
 
 You can run your networkx code with nx-parallel backend by:
 
@@ -57,17 +57,11 @@ You can run your networkx code with nx-parallel backend by:
 export NETWORKX_AUTOMATIC_BACKENDS="parallel" && python nx_code.py
 ```
 
-Note that for all functions inside `nx_code.py` that do not have an nx-parallel implementation their original networkx implementation will be executed. You can also use the nx-parallel backend in your code for only some specific function calls in the following ways:
+Note that for all functions inside `nx_code.py` that do not have an nx-parallel implementation, their original networkx implementation will be executed. You can also use the nx-parallel backend in your code for only some specific function calls in the following ways:
 
 ```py
 import networkx as nx
 import nx_parallel as nxp
-
-# enabling networkx's config for nx-parallel
-nx.config.backends.parallel.active = True
-
-# setting `n_jobs` (by default, `n_jobs=None`)
-nx.config.backends.parallel.n_jobs = 4
 
 G = nx.path_graph(4)
 H = nxp.ParallelGraph(G)
@@ -85,7 +79,66 @@ nxp.betweenness_centrality(G)
 nxp.betweenness_centrality(H)
 ```
 
-For more on how to play with configurations in nx-parallel refer the [Config.md](./Config.md)! Additionally, refer the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more on functionalities provided by networkx for backends and configs like logging, `backend_priority`, etc. Another way to configure nx-parallel is by using [`joblib.parallel_config`](https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html).
+You can also measure the performance gains of parallel algorithms by comparing them to their sequential counter parts. Following is a simple benchmarking setup:
+
+```py
+import networkx as nx
+import nx_parallel as nxp
+from timeit import timeit
+
+G = nx.erdos_renyi_graph(1000, 0.01)
+H = nxp.ParallelGraph(G)
+
+sequential = timeit(lambda: nx.betweenness_centrality(G), number=1)
+print(f"Sequential: {sequential:.2f}s")
+
+# by default, nx-parallel uses all available cores
+parallel = timeit(lambda: nx.betweenness_centrality(H), number=1)
+print(f"Parallel:   {parallel:.2f}s")
+```
+
+Output:
+```sh
+Sequential: 1.29s
+Parallel:   0.62s
+```
+
+### Setting Configurations
+
+You can modify the default NetworkX configurations to control how parallel execution behaves.
+
+Example :
+
+```py
+import networkx as nx
+import nx_parallel as nxp
+
+G = nx.path_graph(4)
+
+with nx.config.backends.parallel(n_jobs=2, verbose=10):
+    nx.betweenness_centrality(G, backend="parallel")
+```
+For more on how to play with configurations in nx-parallel, see [Config.md](./Config.md). Additionally, refer to the [NetworkX's official backend and config docs](https://networkx.org/documentation/latest/reference/backends.html) for more.
+
+You can also enable logging to observe which backend is used and how tasks are scheduled. Enable and configure logging in the following way:
+
+```py
+import logging
+
+nxl = logging.getLogger("networkx")
+nxl.addHandler(logging.StreamHandler())
+nxl.setLevel(logging.DEBUG)
+```
+
+With logging enabled, the example output is as follows:
+```sh
+Converting input graphs from 'networkx' backend to 'parallel' backend for call to 'betweenness_centrality'
+Using backend 'parallel' for call to 'betweenness_centrality' with arguments: (G=<nx_parallel.interface.ParallelGraph object at 0x1027cc5f0>, k=None, normalized=True, weight=None, endpoints=False, seed=<random.Random object at 0x1588a9e20>)
+[Parallel(n_jobs=2)]: Using backend LokyBackend with 2 concurrent workers.
+[Parallel(n_jobs=2)]: Batch computation too fast (0.16860580444335938s.) Setting batch_size=2.
+[Parallel(n_jobs=2)]: Done   2 out of   2 | elapsed:    0.2s finished
+```
+Refer to [Introspection and Logging section](https://networkx.org/documentation/stable/reference/backends.html#introspection-and-logging) in NetworkX's backend documentation for more.
 
 ### Notes
 
