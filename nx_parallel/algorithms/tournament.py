@@ -11,7 +11,7 @@ __all__ = [
 ]
 
 
-@nxp._configure_if_nx_active()
+@nxp._configure_if_nx_active(should_run=nxp.should_skip_parallel)
 def is_reachable(G, s, t, get_chunks="chunks"):
     """The function parallelizes the calculation of two
     neighborhoods of vertices in `G` and checks closure conditions for each
