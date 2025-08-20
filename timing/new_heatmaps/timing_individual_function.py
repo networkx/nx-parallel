@@ -16,6 +16,11 @@ import types
 seed = random.Random(42)
 tournament_funcs = ["is_reachable", "tournament_is_strongly_connected"]
 bipartite_funcs = ["node_redundancy"]
+community_funcs = [
+    "ra_index_soundarajan_hopcroft",
+    "cn_soundarajan_hopcroft",
+    "within_inter_cluster",
+]
 not_implemented_undirected = []
 
 
@@ -79,6 +84,9 @@ def time_individual_function(
                         G[u][v]["weight"] = random.random()
 
                 H = nxp.ParallelGraph(G)
+                if targetFunc.__name__ in community_funcs:
+                    for i, node in enumerate(G.nodes()):
+                        G.nodes[node]["community"] = i % 4
                 # time both versions and update speedup_df
                 parallelTime = measure_time(H)
                 print(parallelTime)
