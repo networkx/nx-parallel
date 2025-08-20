@@ -1,7 +1,6 @@
 from itertools import combinations, chain
 from collections import Counter
 from joblib import Parallel, delayed
-from networkx.algorithms.cluster import _triangles_and_degree_iter
 import nx_parallel as nxp
 import networkx as nx
 from networkx.algorithms.cluster import (
@@ -108,7 +107,7 @@ def triangles(G, nodes=None, get_chunks="chunks"):
                 triangle_counts[node2] += m
                 triangle_counts.update(third_nodes)
         return triangle_counts
-    
+
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
@@ -158,7 +157,7 @@ def clustering(G, nodes=None, weight=None, get_chunks="chunks"):
         returns an iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
     """
-    
+
     def _compute_chunk(chunk):
         if G.is_directed():
             if weight is not None:
@@ -186,7 +185,10 @@ def clustering(G, nodes=None, weight=None, get_chunks="chunks"):
                     v: 0 if t == 0 else t / (d * (d - 1)) for v, d, t, _ in td_iter
                 }
         return clusterc
-    
+
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     n_jobs = nxp.get_n_jobs()
 
     nodes_to_chunk = list(G.nbunch_iter(nodes))
