@@ -154,7 +154,7 @@ Refer to [Introspection and Logging section](https://networkx.org/documentation/
    nxp.approximate_all_pairs_node_connectivity(H)
    ```
 
-   Also, if you are using nx-parallel as a backend then mentioning the subpackage to which the algorithm belongs is recommended to ensure that networkx dispatches to the correct implementation. For example:
+   Also, if you are using nx-parallel as a backend then mentioning the sub-package to which the algorithm belongs is recommended to ensure that networkx dispatches to the correct implementation. For example:
 
    ```py
    # with subpackage - nx-parallel as a backend
