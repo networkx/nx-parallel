@@ -4,7 +4,6 @@ import networkx as nx
 import inspect
 import pytest
 import os
-import joblib
 
 
 def get_functions_with_should_run():
@@ -24,13 +23,13 @@ def test_default_should_run():
 
     with pytest.MonkeyPatch().context() as mp:
         mp.delitem(os.environ, "PYTEST_CURRENT_TEST", raising=False)
-        assert (
-            dummy_default.should_run()
-            == "Parallel backend requires `n_jobs` > 1 to run"
-        )
+        with nx.config.backends.parallel(n_jobs=1):
+            assert (
+                dummy_default.should_run()
+                == "Parallel backend requires `n_jobs` > 1 to run"
+            )
 
-        with joblib.parallel_config(n_jobs=4):
-            assert dummy_default.should_run()
+        assert dummy_default.should_run()
 
 
 def test_skip_parallel_backend():

@@ -4,6 +4,7 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
 
 ## Algorithms in nx-parallel
 
+- [adamic_adar_index](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L108)
 - [all_pairs_all_shortest_paths](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/generic.py#L11)
 - [all_pairs_bellman_ford_path](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L208)
 - [all_pairs_bellman_ford_path_length](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L165)
@@ -16,14 +17,22 @@ nx-parallel is a NetworkX backend that uses joblib for parallelization. This pro
 - [approximate_all_pairs_node_connectivity](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/approximation/connectivity.py#L14)
 - [betweenness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L20)
 - [closeness_vitality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L10)
+- [cn_soundarajan_hopcroft](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L200)
+- [common_neighbor_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L158)
 - [edge_betweenness_centrality](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/betweenness.py#L103)
 - [is_reachable](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L13)
+- [jaccard_coefficient](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L80)
 - [johnson](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/shortest_paths/weighted.py#L251)
 - [local_efficiency](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L11)
 - [node_redundancy](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/bipartite/redundancy.py#L12)
 - [number_of_isolates](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/isolate.py#L9)
-- [square_clustering](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L11)
+- [preferential_attachment](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L133)
+- [ra_index_soundarajan_hopcroft](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L232)
+- [resource_allocation_index](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L55)
+- [square_clustering](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L14)
 - [tournament_is_strongly_connected](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L58)
+- [triangles](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L76)
+- [within_inter_cluster](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L264)
 
 <details>
 <summary>Script used to generate the above list</summary>
