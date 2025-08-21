@@ -36,8 +36,8 @@ def harmonic_centrality(
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
-    nbunch = set(G.nbunch_iter(nbunch) if nbunch is not None else G.nodes)
-    sources = set(G.nbunch_iter(sources) if sources is not None else G.nodes)
+    nbunch = set(G.nbunch_iter(nbunch))
+    sources = set(G.nbunch_iter(sources))
 
     transposed = False
     if len(nbunch) < len(sources):
