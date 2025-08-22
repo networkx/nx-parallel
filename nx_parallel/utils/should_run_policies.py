@@ -5,6 +5,7 @@ __all__ = [
     "default_should_run",
     "should_skip_parallel",
     "should_run_if_large",
+    "should_run_if_sparse",
 ]
 
 
@@ -24,3 +25,15 @@ def default_should_run(*_):
     if n_jobs in (None, 0, 1):
         return "Parallel backend requires `n_jobs` > 1 to run"
     return True
+
+
+def should_run_if_sparse(G, *args, threshold=0.3, **kwargs):
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
+    nodes = len(G)
+    if nodes <= 1:
+        return "Empty graph" if nodes == 0 else "Single-node graph"
+
+    density = 2 * G.number_of_edges() / (nodes * (nodes - 1))
+    return "Graph too dense for parallel execution" if density > threshold else True
