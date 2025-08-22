@@ -5,7 +5,7 @@ import nx_parallel as nxp
 __all__ = ["number_attracting_components"]
 
 
-@nxp._configure_if_nx_active()
+@nxp._configure_if_nx_active(should_run=nxp.should_skip_parallel)
 def number_attracting_components(G, get_chunks="chunks"):
     """The parallel computation is implemented by dividing the list
     of attracting components into chunks and then finding the length
