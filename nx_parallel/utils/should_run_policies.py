@@ -37,4 +37,8 @@ def should_run_if_sparse(G, *args, threshold=0.3, **kwargs):
         return "Empty graph" if nodes == 0 else "Single-node graph"
 
     density = 2 * G.number_of_edges() / (nodes * (nodes - 1))
-    return "Graph too dense for parallel execution" if density > threshold else True
+    return (
+        True
+        if density <= threshold
+        else "Graph too dense to benefit from parallel execution"
+    )
