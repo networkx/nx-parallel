@@ -32,6 +32,7 @@ def should_run_if_sparse(G, *args, threshold=0.3, **kwargs):
         G = G.graph_object
 
     nodes = len(G)
+    # Handle trivial graphs separately to avoid division by zero
     if nodes <= 1:
         return "Empty graph" if nodes == 0 else "Single-node graph"
 
