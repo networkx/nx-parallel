@@ -72,7 +72,7 @@ def square_clustering(G, nodes=None, get_chunks="chunks"):
     return clustering
 
 
-@nxp._configure_if_nx_active()
+@nxp._configure_if_nx_active(should_run=nxp.should_run_if_nodes_none)
 def triangles(G, nodes=None, get_chunks="chunks"):
     """The nodes are chunked into `node_chunks` and for all `node_chunks`
     the number of triangles that include a node as one vertex is computed

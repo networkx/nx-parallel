@@ -52,6 +52,19 @@ def test_should_run_if_large():
     assert dummy_if_large.should_run(largeG)
 
 
+def test_should_run_if_nodes_none():
+    @nxp._configure_if_nx_active(should_run=nxp.should_run_if_nodes_none)
+    def dummy_nodes_none(G, nodes=None):
+        pass
+
+    G = nx.fast_gnp_random_graph(20, 0.6, seed=42)
+    assert (
+        dummy_nodes_none.should_run(G, nodes=[1, 3])
+        == "`nodes` should be None for parallel execution"
+    )
+    assert dummy_nodes_none.should_run(G)
+
+
 @pytest.mark.parametrize("func_name", get_functions_with_should_run())
 def test_should_run(func_name):
     tournament_funcs = [
