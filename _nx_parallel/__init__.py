@@ -132,6 +132,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "harmonic_centrality": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/harmonic.py#L10",
+                "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing harmonic centrality for each chunk concurrently.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "is_reachable": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/tournament.py#L13",
                 "additional_docs": "The function parallelizes the calculation of two neighborhoods of vertices in `G` and checks closure conditions for each neighborhood subset in parallel.",
