@@ -46,6 +46,8 @@ ALGORITHMS = [
     "all_pairs_shortest_path_length",
     # Approximation
     "approximate_all_pairs_node_connectivity",
+    # Assortativity
+    "average_neighbor_degree",
     # Connectivity
     "all_pairs_node_connectivity",
 ]
