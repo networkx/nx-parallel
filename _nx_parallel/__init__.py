@@ -118,6 +118,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
                 },
             },
+            "colliders": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L37",
+                "additional_docs": "The parallel implementation first divides the nodes into chunks and then creates a generator to lazily yield 3-node tuples that represent colliders for each `node_chunk`, and then employs joblib's `Parallel` function to execute these computations in parallel across `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
+                },
+            },
             "common_neighbor_centrality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L158",
                 "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the common neighbor centrality for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
@@ -221,6 +228,13 @@ def get_info():
                 "additional_docs": "The nodes are chunked into `node_chunks` and for all `node_chunks` the number of triangles that include a node as one vertex is computed in parallel over `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
+            "v_structures": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/dag.py#L13",
+                "additional_docs": "The parallel implementation first divides the nodes into chunks and then creates a generator to lazily yield 3-node tuples that represent v_structures for each `node_chunk`, and then employs joblib's `Parallel` function to execute these computations in parallel across `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the nodes into `n_jobs` number of chunks."
                 },
             },
             "within_inter_cluster": {
