@@ -26,6 +26,7 @@ ALGORITHMS = [
     # Centrality
     "betweenness_centrality",
     "edge_betweenness_centrality",
+    "harmonic_centrality",
     # Components : attracting
     "number_attracting_components",
     # Components : connected
@@ -34,6 +35,9 @@ ALGORITHMS = [
     "number_strongly_connected_components",
     # Components : weakly connected
     "number_weakly_connected_components",
+    # Dag
+    "colliders",
+    "v_structures",
     # Efficiency
     "local_efficiency",
     # Shortest Paths : generic
@@ -48,11 +52,15 @@ ALGORITHMS = [
     # Clustering
     "square_clustering",
     "triangles",
+    "clustering",
+    "average_clustering",
     # Shortest Paths : unweighted graphs
     "all_pairs_shortest_path",
     "all_pairs_shortest_path_length",
     # Approximation
     "approximate_all_pairs_node_connectivity",
+    # Assortativity
+    "average_neighbor_degree",
     # Connectivity
     "all_pairs_node_connectivity",
 ]
