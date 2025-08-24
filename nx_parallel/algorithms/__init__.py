@@ -5,6 +5,7 @@ from .shortest_paths import *
 from .approximation import *
 from .assortativity import *
 from .connectivity import *
+from .components import *
 
 # modules
 from .efficiency_measures import *

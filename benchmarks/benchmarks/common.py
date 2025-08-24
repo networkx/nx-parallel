@@ -24,7 +24,7 @@ seed = 42
 def get_cached_gnp_random_graph(
     num_nodes, edge_prob, is_weighted=False, is_directed=False
 ):
-    G = nx.fast_gnp_random_graph(num_nodes, edge_prob, seed=42, directed=is_directed)
+    G = nx.fast_gnp_random_graph(num_nodes, edge_prob, seed=seed, directed=is_directed)
     if is_weighted:
         random.seed(seed)
         for u, v in G.edges():
