@@ -6,7 +6,7 @@ from functools import partial
 __all__ = ["harmonic_centrality"]
 
 
-@nxp._configure_if_nx_active(should_run=nxp.should_run_if_sparse)
+@nxp._configure_if_nx_active(should_run=nxp.should_run_if_sparse(threshold=0.3))
 def harmonic_centrality(
     G, nbunch=None, distance=None, sources=None, get_chunks="chunks"
 ):
