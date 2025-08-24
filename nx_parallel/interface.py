@@ -44,6 +44,8 @@ ALGORITHMS = [
     # Clustering
     "square_clustering",
     "triangles",
+    "clustering",
+    "average_clustering",
     # Shortest Paths : unweighted graphs
     "all_pairs_shortest_path",
     "all_pairs_shortest_path_length",

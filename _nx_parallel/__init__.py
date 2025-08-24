@@ -90,6 +90,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in `list(iter_func(nbunch, 2))` as input and returns an iterable `pairs_chunks`, here `iter_func` is `permutations` in case of directed graphs and `combinations` in case of undirected graphs. The default is to create chunks by slicing the list into `n_jobs` chunks, such that size of each chunk is atmost 10, and at least 1."
                 },
             },
+            "average_clustering": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L213",
+                "additional_docs": "The nodes are chunked into `node_chunks` and then the average clustering coefficient for all `node_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "average_neighbor_degree": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/assortativity/neighbor_degree.py#L10",
                 "additional_docs": "The nodes are chunked into `node_chunks` and then the average degree of the neighborhood of each node for all `node_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
@@ -109,6 +116,13 @@ def get_info():
                 "additional_docs": "The parallel computation is implemented only when the node is not specified. The closeness vitality for each node is computed concurrently.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
+            "clustering": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L146",
+                "additional_docs": "The nodes are chunked into `node_chunks` and then the clustering coefficient for all `node_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
             "cn_soundarajan_hopcroft": {
@@ -210,7 +224,7 @@ def get_info():
                 },
             },
             "square_clustering": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L14",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L22",
                 "additional_docs": "The nodes are chunked into `node_chunks` and then the square clustering coefficient for all `node_chunks` are computed in parallel over `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
@@ -224,7 +238,7 @@ def get_info():
                 },
             },
             "triangles": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L76",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/cluster.py#L84",
                 "additional_docs": "The nodes are chunked into `node_chunks` and for all `node_chunks` the number of triangles that include a node as one vertex is computed in parallel over `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes (or nbunch) as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
