@@ -64,7 +64,7 @@ def test_should_run_if_nodes_none():
     )
     assert dummy_nodes_none.should_run(G)
 
-    
+
 def test_should_run_if_sparse():
     @nxp._configure_if_nx_active(should_run=nxp.should_run_if_sparse)
     def dummy_if_sparse(G):
