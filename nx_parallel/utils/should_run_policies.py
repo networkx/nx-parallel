@@ -6,6 +6,7 @@ __all__ = [
     "should_skip_parallel",
     "should_run_if_large",
     "should_run_if_nodes_none",
+    "should_run_if_sparse",
 ]
 
 
@@ -31,3 +32,20 @@ def should_run_if_nodes_none(G, nodes=None, *_):
     if nodes is None:
         return True
     return "`nodes` should be None for parallel execution"
+
+
+def should_run_if_sparse(G, *args, threshold=0.3, **kwargs):
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
+    nodes = len(G)
+    # Handle trivial graphs separately to avoid division by zero
+    if nodes <= 1:
+        return "Empty graph" if nodes == 0 else "Single-node graph"
+
+    density = 2 * G.number_of_edges() / (nodes * (nodes - 1))
+    return (
+        True
+        if density <= threshold
+        else "Graph too dense to benefit from parallel execution"
+    )
