@@ -60,7 +60,7 @@ def test_should_run_if_nodes_none():
     G = nx.fast_gnp_random_graph(20, 0.6, seed=42)
     assert (
         dummy_nodes_none.should_run(G, nodes=[1, 3])
-        == "`nodes` should be None for parallel execution"
+        == "Parallel execution only supported when `nodes` is None"
     )
     assert dummy_nodes_none.should_run(G)
 

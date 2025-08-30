@@ -31,7 +31,7 @@ def default_should_run(*_):
 def should_run_if_nodes_none(G, nodes=None, *_):
     if nodes is None:
         return True
-    return "`nodes` should be None for parallel execution"
+    return "Parallel execution only supported when `nodes` is None"
 
 
 def should_run_if_sparse(G, *args, threshold=0.3, **kwargs):
