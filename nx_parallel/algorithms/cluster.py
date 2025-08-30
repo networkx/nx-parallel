@@ -111,6 +111,12 @@ def triangles(G, nodes=None, get_chunks="chunks"):
     if hasattr(G, "graph_object"):
         G = G.graph_object
 
+    # Use parallel version only if nodes is None (i.e., all nodes requested)
+    if nodes is not None:
+        if nodes in G:
+            return next(_triangles_and_degree_iter(G, nodes))[2] // 2
+        return {v: t // 2 for v, d, t, _ in _triangles_and_degree_iter(G, nodes)}
+
     # Use parallel version for all nodes in G
     nodes = list(G)
 
