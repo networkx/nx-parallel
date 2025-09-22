@@ -5,6 +5,7 @@ __all__ = [
     "default_should_run",
     "should_skip_parallel",
     "should_run_if_large",
+    "should_run_if_nodes_none",
     "should_run_if_sparse",
 ]
 
@@ -28,6 +29,12 @@ def default_should_run(*_):
     if n_jobs in (None, 0, 1):
         return "Parallel backend requires `n_jobs` > 1 to run"
     return True
+
+
+def should_run_if_nodes_none(G, nodes=None, *_):
+    if nodes is None:
+        return True
+    return "Parallel execution only supported when `nodes` is None"
 
 
 def should_run_if_sparse(threshold=0.3):
