@@ -53,7 +53,7 @@ def test_should_run_if_large():
 
 
 def test_should_run_if_sparse():
-    @nxp._configure_if_nx_active(should_run=nxp.should_run_if_sparse)
+    @nxp._configure_if_nx_active(should_run=nxp.should_run_if_sparse(threshold=0.4))
     def dummy_if_sparse(G):
         pass
 
@@ -63,12 +63,8 @@ def test_should_run_if_sparse():
         == "Graph too dense to benefit from parallel execution"
     )
 
-    G_sparse = nx.fast_gnp_random_graph(20, 0.3, seed=42)
+    G_sparse = nx.fast_gnp_random_graph(20, 0.2, seed=42)
     assert dummy_if_sparse.should_run(G_sparse)
-    assert (
-        dummy_if_sparse.should_run(G_sparse, threshold=0.2)
-        == "Graph too dense to benefit from parallel execution"
-    )
 
 
 @pytest.mark.parametrize("func_name", get_functions_with_should_run())
