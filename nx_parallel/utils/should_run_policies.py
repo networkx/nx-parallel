@@ -37,11 +37,6 @@ def should_run_if_nodes_none(G, nodes=None, *_):
     return "Parallel execution only supported when `nodes` is None"
 
 
-def should_run_if_sparse(G, *args, threshold=0.3, **kwargs):
-    if hasattr(G, "graph_object"):
-        G = G.graph_object
-
-        
 def should_run_if_sparse(threshold=0.3):
     def wrapper(G, *_):
         if hasattr(G, "graph_object"):
