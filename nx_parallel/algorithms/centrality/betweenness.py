@@ -2,10 +2,9 @@ from joblib import Parallel, delayed
 from networkx.algorithms.centrality.betweenness import (
     _accumulate_basic,
     _accumulate_endpoints,
-    _rescale,
     _single_source_dijkstra_path_basic,
     _single_source_shortest_path_basic,
-    _rescale_e,
+    _rescale,
     _add_edge_keys,
     _accumulate_edges,
 )
@@ -75,9 +74,8 @@ def betweenness_centrality(
         len(G),
         normalized=normalized,
         directed=G.is_directed(),
-        k=k,
         endpoints=endpoints,
-        sampled_nodes=nodes,
+        sampled_nodes=None if k is None else nodes,
     )
     return betweenness
 
@@ -147,7 +145,13 @@ def edge_betweenness_centrality(
     for n in G:  # remove nodes to only return edges
         del bt_c[n]
 
-    betweenness = _rescale_e(bt_c, len(G), normalized=normalized, k=k)
+    betweenness = _rescale(
+        bt_c,
+        len(G),
+        normalized=normalized,
+        directed=G.is_directed(),
+        sampled_nodes=None if k is None else nodes,
+    )
 
     if G.is_multigraph():
         betweenness = _add_edge_keys(G, betweenness, weight=weight)
