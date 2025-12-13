@@ -141,7 +141,7 @@ def test_maximal_independent_set_large_graph():
 
 
 def test_maximal_independent_set_random_graph():
-    """Test on random graph for robustness."""
+    """Test on random graph."""
     G = nx.fast_gnp_random_graph(50, 0.1, seed=42)
     H = nxp.ParallelGraph(G)
 
