@@ -7,6 +7,49 @@ import networkx as nx
 __all__ = ["maximal_independent_set"]
 
 
+def _sequential_maximal_independent_set(G, nodes=None, seed=None):
+    """Sequential implementation of maximal independent set.
+
+    This is a direct implementation that doesn't go through the backend system,
+    used as a fallback for small graphs where parallel overhead isn't beneficial.
+    """
+    import random
+
+    # Handle seed
+    if seed is not None:
+        if hasattr(seed, 'choice'):
+            # It's already a random state object
+            rng = seed
+        else:
+            # It's a seed value
+            rng = random.Random(seed)
+    else:
+        rng = random.Random()
+
+    # Initialize with required nodes or a random starting node
+    if not nodes:
+        nodes_set = {rng.choice(list(G))}
+    else:
+        nodes_set = set(nodes)
+
+    # Validate nodes
+    if not nodes_set.issubset(G):
+        raise nx.NetworkXUnfeasible(f"{nodes} is not a subset of the nodes of G")
+    neighbors = set.union(*[set(G.adj[v]) for v in nodes_set]) if nodes_set else set()
+    if set.intersection(neighbors, nodes_set):
+        raise nx.NetworkXUnfeasible(f"{nodes} is not an independent set of G")
+
+    # Build the maximal independent set
+    indep_nodes = list(nodes_set)
+    available_nodes = set(G.nodes()).difference(neighbors.union(nodes_set))
+    while available_nodes:
+        node = rng.choice(list(available_nodes))
+        indep_nodes.append(node)
+        available_nodes.difference_update(list(G.adj[node]) + [node])
+
+    return indep_nodes
+
+
 @nxp._configure_if_nx_active()
 def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
     """Returns a random maximal independent set guaranteed to contain
@@ -108,7 +151,7 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
 
     # For small/medium graphs, use sequential (parallel overhead not worth it)
     if len(G) < 50000:
-        return nx.maximal_independent_set(G, nodes=nodes, seed=seed)
+        return _sequential_maximal_independent_set(G, nodes=nodes, seed=seed)
 
     n_jobs = nxp.get_n_jobs()
 
