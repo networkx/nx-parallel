@@ -1,5 +1,3 @@
-"""Maximal Independent Set algorithms for parallel computation."""
-
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 import networkx as nx

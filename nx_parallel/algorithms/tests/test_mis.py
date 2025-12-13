@@ -1,5 +1,3 @@
-"""Tests for parallel maximal_independent_set algorithm."""
-
 import networkx as nx
 import nx_parallel as nxp
 import pytest
