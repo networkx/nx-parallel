@@ -69,6 +69,56 @@ git commit -m"Your commit message"
 git push origin <branch_name>
 ```
 
+### Windows development workflow (PowerShell / CMD)
+
+The development workflow above uses `make`, `source`, and `export`, which are
+not natively available on Windows. Windows users can follow the steps below
+using PowerShell or Command Prompt.
+
+#### Create and activate a virtual environment
+
+```powershell
+python -m venv nxp-dev
+nxp-dev\Scripts\activate
+```
+
+Install dependencies
+```bash
+pip install -e ".[test]"
+pip install git+https://github.com/networkx/networkx.git@main
+pip install git+https://github.com/joblib/joblib.git@main
+```
+
+Run linters 
+```powershell
+pip install -e ".[developer]"
+pre-commit run --all-files
+```
+
+Run NetworkX backend tests
+
+```powershell
+$env:NETWORKX_TEST_BACKEND="parallel"
+$env:NETWORKX_FALLBACK_TO_NX="True"
+pytest --pyargs networkx
+```
+
+Run nx-parallel tests only
+
+```powershell
+pytest nx_parallel
+```
+
+Run full test suite
+
+```powershell
+pre-commit run --all-files
+$env:NETWORKX_TEST_BACKEND="parallel"
+$env:NETWORKX_FALLBACK_TO_NX="True"
+pytest --pyargs networkx
+pytest nx_parallel
+```
+
 ## Adding tests in nx-parallel
 
 - If an algorithm introduces an additional backend-specific argument make sure to add tests (using pytest) for it in a `tests` directory (in that algorithm's parent directory). For more, refer the networkx's tests.
@@ -118,7 +168,7 @@ Chunking in nx-parallel defaults to slicing the input into `n_jobs` chunks (`n_j
   - [ ] Add the parallel implementation(make sure API doesn't break), the file structure should be the same as that in networkx.
   - [ ] Include the `get_chunks` additional parameter. Currently, all algorithms in nx-parallel offer the user to pass their own custom chunks. Unless it is impossible to chunk, please do include this additional parameter.
   - [ ] add the function to the `ALGORITHMS` list in [interface.py](./nx_parallel/interface.py). Take care of the `name` parameter in `_dispatchable` for the algorithms with same name but different implementations. The `name` parameter is used distinguish such algorithms in a single namespace. (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html))
-  - [ ] update the `__init__.py` files accordingly
+  - [ ] update the `__init__.py` files  accordingly
   - [ ] docstring following the above format
   - [ ] add additional test, if needed. The smoke tests for the additional parameter `get_chunks` are done [here](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/tests/test_get_chunks.py) together for all the algorithms.
   - [ ] run the [timing script](./timing/new_heatmaps/timing_individual_function.py) to get the performance heatmap.
