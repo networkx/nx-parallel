@@ -15,3 +15,4 @@ from .vitality import *
 from .cluster import *
 from .link_prediction import *
 from .dag import *
+from .mis import *
