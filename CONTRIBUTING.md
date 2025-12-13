@@ -168,7 +168,7 @@ Chunking in nx-parallel defaults to slicing the input into `n_jobs` chunks (`n_j
   - [ ] Add the parallel implementation(make sure API doesn't break), the file structure should be the same as that in networkx.
   - [ ] Include the `get_chunks` additional parameter. Currently, all algorithms in nx-parallel offer the user to pass their own custom chunks. Unless it is impossible to chunk, please do include this additional parameter.
   - [ ] add the function to the `ALGORITHMS` list in [interface.py](./nx_parallel/interface.py). Take care of the `name` parameter in `_dispatchable` for the algorithms with same name but different implementations. The `name` parameter is used distinguish such algorithms in a single namespace. (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html))
-  - [ ] update the `__init__.py` files  accordingly
+  - [ ] update the `__init__.py` files accordingly
   - [ ] docstring following the above format
   - [ ] add additional test, if needed. The smoke tests for the additional parameter `get_chunks` are done [here](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/tests/test_get_chunks.py) together for all the algorithms.
   - [ ] run the [timing script](./timing/new_heatmaps/timing_individual_function.py) to get the performance heatmap.
