@@ -9,20 +9,39 @@ __all__ = [
 ]
 
 
-def should_skip_parallel(*_):
+def should_skip_parallel(*_, **__):
     return "Fast algorithm; skip parallel execution"
 
 
-def should_run_if_large(G, *_):
-    if hasattr(G, "graph_object"):
-        G = G.graph_object
+def should_run_if_large(nodes_threshold=200, *_, **__):
+    # If nodes_threshold is a graph-like object, it's being used as a direct should_run
+    # function instead of a factory. Use default threshold.
+    if hasattr(nodes_threshold, '__len__') and hasattr(nodes_threshold, 'nodes'):
+        # nodes_threshold is actually a graph, use it as G with default threshold
+        G = nodes_threshold
+        threshold = 200
 
-    if len(G) <= 200:
-        return "Graph too small for parallel execution"
-    return True
+        if hasattr(G, "graph_object"):
+            G = G.graph_object
+
+        if len(G) < threshold:
+            return "Graph too small for parallel execution"
+        return True
+
+    # Otherwise, it's being used as a factory, return a wrapper
+    threshold = nodes_threshold
+    def wrapper(G, *_, **__):
+        if hasattr(G, "graph_object"):
+            G = G.graph_object
+
+        if len(G) < threshold:
+            return "Graph too small for parallel execution"
+        return True
+
+    return wrapper
 
 
-def default_should_run(*_):
+def default_should_run(*_, **__):
     n_jobs = nxp.get_n_jobs()
     print(f"{n_jobs=}")
     if n_jobs in (None, 0, 1):
@@ -31,7 +50,7 @@ def default_should_run(*_):
 
 
 def should_run_if_sparse(threshold=0.3):
-    def wrapper(G, *_):
+    def wrapper(G, *_, **__):
         if hasattr(G, "graph_object"):
             G = G.graph_object
 
