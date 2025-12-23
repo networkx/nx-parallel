@@ -1,3 +1,73 @@
+# nx-parallel 0.4
+
+We're happy to announce the release of nx-parallel 0.4!
+
+## Enhancements
+
+- Improving development/contributor experience and maintenance stuff ([#108](https://github.com/networkx/nx-parallel/pull/108)).
+- Add `should_run` functionality ([#123](https://github.com/networkx/nx-parallel/pull/123)).
+- parallel implementation of `triangles` ([#106](https://github.com/networkx/nx-parallel/pull/106)).
+- parallel implementation of link prediction algorithms ([#127](https://github.com/networkx/nx-parallel/pull/127)).
+- improve current timing script ([#114](https://github.com/networkx/nx-parallel/pull/114)).
+- parallel implementation of harmonic centrality ([#124](https://github.com/networkx/nx-parallel/pull/124)).
+- parallel implementation of `average_neighbor_degree` algorithm ([#132](https://github.com/networkx/nx-parallel/pull/132)).
+- parallel implementation of `v_structures` and `colliders` ([#134](https://github.com/networkx/nx-parallel/pull/134)).
+- parallel implementation of `clustering` and `average_clustering` ([#130](https://github.com/networkx/nx-parallel/pull/130)).
+- parallel implementation of `is_reachable` using mem-mapping ([#119](https://github.com/networkx/nx-parallel/pull/119)).
+- added parallel implementations for `number_` algorithms ([#117](https://github.com/networkx/nx-parallel/pull/117)).
+
+## Bug Fixes
+
+- Handling empty graph edge-case for `betweenness_centrality` and `edge_betweenness_centrality` ([#100](https://github.com/networkx/nx-parallel/pull/100)).
+- Improving development/contributor experience and maintenance stuff ([#108](https://github.com/networkx/nx-parallel/pull/108)).
+- Refactor get_all_functions to use inspect.signature instead of inspect.getfullargspe ([#104](https://github.com/networkx/nx-parallel/pull/104)).
+- correctly pass n_jobs as n_chunks to chunks() ([#112](https://github.com/networkx/nx-parallel/pull/112)).
+- sync edge bc scaling logic and rescale helpers with networkx ([#143](https://github.com/networkx/nx-parallel/pull/143)).
+
+## Documentation
+
+- Updated the checklist for adding a new algorithm ([#90](https://github.com/networkx/nx-parallel/pull/90)).
+
+## Maintenance
+
+- Improving development/contributor experience and maintenance stuff ([#108](https://github.com/networkx/nx-parallel/pull/108)).
+- Fix square clustering self-loop treatment and simplify local testing ([#113](https://github.com/networkx/nx-parallel/pull/113)).
+- Drop support for Python 3.11 ([#116](https://github.com/networkx/nx-parallel/pull/116)).
+- Remove test order dependency using context managers ([#120](https://github.com/networkx/nx-parallel/pull/120)).
+- refactor `test_get_functions_with_get_chunks` ([#128](https://github.com/networkx/nx-parallel/pull/128)).
+- move `assign_algorithms` logic outside `BackendInterface` ([#133](https://github.com/networkx/nx-parallel/pull/133)).
+- Update `test_get_chunks` for new algorithms ([#129](https://github.com/networkx/nx-parallel/pull/129)).
+- Simplify node selection using `nbunch_iter()` ([#135](https://github.com/networkx/nx-parallel/pull/135)).
+- Refactor ASV benchmarks to use setup functions ([#126](https://github.com/networkx/nx-parallel/pull/126)).
+- make `n_jobs=-1` as default ([#122](https://github.com/networkx/nx-parallel/pull/122)).
+- Post merge refinement ([#138](https://github.com/networkx/nx-parallel/pull/138)).
+- Clean up ([#142](https://github.com/networkx/nx-parallel/pull/142)).
+- sync edge bc scaling logic and rescale helpers with networkx ([#143](https://github.com/networkx/nx-parallel/pull/143)).
+- Add `should_run` policy for when `nodes` is `None` ([#141](https://github.com/networkx/nx-parallel/pull/141)).
+- Prep for the next release, updates to deps, actions and test with py314 in CI ([#148](https://github.com/networkx/nx-parallel/pull/148)).
+
+## Contributors
+
+5 authors added to this release (alphabetically):
+
+- Aditi Juneja ([@Schefflera-Arboricola](https://github.com/Schefflera-Arboricola))
+- akshita  ([@akshitasure12](https://github.com/akshitasure12))
+- Dan Schult ([@dschult](https://github.com/dschult))
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+- Mridul Seth ([@MridulS](https://github.com/MridulS))
+
+6 reviewers added to this release (alphabetically):
+
+- [@Copilot](https://github.com/apps/copilot-pull-request-reviewer)
+- Aditi Juneja ([@Schefflera-Arboricola](https://github.com/Schefflera-Arboricola))
+- akshita  ([@akshitasure12](https://github.com/akshitasure12))
+- Dan Schult ([@dschult](https://github.com/dschult))
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+- Ross Barnowski ([@rossbar](https://github.com/rossbar))
+
+_These lists are automatically generated, and may not be complete or may contain
+duplicates._
+
 # nx-parallel 0.3
 
 We're happy to announce the release of nx-parallel 0.3!
