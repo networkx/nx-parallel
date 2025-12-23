@@ -48,6 +48,7 @@ parallel = "_nx_parallel:get_info"
 [project.optional-dependencies]
 developer = [
     'pre-commit',
+    'ruff==0.14.0',
 ]
 heatmap = [
     'matplotlib>=3.9',
