@@ -13,23 +13,25 @@ def should_skip_parallel(*_, **__):
     return "Fast algorithm; skip parallel execution"
 
 
-def should_run_if_large(nodes_threshold=200, *_, **__):
-    # If nodes_threshold is a graph-like object, it's being used as a direct should_run
-    # function instead of a factory. Use default threshold.
-    if hasattr(nodes_threshold, '__len__') and hasattr(nodes_threshold, 'nodes'):
-        # nodes_threshold is actually a graph, use it as G with default threshold
-        G = nodes_threshold
-        threshold = 200
-
+def should_run_if_large(G=None, nodes_threshold=200, *_, **__):
+    # Detect if first arg is a graph (has both __len__ and nodes attributes)
+    is_graph = G is not None and hasattr(G, '__len__') and hasattr(G, 'nodes')
+    
+    if is_graph:
+        # Direct usage: called with a graph as first argument
+        # Example: should_run_if_large(G) or func.should_run(G)
         if hasattr(G, "graph_object"):
             G = G.graph_object
 
-        if len(G) < threshold:
+        if len(G) < nodes_threshold:
             return "Graph too small for parallel execution"
         return True
-
-    # Otherwise, it's being used as a factory, return a wrapper
-    threshold = nodes_threshold
+    
+    # Factory usage: called with threshold (positional or keyword) but no graph
+    # Examples: should_run_if_large(50000) or should_run_if_large(nodes_threshold=50000)
+    # Use G if it's a number (threshold passed positionally), otherwise use nodes_threshold
+    threshold = G if G is not None and isinstance(G, (int, float)) else nodes_threshold
+    
     def wrapper(G, *_, **__):
         if hasattr(G, "graph_object"):
             G = G.graph_object
