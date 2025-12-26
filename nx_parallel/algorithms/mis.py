@@ -1,3 +1,4 @@
+from typing import Any
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 import networkx as nx
@@ -83,19 +84,20 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
 
     # Validate directed graph
     if G.is_directed():
-        raise nx.NetworkXNotImplemented("Not implemented for directed graphs.")
+        raise nx.NetworkXNotImplemented("NX-PARALLEL: Not implemented for directed graphs.")
 
-    # Convert seed to Random object if needed (for fallback and parallel execution)
+    # Note: When called through nx.maximal_independent_set with backend="parallel",
+    # the @py_random_state(2) decorator in NetworkX runs BEFORE @_dispatchable,
+    # so seed is already a Random object by the time it reaches this backend function.
+    # However, keeping this conversion for defensive purposes in case this function
+    # is called directly via nxp.maximal_independent_set().
     import random
-    if seed is not None:
-        if hasattr(seed, 'random'):
-            # It's already a RandomState/Random object
-            rng = seed
-        else:
-            # It's a seed value
-            rng = random.Random(seed)
+    if seed is not None and hasattr(seed, 'random'):
+        rng = seed
+    elif seed is not None:
+        rng = random.Random(seed)
     else:
-        rng = random.Random()
+        rng = random._inst
 
     # Check if we should run parallel version
     # This is needed when backend is explicitly specified
@@ -118,14 +120,12 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
     n_jobs = nxp.get_n_jobs()
 
     # Parallel strategy: Run complete MIS algorithm on node chunks independently
-    # Then merge results by resolving conflicts
-    all_nodes = list(G.nodes())
+    all_nodes = list(G)
 
     # Remove required nodes and their neighbors from consideration
     if nodes_set:
         available = set(all_nodes) - nodes_set
         for node in nodes_set:
-            available.discard(node)
             available.difference_update(G.neighbors(node))
         available = list(available)
     else:
@@ -176,11 +176,7 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
 
     # Merge results: resolve conflicts between chunks
     indep_set = list(nodes_set) if nodes_set else []
-    excluded = set(nodes_set)
-
-    if nodes_set:
-        for node in nodes_set:
-            excluded.update(adj_dict[node])
+    excluded = set(all_nodes) - set(available) if nodes_set else set()
 
     # Process results in order, greedily adding non-conflicting nodes
     for local_mis in results:
