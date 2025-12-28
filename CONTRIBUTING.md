@@ -23,12 +23,23 @@ python -m venv nxp-dev
 
 # Activating the venv
 source nxp-dev/bin/activate
+
+# For Windows
+.\nxp-dev\Scripts\Activate.ps1
 ```
 
 - Install the dependencies using the following command
 
 ```.sh
 make install
+```
+
+`make` commands aren't supported on Windows-- so use the commands below instead:
+
+```powershell
+pip install -e ".[test]"
+pip install git+https://github.com/networkx/networkx.git@main
+pip install git+https://github.com/joblib/joblib.git@main
 ```
 
 - Create a new branch for your changes using
@@ -48,11 +59,26 @@ git checkout -b <branch_name>
         ```.sh
         make run-networkx-tests
         ```
+
+        - For Windows:
+
+            ```powershell
+            $env:NETWORKX_TEST_BACKEND="parallel";
+            $env:NETWORKX_FALLBACK_TO_NX="True";
+            pytest --pyargs networkx/
+    
+            # linters
+            pip install -e ".[developer]"
+            pre-commit run --all-files
+            ```
     
     - To only run nx-parallel specific tests run:
 
         ```.sh
         make test-only-nx-parallel
+
+        # With Windows:
+        pytest nx_parallel
         ```
 
     - To run both nx-parallel specific test and networkx's test suite with the parallel backend run:
