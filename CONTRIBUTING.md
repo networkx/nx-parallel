@@ -23,12 +23,23 @@ python -m venv nxp-dev
 
 # Activating the venv
 source nxp-dev/bin/activate
+
+# For Windows
+.\nxp-dev\Scripts\Activate.ps1
 ```
 
 - Install the dependencies using the following command
 
 ```.sh
 make install
+```
+
+`make` commands aren't supported on Windows-- so use the commands below instead:
+
+```powershell
+pip install -e ".[test]"
+pip install git+https://github.com/networkx/networkx.git@main
+pip install git+https://github.com/joblib/joblib.git@main
 ```
 
 - Create a new branch for your changes using
@@ -48,11 +59,26 @@ git checkout -b <branch_name>
         ```.sh
         make run-networkx-tests
         ```
+
+        - For Windows:
+
+            ```powershell
+            $env:NETWORKX_TEST_BACKEND="parallel";
+            $env:NETWORKX_FALLBACK_TO_NX="True";
+            pytest --pyargs networkx/
+    
+            # linters
+            pip install -e ".[developer]"
+            pre-commit run --all-files
+            ```
     
     - To only run nx-parallel specific tests run:
 
         ```.sh
         make test-only-nx-parallel
+
+        # With Windows:
+        pytest nx_parallel
         ```
 
     - To run both nx-parallel specific test and networkx's test suite with the parallel backend run:
@@ -67,56 +93,6 @@ git checkout -b <branch_name>
 git add .
 git commit -m"Your commit message"
 git push origin <branch_name>
-```
-
-### Windows development workflow (PowerShell / CMD)
-
-The development workflow above uses `make`, `source`, and `export`, which are
-not natively available on Windows. Windows users can follow the steps below
-using PowerShell or Command Prompt.
-
-#### Create and activate a virtual environment
-
-```powershell
-python -m venv nxp-dev
-nxp-dev\Scripts\activate
-```
-
-Install dependencies
-```bash
-pip install -e ".[test]"
-pip install git+https://github.com/networkx/networkx.git@main
-pip install git+https://github.com/joblib/joblib.git@main
-```
-
-Run linters 
-```powershell
-pip install -e ".[developer]"
-pre-commit run --all-files
-```
-
-Run NetworkX backend tests
-
-```powershell
-$env:NETWORKX_TEST_BACKEND="parallel"
-$env:NETWORKX_FALLBACK_TO_NX="True"
-pytest --pyargs networkx
-```
-
-Run nx-parallel tests only
-
-```powershell
-pytest nx_parallel
-```
-
-Run full test suite
-
-```powershell
-pre-commit run --all-files
-$env:NETWORKX_TEST_BACKEND="parallel"
-$env:NETWORKX_FALLBACK_TO_NX="True"
-pytest --pyargs networkx
-pytest nx_parallel
 ```
 
 ## Adding tests in nx-parallel
