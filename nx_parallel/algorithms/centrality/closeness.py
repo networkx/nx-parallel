@@ -4,6 +4,7 @@ import nx_parallel as nxp
 
 __all__ = ["closeness_centrality"]
 
+
 @nxp._configure_if_nx_active(should_run=nxp.should_skip_parallel)
 def closeness_centrality(G, u=None, distance=None, wf_improved=True):
     """
@@ -22,7 +23,9 @@ def closeness_centrality(G, u=None, distance=None, wf_improved=True):
         chunk_results = {}
         for node in chunk:
             # NetworkX closeness only computes one node at a time if 'u' is set
-            chunk_results[node] = nx.closeness_centrality(G, u=node, distance=distance, wf_improved=wf_improved)
+            chunk_results[node] = nx.closeness_centrality(
+                G, u=node, distance=distance, wf_improved=wf_improved
+            )
         return chunk_results
 
     # 1. Split nodes into chunks
