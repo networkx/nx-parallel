@@ -38,6 +38,7 @@ def test_get_functions_with_get_chunks():
 ignore_funcs = [
     "number_of_isolates",
     "is_reachable",
+    "maximal_independent_set",
 ]
 
 

@@ -63,6 +63,8 @@ ALGORITHMS = [
     "average_neighbor_degree",
     # Connectivity
     "all_pairs_node_connectivity",
+    # Maximal Independent Set
+    "maximal_independent_set",
 ]
 
 
