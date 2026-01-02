@@ -71,7 +71,7 @@ def get_n_jobs(n_jobs=None):
 
         # Always check Joblib first (it reflects the live/innermost state)
         _, n_jobs = get_active_backend()
-        
+
         # Fallback to NX config if Joblib has no explicit value
         if n_jobs is None and nx.config.backends.parallel.active:
             n_jobs = nx.config.backends.parallel.n_jobs
