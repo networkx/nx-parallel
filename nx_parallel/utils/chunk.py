@@ -67,12 +67,14 @@ def get_n_jobs(n_jobs=None):
         return 2
 
     if n_jobs is None:
-        if nx.config.backends.parallel.active:
-            n_jobs = nx.config.backends.parallel.n_jobs
-        else:
-            from joblib.parallel import get_active_backend
+        from joblib.parallel import get_active_backend
 
-            n_jobs = get_active_backend()[1]
+        # Always check Joblib first (it reflects the live/innermost state)
+        _, n_jobs = get_active_backend()
+        
+        # Fallback to NX config if Joblib has no explicit value
+        if n_jobs is None and nx.config.backends.parallel.active:
+            n_jobs = nx.config.backends.parallel.n_jobs
 
     if n_jobs is None:
         return 1
