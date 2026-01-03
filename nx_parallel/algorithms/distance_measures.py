@@ -67,7 +67,7 @@ def _eccentricity_chunk(G, nodes, weight):
 
 
 @nxp._configure_if_nx_active(should_run=nxp.should_run_if_large)
-def diameter(G, e=None, useIP=False, get_chunks="chunks"):
+def diameter(G, e=None, usebounds=False, weight=None, get_chunks="chunks"):
     """The parallel computation is implemented by using the parallel eccentricity
     implementation.
 
@@ -80,13 +80,16 @@ def diameter(G, e=None, useIP=False, get_chunks="chunks"):
         iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     if e is None:
-        e = eccentricity(G, get_chunks=get_chunks)
+        e = eccentricity(G, weight=weight, get_chunks=get_chunks)
     return max(e.values())
 
 
 @nxp._configure_if_nx_active(should_run=nxp.should_run_if_large)
-def radius(G, e=None, useIP=False, get_chunks="chunks"):
+def radius(G, e=None, usebounds=False, weight=None, get_chunks="chunks"):
     """The parallel computation is implemented by using the parallel eccentricity
     implementation.
 
@@ -99,13 +102,16 @@ def radius(G, e=None, useIP=False, get_chunks="chunks"):
         iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     if e is None:
-        e = eccentricity(G, get_chunks=get_chunks)
+        e = eccentricity(G, weight=weight, get_chunks=get_chunks)
     return min(e.values())
 
 
 @nxp._configure_if_nx_active(should_run=nxp.should_run_if_large)
-def center(G, e=None, useIP=False, get_chunks="chunks"):
+def center(G, e=None, usebounds=False, weight=None, get_chunks="chunks"):
     """The parallel computation is implemented by using the parallel eccentricity
     implementation.
 
@@ -118,15 +124,18 @@ def center(G, e=None, useIP=False, get_chunks="chunks"):
         iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     if e is None:
-        e = eccentricity(G, get_chunks=get_chunks)
+        e = eccentricity(G, weight=weight, get_chunks=get_chunks)
     r = min(e.values())
     p = [v for v, ecc in e.items() if ecc == r]
     return p
 
 
 @nxp._configure_if_nx_active(should_run=nxp.should_run_if_large)
-def periphery(G, e=None, useIP=False, get_chunks="chunks"):
+def periphery(G, e=None, usebounds=False, weight=None, get_chunks="chunks"):
     """The parallel computation is implemented by using the parallel eccentricity
     implementation.
 
@@ -139,8 +148,11 @@ def periphery(G, e=None, useIP=False, get_chunks="chunks"):
         iterable `node_chunks`. The default chunking is done by slicing the
         `nodes` into `n_jobs` number of chunks.
     """
+    if hasattr(G, "graph_object"):
+        G = G.graph_object
+
     if e is None:
-        e = eccentricity(G, get_chunks=get_chunks)
+        e = eccentricity(G, weight=weight, get_chunks=get_chunks)
     d = max(e.values())
     p = [v for v, ecc in e.items() if ecc == d]
     return p
