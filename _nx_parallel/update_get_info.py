@@ -126,7 +126,7 @@ def get_url(file_path, function_name):
     """Return the URL to the given function in the given file."""
     file_url = (
         "https://github.com/networkx/nx-parallel/blob/main/nx_parallel"
-        + file_path.split("nx_parallel")[-1]
+        + file_path.split("nx_parallel")[-1].replace(os.sep, "/")
         + "#L"
     )
     with open(file_path, "r") as f:
