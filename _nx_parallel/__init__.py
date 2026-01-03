@@ -112,7 +112,7 @@ def get_info():
                 },
             },
             "center": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L114",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L115",
                 "additional_docs": "The parallel computation is implemented by using the parallel eccentricity implementation.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
@@ -154,7 +154,7 @@ def get_info():
                 },
             },
             "diameter": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L70",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L71",
                 "additional_docs": "The parallel computation is implemented by using the parallel eccentricity implementation.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
@@ -252,7 +252,7 @@ def get_info():
                 },
             },
             "periphery": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L138",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L139",
                 "additional_docs": "The parallel computation is implemented by using the parallel eccentricity implementation.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
@@ -273,7 +273,7 @@ def get_info():
                 },
             },
             "radius": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L92",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L93",
                 "additional_docs": "The parallel computation is implemented by using the parallel eccentricity implementation.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."

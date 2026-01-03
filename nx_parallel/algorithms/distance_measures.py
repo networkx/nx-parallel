@@ -23,8 +23,9 @@ def eccentricity(G, v=None, sp=None, weight=None, get_chunks="chunks"):
         G = G.graph_object
 
     # Fallback to sequential for single node or if shortest paths are provided
+    # Use orig_func to avoid recursion through backend dispatch
     if sp is not None or (v is not None and v in G):
-        return nx.eccentricity(G, v, sp, weight)
+        return nx.eccentricity.orig_func(G, v, sp, weight)
 
     nodes = list(G.nbunch_iter(v))
     if not nodes:
