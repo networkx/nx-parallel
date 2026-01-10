@@ -3,7 +3,7 @@ from networkx.algorithms.bipartite.cluster import modes
 import networkx as nx
 import nx_parallel as nxp
 
-__all__ = ["clustering", "latapy_clustering"]
+__all__ = ["latapy_clustering"]
 
 
 @nxp._configure_if_nx_active()
@@ -45,6 +45,3 @@ def latapy_clustering(G, nodes=None, mode="dot", get_chunks="chunks"):
             clusterings[node] += c
 
     return clusterings
-
-
-clustering = latapy_clustering
