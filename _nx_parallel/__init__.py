@@ -181,6 +181,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in an iterable of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `G.nodes` into `n_jobs` number of chunks."
                 },
             },
+            "latapy_clustering": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/bipartite/cluster.py#L10",
+                "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing the bipartite clustering coefficient for each chunk in parallel.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in an iterable of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `G.nodes` into `n_jobs` number of chunks."
+                },
+            },
             "local_efficiency": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L11",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and then computing and adding global efficiencies of all node in all chunks, in parallel, and then adding all these sums and dividing by the total number of nodes at the end.",
