@@ -1,4 +1,4 @@
-from joblib import Parallel
+from joblib import Parallel, delayed
 from networkx.algorithms.bipartite.cluster import modes
 import networkx as nx
 import nx_parallel as nxp
@@ -21,9 +21,9 @@ def latapy_clustering(G, nodes=None, mode="dot", get_chunks="chunks"):
         `G.nodes` (or `nodes`) into `n_jobs` number of chunks.
     """
 
-    def _process_chunk(chunks):
+    def _process_chunk(chunk):
         ccs = {}
-        for v in chunks:
+        for v in chunk:
             cc = 0.0
             nbrs2 = {u for nbr in G[v] for u in G[nbr]} - {v}
             for u in nbrs2:
@@ -35,6 +35,9 @@ def latapy_clustering(G, nodes=None, mode="dot", get_chunks="chunks"):
 
     if hasattr(G, "graph_object"):
         G = G.graph_object
+
+    if not nx.algorithms.bipartite.is_bipartite(G):
+        raise nx.NetworkXError("Graph is not bipartite")
 
     try:
         cc_func = modes[mode]
@@ -50,12 +53,10 @@ def latapy_clustering(G, nodes=None, mode="dot", get_chunks="chunks"):
         node_chunks = nxp.chunks(nodes, n_jobs)
     else:
         node_chunks = get_chunks(nodes)
-    results = Parallel()((_process_chunk)(chunk) for chunk in node_chunks)
-
+    results = Parallel()(delayed(_process_chunk)(chunk) for chunk in node_chunks)
     clusterings = {}
     for result in results:
-        for node, c in result.items():
-            clusterings[node] += c
+        clusterings.update(result)
 
     return clusterings
 

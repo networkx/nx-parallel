@@ -15,7 +15,7 @@ import types
 
 seed = random.Random(42)
 tournament_funcs = ["is_reachable", "is_strongly_connected"]
-bipartite_funcs = ["node_redundancy"]
+bipartite_funcs = ["node_redundancy", "latapy_clustering"]
 community_funcs = [
     "ra_index_soundarajan_hopcroft",
     "cn_soundarajan_hopcroft",
@@ -174,4 +174,4 @@ def plot_timing_heatmap(targetFunc):
     )
 
 
-# plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
+plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
