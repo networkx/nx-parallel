@@ -58,19 +58,21 @@ def time_individual_function(
                     G = nx.bipartite.random_graph(
                         n[ind], m[ind], p, directed=True, seed=seed
                     )
-                    for cur_node in G.nodes:
-                        neighbors = set(G.neighbors(cur_node))
-                        # have atleast 2 outgoing edges
-                        while len(neighbors) < 2:
-                            new_neighbor = seed.choice(
-                                [
-                                    node
-                                    for node in G.nodes
-                                    if node != cur_node and node not in neighbors
-                                ]
-                            )
-                            G.add_edge(cur_node, new_neighbor)
-                            neighbors.add(new_neighbor)
+                    A, B = range(n[ind]), range(n[ind], n[ind] + m[ind])
+                    for source_group, target_group in [(A, B), (B, A)]:
+                        for cur_node in source_group:
+                            neighbors = set(G.neighbors(cur_node))
+                            # have atleast 2 outgoing edges
+                            while len(neighbors) < 2:
+                                new_neighbor = seed.choice(
+                                    [
+                                        node
+                                        for node in target_group
+                                        if node not in neighbors
+                                    ]
+                                )
+                                G.add_edge(cur_node, new_neighbor)
+                                neighbors.add(new_neighbor)
                 else:
                     print(f"Number of Nodes: {num}")
                     G = nx.fast_gnp_random_graph(
@@ -174,4 +176,4 @@ def plot_timing_heatmap(targetFunc):
     )
 
 
-plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
+# plot_timing_heatmap(nx.algorithms.tournament.is_reachable)
