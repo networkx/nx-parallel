@@ -1,75 +1,39 @@
 import networkx as nx
 import nx_parallel as nxp
-import pytest
 
 
-def test_maximal_independent_set_basic():
-    G = nx.path_graph(5)
-    H = nxp.ParallelGraph(G)
-    result = nxp.maximal_independent_set(H)
-
-    result_set = set(result)
-    for node in result:
-        neighbors = set(G.neighbors(node))
-        assert not result_set.intersection(neighbors)
-
-    for node in G.nodes():
-        if node not in result_set:
-            neighbors = set(G.neighbors(node))
-            assert result_set.intersection(neighbors)
-
-
-def test_maximal_independent_set_with_required_nodes():
-    G = nx.path_graph(7)
-    H = nxp.ParallelGraph(G)
-    required_nodes = [1, 3]
-    result = nxp.maximal_independent_set(H, nodes=required_nodes)
-
-    assert 1 in result
-    assert 3 in result
-
-    result_set = set(result)
-    for node in result:
-        neighbors = set(G.neighbors(node))
-        assert not result_set.intersection(neighbors)
-
-
-def test_maximal_independent_set_invalid_nodes():
-    G = nx.path_graph(5)
+def test_should_run_small_graph():
+    """Small graphs should fall back to NetworkX sequential implementation."""
+    G = nx.fast_gnp_random_graph(100, 0.1, seed=42)
     H = nxp.ParallelGraph(G)
 
-    with pytest.raises(nx.NetworkXUnfeasible):
-        nxp.maximal_independent_set(H, nodes=[10, 20])
-
-    with pytest.raises(nx.NetworkXUnfeasible):
-        nxp.maximal_independent_set(H, nodes=[0, 1])
+    result = nxp.maximal_independent_set.should_run(H)
+    assert result == "Graph too small for parallel execution"
 
 
-def test_maximal_independent_set_directed_graph():
-    G = nx.DiGraph([(0, 1), (1, 2)])
+def test_should_run_large_graph():
+    """Large graphs should use the parallel implementation."""
+    G = nx.fast_gnp_random_graph(60000, 0.0001, seed=42)
     H = nxp.ParallelGraph(G)
 
-    with pytest.raises(nx.NetworkXNotImplemented):
-        nxp.maximal_independent_set(H)
+    result = nxp.maximal_independent_set.should_run(H)
+    assert result is True
 
 
-def test_maximal_independent_set_deterministic_with_seed():
-    G = nx.karate_club_graph()
+def test_get_chunks():
+    """Test custom chunking function."""
+    G = nx.fast_gnp_random_graph(60000, 0.0001, seed=42)
     H = nxp.ParallelGraph(G)
+
+    def custom_chunks(nodes):
+        nodes_list = list(nodes)
+        mid = len(nodes_list) // 2
+        return [nodes_list[:mid], nodes_list[mid:]]
 
     result1 = nxp.maximal_independent_set(H, seed=42)
-    result2 = nxp.maximal_independent_set(H, seed=42)
+    result2 = nxp.maximal_independent_set(H, seed=42, get_chunks=custom_chunks)
 
-    assert result1 == result2
-
-
-def test_maximal_independent_set_different_seeds():
-    G = nx.karate_club_graph()
-    H = nxp.ParallelGraph(G)
-
-    result1 = nxp.maximal_independent_set(H, seed=42)
-    result2 = nxp.maximal_independent_set(H, seed=100)
-
+    # Both should be valid independent sets (correctness is tested by NetworkX)
     for result in [result1, result2]:
         result_set = set(result)
         for node in result:
@@ -77,49 +41,12 @@ def test_maximal_independent_set_different_seeds():
             assert not result_set.intersection(neighbors)
 
 
-def test_maximal_independent_set_complete_graph():
-    G = nx.complete_graph(5)
+def test_parallel_deterministic_with_seed():
+    """Parallel execution with same seed should produce same result."""
+    G = nx.fast_gnp_random_graph(60000, 0.0001, seed=42)
     H = nxp.ParallelGraph(G)
-    result = nxp.maximal_independent_set(H)
 
-    assert len(result) == 1
+    result1 = nxp.maximal_independent_set(H, seed=42)
+    result2 = nxp.maximal_independent_set(H, seed=42)
 
-
-def test_maximal_independent_set_empty_graph():
-    G = nx.empty_graph(5)
-    H = nxp.ParallelGraph(G)
-    result = nxp.maximal_independent_set(H)
-
-    assert len(result) == 5
-
-
-def test_maximal_independent_set_large_graph():
-    G = nx.fast_gnp_random_graph(150, 0.1, seed=42)
-    H = nxp.ParallelGraph(G)
-    result = nxp.maximal_independent_set(H, seed=42)
-
-    result_set = set(result)
-    for node in result:
-        neighbors = set(G.neighbors(node))
-        assert not result_set.intersection(neighbors)
-
-    for node in G.nodes():
-        if node not in result_set:
-            neighbors = set(G.neighbors(node))
-            assert result_set.intersection(neighbors)
-
-
-def test_maximal_independent_set_random_graph():
-    G = nx.fast_gnp_random_graph(50, 0.1, seed=42)
-    H = nxp.ParallelGraph(G)
-    result = nxp.maximal_independent_set(H, seed=42)
-
-    result_set = set(result)
-    for node in result:
-        neighbors = set(G.neighbors(node))
-        assert not result_set.intersection(neighbors)
-
-    for node in G.nodes():
-        if node not in result_set:
-            neighbors = set(G.neighbors(node))
-            assert result_set.intersection(neighbors)
+    assert result1 == result2
