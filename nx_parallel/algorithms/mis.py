@@ -79,7 +79,9 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
 
     # Validate directed graph
     if G.is_directed():
-        raise nx.NetworkXNotImplemented("NX-PARALLEL: Not implemented for directed graphs.")
+        raise nx.NetworkXNotImplemented(
+            "NX-PARALLEL: Not implemented for directed graphs."
+        )
 
     # Note: When called through nx.maximal_independent_set with backend="parallel",
     # the @py_random_state(2) decorator in NetworkX runs BEFORE @_dispatchable,
@@ -87,7 +89,8 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
     # However, keeping this conversion for defensive purposes in case this function
     # is called directly via nxp.maximal_independent_set().
     import random
-    if seed is not None and hasattr(seed, 'random'):
+
+    if seed is not None and hasattr(seed, "random"):
         rng = seed
     elif seed is not None:
         rng = random.Random(seed)
@@ -99,7 +102,9 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
         nodes_set = set(nodes)
         if not nodes_set.issubset(G):
             raise nx.NetworkXUnfeasible(f"{nodes} is not a subset of the nodes of G")
-        neighbors = set.union(*[set(G.adj[v]) for v in nodes_set]) if nodes_set else set()
+        neighbors = (
+            set.union(*[set(G.adj[v]) for v in nodes_set]) if nodes_set else set()
+        )
         if set.intersection(neighbors, nodes_set):
             raise nx.NetworkXUnfeasible(f"{nodes} is not an independent set of G")
     else:
