@@ -4,9 +4,8 @@ import networkx as nx
 
 __all__ = ["maximal_independent_set"]
 
-# Import the actual NetworkX implementation
-from networkx.algorithms.mis import maximal_independent_set as _nx_mis_dispatcher
-_nx_mis = _nx_mis_dispatcher.orig_func
+# abbreviation for the actual NetworkX implementation
+_nx_mis = nx.maximal_independent_set.orig_func
 
 
 @nxp._configure_if_nx_active(should_run=nxp.should_run_if_large(50000))
