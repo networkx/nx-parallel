@@ -4,9 +4,6 @@ import networkx as nx
 
 __all__ = ["maximal_independent_set"]
 
-# abbreviation for the actual NetworkX implementation
-_nx_mis = nx.maximal_independent_set.orig_func
-
 
 @nxp._configure_if_nx_active(should_run=nxp.should_run_if_large(50000))
 def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
@@ -96,13 +93,6 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
         rng = random.Random(seed)
     else:
         rng = random._inst
-
-    # Check if we should run parallel version
-    # This is needed when backend is explicitly specified
-    should_run_result = maximal_independent_set.should_run(G, nodes, seed)
-    if should_run_result is not True:
-        # Fall back to NetworkX sequential (unwrapped version needs Random object)
-        return _nx_mis(G, nodes=nodes, seed=rng)
 
     # Validate nodes parameter
     if nodes is not None:
