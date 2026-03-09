@@ -1,4 +1,3 @@
-from typing import Any
 from joblib import Parallel, delayed
 import nx_parallel as nxp
 import networkx as nx
