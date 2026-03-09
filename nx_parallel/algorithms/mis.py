@@ -179,4 +179,11 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
                 excluded.add(node)
                 excluded.update(adj_dict[node])
 
+    # Final pass: ensure maximality by adding any remaining available nodes
+    for node in available:
+        if node not in excluded:
+            indep_set.append(node)
+            excluded.add(node)
+            excluded.update(adj_dict[node])
+
     return indep_set
