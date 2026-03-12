@@ -138,6 +138,30 @@ class BackendInterface:
         """
         return getattr(cls, name).should_run(*args, **kwargs)
 
+    @staticmethod
+    def on_start_tests(items):
+        """Modify pytest items after tests have been collected.
+
+        This is called during pytest_collection_modifyitems phase.
+        Mark tests that have different valid behavior in parallel backend.
+        """
+        try:
+            import pytest
+        except ModuleNotFoundError:
+            return
+
+        xfail_tests = {
+            "test_random_seed": (
+                "test_mis.py",
+                "Parallel MIS produces different valid ordering than sequential",
+            ),
+        }
+
+        for item in items:
+            for test_name, (filename, reason) in xfail_tests.items():
+                if item.name == test_name and filename in str(item.fspath):
+                    item.add_marker(pytest.mark.xfail(reason=reason))
+
 
 for attr in ALGORITHMS:
     setattr(BackendInterface, attr, getattr(algorithms, attr))
