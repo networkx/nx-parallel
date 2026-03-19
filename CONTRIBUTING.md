@@ -1,4 +1,4 @@
-# Welcome to nx-parallel!
+# Contributors Guide
 
 Hi, Thanks for stopping by!
 
