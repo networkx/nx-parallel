@@ -65,6 +65,7 @@ docs = [
     'pydata-sphinx-theme>=0.15',
     'myst-parser>=2',
     'sphinx-autoapi>=3',
+    'intersphinx_registry',
 ]
 [tool.pytest.ini_options]
 filterwarnings = [

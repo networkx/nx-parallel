@@ -105,7 +105,7 @@ git push origin <branch_name>
 
 For displaying a small note about nx-parallel's implementation at the end of the main NetworkX documentation, we use the `backend_info` [entry_point](https://packaging.python.org/en/latest/specifications/entry-points/#entry-points) (in the `pyproject.toml` file). The [`get_info` function](./_nx_parallel/__init__.py) is used to parse the docstrings of all the algorithms in nx-parallel and display the nx-parallel specific documentation on the NetworkX's main docs, in the "Additional Backend implementations" box, as shown in the screenshot below.
 
-![backend_box_ss](./assets/images/backend_box_ss.png)
+![backend_box_ss](_static/backend_box_ss.png)
 
 nx-parallel follows [sphinx docstring guidelines](https://the-ultimate-sphinx-tutorial.readthedocs.io/en/latest/_guide/_styleguides/docstrings-guidelines.html) for writing docstrings. But, while extracting the docstring to display on the main networkx docs, only the first paragraph of the function's description and the first paragraph of each parameter's description is extracted and displayed. So, make sure to include all the necessary information in the first paragraphs itself. And you only need to include the additional **backend** parameters in the `Parameters` section and not all the parameters. Also, it is recommended to include a link to the networkx function's documentation page in the docstring, at the end of the function description.
 

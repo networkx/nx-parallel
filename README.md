@@ -19,7 +19,7 @@ For more, see [INSTALL.md](./INSTALL.md).
 You can run your networkx code with nx-parallel backend by:
 
 ```sh
-export NETWORKX_AUTOMATIC_BACKENDS="parallel" && python nx_code.py
+export NETWORKX_BACKEND_PRIORITY="parallel" && python nx_code.py
 ```
 
 Note that for all functions inside `nx_code.py` that do not have an nx-parallel implementation, their original networkx implementation will be executed. You can also use the nx-parallel backend in your code for only some specific function calls in the following ways:
