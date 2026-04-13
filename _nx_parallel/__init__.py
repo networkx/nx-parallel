@@ -111,6 +111,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "center": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L115",
+                "additional_docs": "The parallel computation is implemented by using the parallel eccentricity implementation.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "closeness_vitality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/vitality.py#L10",
                 "additional_docs": "The parallel computation is implemented only when the node is not specified. The closeness vitality for each node is computed concurrently.",
@@ -144,6 +151,20 @@ def get_info():
                 "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the common neighbor centrality for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
+                },
+            },
+            "diameter": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L71",
+                "additional_docs": "The parallel computation is implemented by using the parallel eccentricity implementation.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
+            "eccentricity": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L9",
+                "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing eccentricity for each chunk concurrently.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
             "edge_betweenness_centrality": {
@@ -230,6 +251,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of weakly connected components as input and returns an iterable `component_chunks`. The default chunking is done by slicing the list of weakly connected components into `n_jobs` number of chunks."
                 },
             },
+            "periphery": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L139",
+                "additional_docs": "The parallel computation is implemented by using the parallel eccentricity implementation.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "preferential_attachment": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L133",
                 "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the preferential attachment for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
@@ -242,6 +270,13 @@ def get_info():
                 "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the resource allocation index for all `pairs_chunks` is computed in parallel, using the community information, over `n_jobs` number of CPU cores.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the edges (or ebunch) as input and returns an iterable `pairs_chunks`. The default chunking is done by slicing `ebunch` into `n_jobs` number of chunks."
+                },
+            },
+            "radius": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/distance_measures.py#L93",
+                "additional_docs": "The parallel computation is implemented by using the parallel eccentricity implementation.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
             "resource_allocation_index": {

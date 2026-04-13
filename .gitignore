@@ -136,4 +136,4 @@ html/
 # get_info update script
 temp__init__.py
 
-.DS_Store
+.DS_Storeuv.lock

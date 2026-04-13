@@ -63,6 +63,12 @@ ALGORITHMS = [
     "average_neighbor_degree",
     # Connectivity
     "all_pairs_node_connectivity",
+    # Distance Measures
+    "eccentricity",
+    "diameter",
+    "radius",
+    "center",
+    "periphery",
 ]
 
 
