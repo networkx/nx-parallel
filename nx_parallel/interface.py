@@ -155,6 +155,14 @@ class BackendInterface:
                 "test_mis.py",
                 "Parallel MIS produces different valid ordering than sequential",
             ),
+            "test_K5[graph0]": (
+                "test_mis.py",
+                "Return type changed from list to set in NetworkX main",
+            ),
+            "test_K5[graph1]": (
+                "test_mis.py",
+                "Return type changed from list to set in NetworkX main",
+            ),
         }
 
         for item in items:

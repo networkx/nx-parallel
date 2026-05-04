@@ -172,21 +172,21 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
     )
 
     # Merge results: resolve conflicts between chunks
-    indep_set = list(nodes_set) if nodes_set else []
+    indep_set = set(nodes_set) if nodes_set else set()
     excluded = set(all_nodes) - set(available) if nodes_set else set()
 
     # Process results in order, greedily adding non-conflicting nodes
     for local_mis in results:
         for node in local_mis:
             if node not in excluded:
-                indep_set.append(node)
+                indep_set.add(node)
                 excluded.add(node)
                 excluded.update(G.neighbors(node))
 
     # Final pass: ensure maximality by adding any remaining available nodes
     for node in available:
         if node not in excluded:
-            indep_set.append(node)
+            indep_set.add(node)
             excluded.add(node)
             excluded.update(G.neighbors(node))
 
