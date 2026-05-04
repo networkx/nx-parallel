@@ -11,8 +11,7 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
     a given set of nodes.
 
     This parallel implementation processes nodes in chunks across multiple
-    cores, using a Luby-style randomized parallel algorithm for speedup
-    on large graphs.
+    cores.
 
     An independent set is a set of nodes such that the subgraph
     of G induced by these nodes contains no edges. A maximal
@@ -69,9 +68,16 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
     Notes
     -----
     This algorithm does not solve the maximum independent set problem.
+    It computes a maximal independent set, which is not guaranteed to be
+    the largest possible independent set in the graph.
+
     The parallel version uses a chunk-based parallel algorithm that
     provides speedup on large graphs (>= 50000 nodes). For smaller graphs,
     the NetworkX sequential version is used automatically.
+
+    The parallel implementation may produce a maximal independent set with
+    different node ordering than the sequential version, but both are valid
+    maximal independent sets.
 
     """
     if hasattr(G, "graph_object"):
@@ -133,14 +139,12 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
     else:
         chunks = list(get_chunks(available))
 
-    # Precompute adjacency
-    adj_dict = {node: set(G.neighbors(node)) for node in G.nodes()}
-
     def _process_chunk_independent(chunk, chunk_seed):
         """Process chunk completely independently - build local MIS."""
         local_rng = random.Random(chunk_seed)
         local_mis = []
         local_excluded = set()
+        chunk_set = set(chunk)
 
         # Shuffle chunk for randomness
         chunk_list = list(chunk)
@@ -152,8 +156,8 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
                 local_mis.append(node)
                 local_excluded.add(node)
                 # Mark neighbors as excluded (only within this chunk)
-                for neighbor in adj_dict[node]:
-                    if neighbor in chunk_list:
+                for neighbor in G.neighbors(node):
+                    if neighbor in chunk_set:
                         local_excluded.add(neighbor)
 
         return local_mis
@@ -177,13 +181,13 @@ def maximal_independent_set(G, nodes=None, seed=None, get_chunks="chunks"):
             if node not in excluded:
                 indep_set.append(node)
                 excluded.add(node)
-                excluded.update(adj_dict[node])
+                excluded.update(G.neighbors(node))
 
     # Final pass: ensure maximality by adding any remaining available nodes
     for node in available:
         if node not in excluded:
             indep_set.append(node)
             excluded.add(node)
-            excluded.update(adj_dict[node])
+            excluded.update(G.neighbors(node))
 
     return indep_set
