@@ -72,11 +72,16 @@ def test_get_chunks(func):
         "v_structures",
         "colliders",
     ]
+    bipartite_funcs = [
+        "latapy_clustering",
+    ]
 
     if func in tournament_funcs:
         G = nx.tournament.random_tournament(15, seed=42)
     elif func in dag_funcs:
         G = nx.gn_graph(25, seed=42, create_using=nx.DiGraph)
+    elif func in bipartite_funcs:
+        G = nx.bipartite.random_graph(20, 25, 0.6, seed=42, directed=True)
     else:
         G = nx.fast_gnp_random_graph(
             40, 0.6, seed=42, directed=func in not_implemented_undirected

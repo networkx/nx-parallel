@@ -7,6 +7,7 @@ __all__ = ["BackendInterface", "ParallelGraph"]
 ALGORITHMS = [
     # Bipartite
     "node_redundancy",
+    "latapy_clustering",
     # Isolates
     "number_of_isolates",
     # Vitality
