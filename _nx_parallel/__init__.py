@@ -241,6 +241,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of weakly connected components as input and returns an iterable `component_chunks`. The default chunking is done by slicing the list of weakly connected components into `n_jobs` number of chunks."
                 },
             },
+            "percolation_centrality": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/percolation.py#L16",
+                "additional_docs": "The parallel computation is implemented by dividing the source nodes into chunks and computing their percolation centrality contributions concurrently.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "preferential_attachment": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/link_prediction.py#L133",
                 "additional_docs": "The edge pairs are chunked into `pairs_chunks` and then the preferential attachment for all `pairs_chunks` is computed in parallel over `n_jobs` number of CPU cores.",
