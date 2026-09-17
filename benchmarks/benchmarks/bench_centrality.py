@@ -34,3 +34,15 @@ class Harmonic(Benchmark):
 
     def time_harmonic_centrality(self, backend, num_nodes, edge_prob):
         _ = nx.harmonic_centrality(self.G, backend=backend)
+
+
+class Percolation(Benchmark):
+    params = [backends, num_nodes, edge_prob]
+    param_names = ["backend", "num_nodes", "edge_prob"]
+
+    def setup(self, backend, num_nodes, edge_prob):
+        self.G = get_cached_gnp_random_graph(num_nodes, edge_prob)
+        self.states = {node: (i % 9 + 1) / 10 for i, node in enumerate(self.G)}
+
+    def time_percolation_centrality(self, backend, num_nodes, edge_prob):
+        _ = nx.percolation_centrality(self.G, states=self.states, backend=backend)

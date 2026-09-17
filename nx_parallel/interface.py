@@ -27,6 +27,7 @@ ALGORITHMS = [
     "betweenness_centrality",
     "edge_betweenness_centrality",
     "harmonic_centrality",
+    "percolation_centrality",
     # Components : attracting
     "number_attracting_components",
     # Components : connected
