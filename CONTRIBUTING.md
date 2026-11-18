@@ -11,13 +11,13 @@ To set the local development environment:
 - Fork this repository.
 - Clone the forked repository locally:
 
-```.sh
+```sh
 git clone git@github.com:<your_username>/nx-parallel.git
 ```
 
 - Create a fresh conda/mamba virtualenv ([learn more](https://github.com/networkx/networkx/blob/main/CONTRIBUTING.rst#development-workflow))
 
-```.sh
+```sh
 # Creating a virtual environment
 python -m venv nxp-dev
 
@@ -30,7 +30,7 @@ source nxp-dev/bin/activate
 
 - Install the dependencies using the following command
 
-```.sh
+```sh
 make install
 ```
 
@@ -44,19 +44,19 @@ pip install git+https://github.com/joblib/joblib.git@main
 
 - Create a new branch for your changes using
 
-```.sh
+```sh
 git checkout -b <branch_name>
 ```
 
 - Make the changes in this new feature branch and run all tests before pushing them ([learn more](https://networkx.org/documentation/latest/reference/backends.html#testing-the-custom-backend)):
 
-    ```.sh
+    ```sh
     make test
     ```
 
     - To only run only networkx's test suite with nx-parallel as the backend run:
 
-        ```.sh
+        ```sh
         make run-networkx-tests
         ```
 
@@ -74,7 +74,7 @@ git checkout -b <branch_name>
     
     - To only run nx-parallel specific tests run:
 
-        ```.sh
+        ```sh
         make test-only-nx-parallel
 
         # With Windows:
@@ -83,13 +83,13 @@ git checkout -b <branch_name>
 
     - To run both nx-parallel specific test and networkx's test suite with the parallel backend run:
 
-        ```.sh
+        ```sh
         make test-backend
         ```
 
 - If all the tests run successfully, stage your changes, then commit and push and then create a PR
 
-```.sh
+```sh
 git add .
 git commit -m"Your commit message"
 git push origin <branch_name>
@@ -111,7 +111,7 @@ nx-parallel follows [sphinx docstring guidelines](https://the-ultimate-sphinx-tu
 
 Here is an example of how the docstrings should be formatted in nx-parallel:
 
-```.py
+```python
 def parallel_func(G, nx_arg, additional_backend_arg_1, additional_backend_arg_2=None):
     """The parallel computation is implemented by dividing the
     nodes into chunks and ..... [ONLY THIS PARAGRAPH WILL BE DISPLAYED ON THE MAIN NETWORKX DOCS]

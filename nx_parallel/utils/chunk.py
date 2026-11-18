@@ -10,10 +10,10 @@ def chunks(iterable, n_chunks, *, max_chunk_size=None):
     """Yield chunks from input iterable.
 
     - If `max_chunk_size` is None (default), the iterable is split into
-    exactly `n_chunks` equally sized chunks.
+      exactly `n_chunks` equally sized chunks.
     - If `max_chunk_size` is specified and the default split would create
-    chunks larger than this size, the iterable is instead divided into
-    smaller chunks, each containing at most `max_chunk_size` items.
+      chunks larger than this size, the iterable is instead divided into
+      smaller chunks, each containing at most `max_chunk_size` items.
 
     Parameters
     ----------

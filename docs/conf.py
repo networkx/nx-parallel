@@ -31,6 +31,9 @@ source_suffix = {
 # (it needs dask/ray/free-threaded Python, which the docs CI doesn't have).
 nb_execution_mode = "off"
 
+# GitHub-style anchors for h1-h3, so links like [..](#21-usage) work
+myst_heading_anchors = 3
+
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
 
@@ -61,8 +64,8 @@ autoapi_options = [
     "show-module-summary",
 ]
 autoapi_ignore = [
-    "*tests*",
-    "*test_*",
+    "*/tests/*",
+    "*/test_*.py",
     "*/benchmarks/*",
     "*/timing/*",
 ]
@@ -70,5 +73,4 @@ autoapi_ignore = [
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "networkx": ("https://networkx.org/documentation/stable/", None),
-    "nx-parallel": ("https://networkx.org/nx-parallel/", None),
 }
