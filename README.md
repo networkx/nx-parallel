@@ -1,4 +1,4 @@
-# Overview
+# nx-parallel
 
 nx-parallel is a NetworkX backend that uses joblib for parallelization. This project aims to provide parallelized implementations of various NetworkX functions to improve performance. Refer [NetworkX backends documentation](https://networkx.org/documentation/latest/reference/backends.html) to learn more about the backend architecture in NetworkX.
 
@@ -32,7 +32,7 @@ NETWORKX_BACKEND_PRIORITY="parallel" python nx_code.py
 
 Note that for all functions inside `nx_code.py` that are not supported by nx-parallel, will fallback to networkx.
 
-For more, checkout out the [Tutorial notebook](Tutorial.ipynb) on running nx-parallel with free-threaded Python.
+For more, checkout out the [Tutorial notebook](docs/Tutorial.ipynb) on running nx-parallel with free-threaded Python.
 
 ### Setting parallel configurations
 
@@ -51,7 +51,7 @@ with joblib.parallel_config(backend="threading", n_jobs=-1, verbose=100):
     nx.betweenness_centrality(G, backend="parallel")
 ```
 
-For more on how to play with different parallel backends (Loky, Multiprocessing, Threading, Dask, Ray) and configurations in nx-parallel, see [Tutorial](Tutorial.ipynb) and [Config.md](./Config.md). Additionally, refer to the NetworkX's official [backends](https://networkx.org/documentation/latest/reference/backends.html) and [config](https://networkx.org/documentation/latest/reference/configs.html) docs.
+For more on how to play with different parallel backends (Loky, Multiprocessing, Threading, Dask, Ray) and configurations in nx-parallel, see [Tutorial](docs/Tutorial.ipynb) and [Config.md](./Config.md). Additionally, refer to the NetworkX's official [backends](https://networkx.org/documentation/latest/reference/backends.html) and [config](https://networkx.org/documentation/latest/reference/configs.html) docs.
 
 ---
 

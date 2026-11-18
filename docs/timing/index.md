@@ -1,1 +1,4 @@
-../../timing/README.md
+```{include} ../../timing/README.md
+:relative-docs: docs/
+:relative-images:
+```

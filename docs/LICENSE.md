@@ -1,1 +1,4 @@
-../LICENSE.md
+```{include} ../LICENSE.md
+:relative-docs: docs/
+:relative-images:
+```

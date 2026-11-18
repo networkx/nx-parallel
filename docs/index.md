@@ -16,9 +16,9 @@ hidden: true
 ---
 
 Overview
-INSTALL
+Tutorial <Tutorial>
+Installation <INSTALL>
 api/index
-Config
-timing/index
-CONTRIBUTING
+Configuration <Config>
+Contributing <CONTRIBUTING>
 ```

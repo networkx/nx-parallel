@@ -15,16 +15,24 @@ release = "0.4"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "myst_parser",
+    "myst_nb",
     "autoapi.extension",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx.ext.autodoc",
 ]
-source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "myst-nb",
+    ".ipynb": "myst-nb",
+}
+
+# Use the outputs already stored in the notebook instead of re-executing it
+# (it needs dask/ray/free-threaded Python, which the docs CI doesn't have).
+nb_execution_mode = "off"
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
 
 
 # -- Options for HTML output -------------------------------------------------
