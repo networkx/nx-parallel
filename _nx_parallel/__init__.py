@@ -188,6 +188,17 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "maximal_independent_set": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/mis.py#L9",
+                "additional_docs": "Returns a random maximal independent set guaranteed to contain a given set of nodes.",
+                "additional_parameters": {
+                    "G : NetworkX graph": "An undirected graph.",
+                    "nodes : list or iterable, optional": "Nodes that must be part of the independent set. This set of nodes must be independent. If not provided, a random starting node is chosen.",
+                    "seed : integer, random_state, or None (default)": "Indicator of random number generation state. See :ref:`Randomness<randomness>`.",
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of nodes and returns chunks. The default chunking divides nodes into n_jobs chunks.",
+                    "indep_nodes : list": "List of nodes that are part of a maximal independent set.",
+                },
+            },
             "node_redundancy": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/bipartite/redundancy.py#L12",
                 "additional_docs": "In the parallel implementation we divide the nodes into chunks and compute the node redundancy coefficients for all `node_chunk` in parallel.",
