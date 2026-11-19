@@ -55,8 +55,7 @@ def all_pairs_shortest_path_length(G, cutoff=None, get_chunks="chunks"):
     )
 
     for path_length_chunk in Parallel()(path_lengths_chunk_generator):
-        for path_length in path_length_chunk:
-            yield path_length
+        yield from path_length_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -98,5 +97,4 @@ def all_pairs_shortest_path(G, cutoff=None, get_chunks="chunks"):
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk

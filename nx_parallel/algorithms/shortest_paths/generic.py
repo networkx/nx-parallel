@@ -54,5 +54,4 @@ def all_pairs_all_shortest_paths(
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk

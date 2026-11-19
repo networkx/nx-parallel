@@ -65,8 +65,7 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -115,8 +114,7 @@ def all_pairs_dijkstra_path_length(
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -158,8 +156,7 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -201,8 +198,7 @@ def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
     )
 
     for path_length_chunk in Parallel()(path_lengths_chunk_generator):
-        for path_length in path_length_chunk:
-            yield path_length
+        yield from path_length_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -244,8 +240,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk
 
 
 @nxp._configure_if_nx_active()
