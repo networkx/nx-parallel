@@ -91,9 +91,9 @@ def _betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
             S, P, sigma, _ = _single_source_dijkstra_path_basic(G, s, weight)
         # accumulation
         if endpoints:
-            betweenness, delta = _accumulate_endpoints(betweenness, S, P, sigma, s)
+            betweenness, _delta = _accumulate_endpoints(betweenness, S, P, sigma, s)
         else:
-            betweenness, delta = _accumulate_basic(betweenness, S, P, sigma, s)
+            betweenness, _delta = _accumulate_basic(betweenness, S, P, sigma, s)
     return betweenness
 
 

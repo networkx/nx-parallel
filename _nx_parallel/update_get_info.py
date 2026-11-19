@@ -65,10 +65,11 @@ def extract_docstrings_from_file(file_path):
                         for expr in node.value.elts
                         if isinstance(expr, ast.Constant)
                     ]
-            elif isinstance(node, ast.FunctionDef):
-                if all_list and node.name in all_list:
-                    docstring = ast.get_docstring(node) or "No docstring found."
-                    docstrings[node.name] = docstring
+            elif (
+                isinstance(node, ast.FunctionDef) and all_list and node.name in all_list
+            ):
+                docstring = ast.get_docstring(node) or "No docstring found."
+                docstrings[node.name] = docstring
     return docstrings
 
 
@@ -85,7 +86,7 @@ def extract_add_docs(docstring):
         par_docs = par_docs.replace("\n", " ")
     except IndexError:
         par_docs = None
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(e)
         par_docs = None
     return par_docs
@@ -116,7 +117,7 @@ def extract_add_params(docstring):
                 i += 1
     except IndexError:
         par_params = None
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(e)
         par_params = None
     return par_params
