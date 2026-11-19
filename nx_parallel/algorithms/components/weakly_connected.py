@@ -1,5 +1,6 @@
-from networkx import weakly_connected_components
 from joblib import Parallel, delayed
+from networkx import weakly_connected_components
+
 import nx_parallel as nxp
 
 __all__ = ["number_weakly_connected_components"]

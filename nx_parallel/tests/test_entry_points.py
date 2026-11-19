@@ -1,4 +1,4 @@
-from importlib.metadata import entry_points, EntryPoint
+from importlib.metadata import EntryPoint, entry_points
 
 
 def test_backends_ep():

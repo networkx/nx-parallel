@@ -3,10 +3,12 @@ Parallel flow based connectivity algorithms
 """
 
 import itertools
-from networkx.algorithms.flow import build_residual_network
-from networkx.algorithms.connectivity.utils import build_auxiliary_node_connectivity
-from networkx.algorithms.connectivity.connectivity import local_node_connectivity
+
 from joblib import Parallel, delayed
+from networkx.algorithms.connectivity.connectivity import local_node_connectivity
+from networkx.algorithms.connectivity.utils import build_auxiliary_node_connectivity
+from networkx.algorithms.flow import build_residual_network
+
 import nx_parallel as nxp
 
 __all__ = [

@@ -1,7 +1,9 @@
-from joblib import Parallel, delayed
-import networkx as nx
-import nx_parallel as nxp
 from functools import partial
+
+import networkx as nx
+from joblib import Parallel, delayed
+
+import nx_parallel as nxp
 
 __all__ = ["harmonic_centrality"]
 

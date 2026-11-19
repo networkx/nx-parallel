@@ -1,12 +1,13 @@
-from .common import (
-    backends,
-    num_nodes,
-    edge_prob,
-    seed,
-    get_cached_gnp_random_graph,
-    Benchmark,
-)
 import networkx as nx
+
+from .common import (
+    Benchmark,
+    backends,
+    edge_prob,
+    get_cached_gnp_random_graph,
+    num_nodes,
+    seed,
+)
 
 
 class Attracting(Benchmark):

@@ -1,20 +1,22 @@
-from itertools import combinations, chain
 from collections import Counter
-from joblib import Parallel, delayed
-import nx_parallel as nxp
+from itertools import chain, combinations
+
 import networkx as nx
+from joblib import Parallel, delayed
 from networkx.algorithms.cluster import (
-    _directed_weighted_triangles_and_degree_iter,
     _directed_triangles_and_degree_iter,
-    _weighted_triangles_and_degree_iter,
+    _directed_weighted_triangles_and_degree_iter,
     _triangles_and_degree_iter,
+    _weighted_triangles_and_degree_iter,
 )
 
+import nx_parallel as nxp
+
 __all__ = [
+    "average_clustering",
+    "clustering",
     "square_clustering",
     "triangles",
-    "clustering",
-    "average_clustering",
 ]
 
 

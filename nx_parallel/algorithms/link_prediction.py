@@ -1,19 +1,20 @@
-from joblib import Parallel, delayed
-import networkx as nx
-import nx_parallel as nxp
-from math import log
 import itertools
+from math import log
+
+import networkx as nx
+from joblib import Parallel, delayed
 from networkx.algorithms.link_prediction import _community
 
+import nx_parallel as nxp
 
 __all__ = [
-    "resource_allocation_index",
-    "jaccard_coefficient",
     "adamic_adar_index",
-    "preferential_attachment",
-    "common_neighbor_centrality",
     "cn_soundarajan_hopcroft",
+    "common_neighbor_centrality",
+    "jaccard_coefficient",
+    "preferential_attachment",
     "ra_index_soundarajan_hopcroft",
+    "resource_allocation_index",
     "within_inter_cluster",
 ]
 

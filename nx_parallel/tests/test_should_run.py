@@ -1,8 +1,10 @@
+import inspect
+
+import networkx as nx
+import pytest
+
 import nx_parallel as nxp
 from nx_parallel.interface import ALGORITHMS
-import networkx as nx
-import inspect
-import pytest
 
 
 def get_functions_with_should_run():

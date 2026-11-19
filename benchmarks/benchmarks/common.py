@@ -1,15 +1,15 @@
+import random
 from functools import lru_cache
 from pathlib import Path
-import random
 
 import networkx as nx
 
 __all__ = [
+    "Benchmark",
     "backends",
-    "num_nodes",
     "edge_prob",
     "get_cached_gnp_random_graph",
-    "Benchmark",
+    "num_nodes",
 ]
 
 CACHE_ROOT = Path(__file__).resolve().parent.parent / "env" / "nxp_benchdata"

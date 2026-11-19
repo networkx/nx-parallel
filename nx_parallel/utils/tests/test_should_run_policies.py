@@ -1,6 +1,8 @@
 import os
-import pytest
+
 import networkx as nx
+import pytest
+
 import nx_parallel as nxp
 
 

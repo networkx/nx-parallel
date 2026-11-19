@@ -1,11 +1,13 @@
+import random
+
+import networkx as nx
+
 from .common import (
+    Benchmark,
     backends,
     num_nodes,
     seed,
-    Benchmark,
 )
-import networkx as nx
-import random
 
 
 class Tournament(Benchmark):

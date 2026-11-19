@@ -1,7 +1,7 @@
 import networkx as nx
-import nx_parallel as nxp
 from joblib import Parallel, delayed
 
+import nx_parallel as nxp
 
 __all__ = ["average_neighbor_degree"]
 

@@ -1,14 +1,15 @@
 from joblib import Parallel, delayed
 from networkx.algorithms.centrality.betweenness import (
     _accumulate_basic,
+    _accumulate_edges,
     _accumulate_endpoints,
+    _add_edge_keys,
+    _rescale,
     _single_source_dijkstra_path_basic,
     _single_source_shortest_path_basic,
-    _rescale,
-    _add_edge_keys,
-    _accumulate_edges,
 )
 from networkx.utils import py_random_state
+
 import nx_parallel as nxp
 
 __all__ = ["betweenness_centrality", "edge_betweenness_centrality"]

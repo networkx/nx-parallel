@@ -1,9 +1,9 @@
 import itertools
 import os
+
 import networkx as nx
 
-
-__all__ = ["chunks", "get_n_jobs", "create_iterables"]
+__all__ = ["chunks", "create_iterables", "get_n_jobs"]
 
 
 def chunks(iterable, n_chunks, *, max_chunk_size=None):

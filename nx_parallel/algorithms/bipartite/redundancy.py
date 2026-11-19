@@ -1,9 +1,10 @@
-from joblib import Parallel, delayed
-from networkx.algorithms.bipartite.redundancy import _node_redundancy
-import networkx as nx
-import nx_parallel as nxp
 from itertools import chain
 
+import networkx as nx
+from joblib import Parallel, delayed
+from networkx.algorithms.bipartite.redundancy import _node_redundancy
+
+import nx_parallel as nxp
 
 __all__ = ["node_redundancy"]
 
@@ -43,4 +44,4 @@ def node_redundancy(G, nodes=None, get_chunks="chunks"):
         )(G, node_chunk)
         for node_chunk in node_chunks
     )
-    return dict(chain.from_iterable((node_redundancies)))
+    return dict(chain.from_iterable(node_redundancies))
