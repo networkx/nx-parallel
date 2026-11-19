@@ -35,7 +35,13 @@ nb_execution_mode = "off"
 myst_heading_anchors = 3
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "**.ipynb_checkpoints",
+    "timing/index.md",  # timing page not ready yet; remove to publish it
+]
 
 
 # -- Options for HTML output -------------------------------------------------
