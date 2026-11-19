@@ -1,4 +1,4 @@
-# Welcome to nx-parallel!
+# Contributors Guide
 
 Hi, Thanks for stopping by!
 
@@ -11,13 +11,13 @@ To set the local development environment:
 - Fork this repository.
 - Clone the forked repository locally:
 
-```.sh
+```sh
 git clone git@github.com:<your_username>/nx-parallel.git
 ```
 
 - Create a fresh conda/mamba virtualenv ([learn more](https://github.com/networkx/networkx/blob/main/CONTRIBUTING.rst#development-workflow))
 
-```.sh
+```sh
 # Creating a virtual environment
 python -m venv nxp-dev
 
@@ -30,7 +30,7 @@ source nxp-dev/bin/activate
 
 - Install the dependencies using the following command
 
-```.sh
+```sh
 make install
 ```
 
@@ -44,19 +44,19 @@ pip install git+https://github.com/joblib/joblib.git@main
 
 - Create a new branch for your changes using
 
-```.sh
+```sh
 git checkout -b <branch_name>
 ```
 
 - Make the changes in this new feature branch and run all tests before pushing them ([learn more](https://networkx.org/documentation/latest/reference/backends.html#testing-the-custom-backend)):
 
-    ```.sh
+    ```sh
     make test
     ```
 
     - To only run only networkx's test suite with nx-parallel as the backend run:
 
-        ```.sh
+        ```sh
         make run-networkx-tests
         ```
 
@@ -74,7 +74,7 @@ git checkout -b <branch_name>
     
     - To only run nx-parallel specific tests run:
 
-        ```.sh
+        ```sh
         make test-only-nx-parallel
 
         # With Windows:
@@ -83,13 +83,13 @@ git checkout -b <branch_name>
 
     - To run both nx-parallel specific test and networkx's test suite with the parallel backend run:
 
-        ```.sh
+        ```sh
         make test-backend
         ```
 
 - If all the tests run successfully, stage your changes, then commit and push and then create a PR
 
-```.sh
+```sh
 git add .
 git commit -m"Your commit message"
 git push origin <branch_name>
@@ -103,15 +103,15 @@ git push origin <branch_name>
 
 ## Documentation syntax
 
-For displaying a small note about nx-parallel's implementation at the end of the main NetworkX documentation, we use the `backend_info` [entry_point](https://packaging.python.org/en/latest/specifications/entry-points/#entry-points) (in the `pyproject.toml` file). The [`get_info` function](./_nx_parallel/__init__.py) is used to parse the docstrings of all the algorithms in nx-parallel and display the nx-parallel specific documentation on the NetworkX's main docs, in the "Additional Backend implementations" box, as shown in the screenshot below.
+For displaying a small note about nx-parallel's implementation at the end of the main NetworkX documentation, we use the `backend_info` [entry_point](https://packaging.python.org/en/latest/specifications/entry-points/#entry-points) (in the `pyproject.toml` file). The [`get_info` function](https://github.com/networkx/nx-parallel/blob/main/_nx_parallel/__init__.py) is used to parse the docstrings of all the algorithms in nx-parallel and display the nx-parallel specific documentation on the NetworkX's main docs, in the "Additional Backend implementations" box, as shown in the screenshot below.
 
-![backend_box_ss](./assets/images/backend_box_ss.png)
+![backend_box_ss](docs/_static/backend_box_ss.png)
 
 nx-parallel follows [sphinx docstring guidelines](https://the-ultimate-sphinx-tutorial.readthedocs.io/en/latest/_guide/_styleguides/docstrings-guidelines.html) for writing docstrings. But, while extracting the docstring to display on the main networkx docs, only the first paragraph of the function's description and the first paragraph of each parameter's description is extracted and displayed. So, make sure to include all the necessary information in the first paragraphs itself. And you only need to include the additional **backend** parameters in the `Parameters` section and not all the parameters. Also, it is recommended to include a link to the networkx function's documentation page in the docstring, at the end of the function description.
 
 Here is an example of how the docstrings should be formatted in nx-parallel:
 
-```.py
+```python
 def parallel_func(G, nx_arg, additional_backend_arg_1, additional_backend_arg_2=None):
     """The parallel computation is implemented by dividing the
     nodes into chunks and ..... [ONLY THIS PARAGRAPH WILL BE DISPLAYED ON THE MAIN NETWORKX DOCS]
@@ -134,7 +134,7 @@ def parallel_func(G, nx_arg, additional_backend_arg_1, additional_backend_arg_2=
 
 In parallel computing, "chunking" refers to dividing a large task into smaller, more manageable chunks that can be processed simultaneously by multiple computing units, such as CPU cores or distributed computing nodes. It's like breaking down a big task into smaller pieces so that multiple workers can work on different pieces at the same time, and in the case of nx-parallel, this usually speeds up the overall process.
 
-Chunking in nx-parallel defaults to slicing the input into `n_jobs` chunks (`n_jobs=-1` means using all CPU cores; see [`chunk.py`](./nx_parallel/utils/chunk.py)). To know how to change config options like `n_jobs`, see [`Config.md`](./Config.md). A user can override chunking by passing a custom function to the `get_chunks`  kwarg. When adding a new algorithm, you may modify this default chunking behavior if needed (e.g. [PR#33](https://github.com/networkx/nx-parallel/pull/33)).
+Chunking in nx-parallel defaults to slicing the input into `n_jobs` chunks (`n_jobs=-1` means using all CPU cores; see [`chunk.py`](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/utils/chunk.py)). To know how to change config options like `n_jobs`, see [`Config.md`](./Config.md). A user can override chunking by passing a custom function to the `get_chunks`  kwarg. When adding a new algorithm, you may modify this default chunking behavior if needed (e.g. [PR#33](https://github.com/networkx/nx-parallel/pull/33)).
 
 ## General guidelines on adding a new algorithm
 
@@ -143,11 +143,11 @@ Chunking in nx-parallel defaults to slicing the input into `n_jobs` chunks (`n_j
 - check-list for adding a new function:
   - [ ] Add the parallel implementation(make sure API doesn't break), the file structure should be the same as that in networkx.
   - [ ] Include the `get_chunks` additional parameter. Currently, all algorithms in nx-parallel offer the user to pass their own custom chunks. Unless it is impossible to chunk, please do include this additional parameter.
-  - [ ] add the function to the `ALGORITHMS` list in [interface.py](./nx_parallel/interface.py). Take care of the `name` parameter in `_dispatchable` for the algorithms with same name but different implementations. The `name` parameter is used distinguish such algorithms in a single namespace. (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html))
+  - [ ] add the function to the `ALGORITHMS` list in [interface.py](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/interface.py). Take care of the `name` parameter in `_dispatchable` for the algorithms with same name but different implementations. The `name` parameter is used distinguish such algorithms in a single namespace. (ref. [docs](https://networkx.org/documentation/latest/reference/backends.html))
   - [ ] update the `__init__.py` files accordingly
   - [ ] docstring following the above format
   - [ ] add additional test, if needed. The smoke tests for the additional parameter `get_chunks` are done [here](https://github.com/networkx/nx-parallel/blob/main/nx_parallel/tests/test_get_chunks.py) together for all the algorithms.
-  - [ ] run the [timing script](./timing/new_heatmaps/timing_individual_function.py) to get the performance heatmap.
+  - [ ] run the [timing script](https://github.com/networkx/nx-parallel/blob/main/timing/new_heatmaps/timing_individual_function.py) to get the performance heatmap.
   - [ ] add benchmark(s) for the new function(ref. the README in `benchmarks` folder for more details)
 
 Happy contributing! 🎉

@@ -1,9 +1,9 @@
-## Installation
+# Installation
 
 It is recommended to first refer the [NetworkX's INSTALL.rst](https://github.com/networkx/networkx/blob/main/INSTALL.rst).
 nx-parallel requires Python >=3.12. Right now, the only dependencies of nx-parallel are networkx and joblib.
 
-### Installing nx-parallel using `pip`
+## Installing nx-parallel using `pip`
 
 You can install the stable version of nx-parallel using pip:
 
@@ -18,7 +18,7 @@ and joblib. To upgrade to a newer release use the `--upgrade` flag:
 pip install --upgrade nx-parallel
 ```
 
-### Installing the development version
+## Installing the development version
 
 Before installing the development version, you may need to uninstall the
 standard version of `nx-parallel` and other two dependencies using `pip`:
@@ -33,7 +33,7 @@ Then do:
 pip install git+https://github.com/networkx/nx-parallel.git@main
 ```
 
-### Installing nx-parallel with conda
+## Installing nx-parallel with conda
 
 Installing `nx-parallel` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
