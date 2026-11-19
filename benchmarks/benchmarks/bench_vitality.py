@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import networkx as nx
 
 from .common import (
@@ -10,8 +12,8 @@ from .common import (
 
 
 class Vitality(Benchmark):
-    params = [backends, num_nodes, edge_prob]
-    param_names = ["backend", "num_nodes", "edge_prob"]
+    params: ClassVar[list] = [backends, num_nodes, edge_prob]
+    param_names: ClassVar[list] = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
         self.G = get_cached_gnp_random_graph(num_nodes, edge_prob)

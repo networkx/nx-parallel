@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import networkx as nx
 
 from .common import (
@@ -9,8 +11,8 @@ from .common import (
 
 
 class DAG(Benchmark):
-    params = [backends, num_nodes]
-    param_names = ["backend", "num_nodes"]
+    params: ClassVar[list] = [backends, num_nodes]
+    param_names: ClassVar[list] = ["backend", "num_nodes"]
 
     def setup(self, backend, num_nodes):
         self.G = nx.gn_graph(num_nodes, seed=seed, create_using=nx.DiGraph)

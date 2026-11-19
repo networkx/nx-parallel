@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import networkx as nx
 
 from .common import (
@@ -13,8 +15,8 @@ m = [25, 50, 100, 200, 400]
 
 
 class Redundancy(Benchmark):
-    params = [backends, n, m, edge_prob]
-    param_names = ["backend", "n", "m", "edge_prob"]
+    params: ClassVar[list] = [backends, n, m, edge_prob]
+    param_names: ClassVar[list] = ["backend", "n", "m", "edge_prob"]
 
     def setup(self, backend, n, m, edge_prob):
         self.G = get_random_bipartite_graph(n, m, edge_prob)
