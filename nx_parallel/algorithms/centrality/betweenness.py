@@ -1,14 +1,15 @@
 from joblib import Parallel, delayed
 from networkx.algorithms.centrality.betweenness import (
     _accumulate_basic,
+    _accumulate_edges,
     _accumulate_endpoints,
+    _add_edge_keys,
+    _rescale,
     _single_source_dijkstra_path_basic,
     _single_source_shortest_path_basic,
-    _rescale,
-    _add_edge_keys,
-    _accumulate_edges,
 )
 from networkx.utils import py_random_state
+
 import nx_parallel as nxp
 
 __all__ = ["betweenness_centrality", "edge_betweenness_centrality"]
@@ -90,9 +91,9 @@ def _betweenness_centrality_node_subset(G, nodes, weight=None, endpoints=False):
             S, P, sigma, _ = _single_source_dijkstra_path_basic(G, s, weight)
         # accumulation
         if endpoints:
-            betweenness, delta = _accumulate_endpoints(betweenness, S, P, sigma, s)
+            betweenness, _delta = _accumulate_endpoints(betweenness, S, P, sigma, s)
         else:
-            betweenness, delta = _accumulate_basic(betweenness, S, P, sigma, s)
+            betweenness, _delta = _accumulate_basic(betweenness, S, P, sigma, s)
     return betweenness
 
 

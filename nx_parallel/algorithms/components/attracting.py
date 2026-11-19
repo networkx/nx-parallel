@@ -1,5 +1,6 @@
-from networkx import attracting_components
 from joblib import Parallel, delayed
+from networkx import attracting_components
+
 import nx_parallel as nxp
 
 __all__ = ["number_attracting_components"]

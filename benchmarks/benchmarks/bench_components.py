@@ -1,17 +1,20 @@
-from .common import (
-    backends,
-    num_nodes,
-    edge_prob,
-    seed,
-    get_cached_gnp_random_graph,
-    Benchmark,
-)
+from typing import ClassVar
+
 import networkx as nx
+
+from .common import (
+    Benchmark,
+    backends,
+    edge_prob,
+    get_cached_gnp_random_graph,
+    num_nodes,
+    seed,
+)
 
 
 class Attracting(Benchmark):
-    params = [backends, num_nodes, edge_prob]
-    param_names = ["backend", "num_nodes", "edge_prob"]
+    params: ClassVar[list] = [backends, num_nodes, edge_prob]
+    param_names: ClassVar[list] = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
         self.G = get_cached_gnp_random_graph(
@@ -23,8 +26,8 @@ class Attracting(Benchmark):
 
 
 class Connected(Benchmark):
-    params = [backends, num_nodes, edge_prob]
-    param_names = ["backend", "num_nodes", "edge_prob"]
+    params: ClassVar[list] = [backends, num_nodes, edge_prob]
+    param_names: ClassVar[list] = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
         self.G = get_cached_gnp_random_graph(num_nodes, edge_prob)
@@ -34,8 +37,8 @@ class Connected(Benchmark):
 
 
 class StronglyConnected(Benchmark):
-    params = [backends, num_nodes, edge_prob]
-    param_names = ["backend", "num_nodes", "edge_prob"]
+    params: ClassVar[list] = [backends, num_nodes, edge_prob]
+    param_names: ClassVar[list] = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
         self.G = get_cached_gnp_random_graph(
@@ -47,8 +50,8 @@ class StronglyConnected(Benchmark):
 
 
 class WeaklyConnected(Benchmark):
-    params = [backends, num_nodes, edge_prob]
-    param_names = ["backend", "num_nodes", "edge_prob"]
+    params: ClassVar[list] = [backends, num_nodes, edge_prob]
+    param_names: ClassVar[list] = ["backend", "num_nodes", "edge_prob"]
 
     def setup(self, backend, num_nodes, edge_prob):
         self.G = get_cached_gnp_random_graph(

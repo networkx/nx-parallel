@@ -1,5 +1,6 @@
-from networkx.algorithms.shortest_paths.generic import single_source_all_shortest_paths
 from joblib import Parallel, delayed
+from networkx.algorithms.shortest_paths.generic import single_source_all_shortest_paths
+
 import nx_parallel as nxp
 
 __all__ = [
@@ -53,5 +54,4 @@ def all_pairs_all_shortest_paths(
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk

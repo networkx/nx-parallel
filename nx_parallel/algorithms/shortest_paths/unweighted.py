@@ -3,11 +3,12 @@ Shortest path parallel algorithms for unweighted graphs.
 """
 
 from joblib import Parallel, delayed
-import nx_parallel as nxp
 from networkx.algorithms.shortest_paths.unweighted import (
-    single_source_shortest_path_length,
     single_source_shortest_path,
+    single_source_shortest_path_length,
 )
+
+import nx_parallel as nxp
 
 __all__ = [
     "all_pairs_shortest_path",
@@ -54,8 +55,7 @@ def all_pairs_shortest_path_length(G, cutoff=None, get_chunks="chunks"):
     )
 
     for path_length_chunk in Parallel()(path_lengths_chunk_generator):
-        for path_length in path_length_chunk:
-            yield path_length
+        yield from path_length_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -97,5 +97,4 @@ def all_pairs_shortest_path(G, cutoff=None, get_chunks="chunks"):
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk

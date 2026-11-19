@@ -1,20 +1,20 @@
 # smoke tests for all functions supporting `get_chunks` kwarg
 
-import inspect
 import importlib
+import inspect
+import math
 import random
 import types
-import math
+from collections.abc import Iterable
 
 import networkx as nx
 import pytest
 
 import nx_parallel as nxp
 from nx_parallel.interface import ALGORITHMS
-from collections.abc import Iterable
 
 
-def get_functions_with_get_chunks(ignore_funcs=[], package_name="nx_parallel"):
+def get_functions_with_get_chunks(ignore_funcs=(), package_name="nx_parallel"):
     """Yields function names for functions with a `get_chunks` kwarg."""
 
     package = importlib.import_module(package_name)
@@ -35,11 +35,11 @@ def test_get_functions_with_get_chunks():
     assert set(get_functions_with_get_chunks()) == set(ALGORITHMS)
 
 
-ignore_funcs = [
+ignore_funcs = (
     "number_of_isolates",
     "is_reachable",
     "maximal_independent_set",
-]
+)
 
 
 @pytest.mark.parametrize("func", get_functions_with_get_chunks(ignore_funcs))

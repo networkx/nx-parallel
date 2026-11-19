@@ -1,6 +1,6 @@
-from networkx.utils.configs import Config
-from typing import Union
 from dataclasses import dataclass, field
+
+from networkx.utils.configs import Config
 
 __all__ = [
     "_config",
@@ -14,7 +14,7 @@ class ParallelConfig(Config):
     n_jobs: int = -1
     verbose: int = 0
     temp_folder: str = None
-    max_nbytes: Union[int, str] = "1M"
+    max_nbytes: int | str = "1M"
     mmap_mode: str = "r"
     prefer: str = None
     require: str = None

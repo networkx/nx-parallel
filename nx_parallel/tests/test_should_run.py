@@ -1,8 +1,10 @@
+import inspect
+
+import networkx as nx
+import pytest
+
 import nx_parallel as nxp
 from nx_parallel.interface import ALGORITHMS
-import networkx as nx
-import inspect
-import pytest
 
 
 def get_functions_with_should_run():
@@ -29,7 +31,6 @@ def test_should_run(func_name):
     func = getattr(nxp, func_name)
 
     result = func.should_run(H)
-    if not isinstance(result, (bool, str)):
-        raise AssertionError(
-            f"{func.__name__}.should_run has an invalid return type; {type(result)}"
-        )
+    assert isinstance(result, (bool, str)), (
+        f"{func.__name__}.should_run has an invalid return type; {type(result)}"
+    )

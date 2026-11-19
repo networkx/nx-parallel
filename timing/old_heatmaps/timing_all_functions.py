@@ -12,9 +12,9 @@ heatmapDF = pd.DataFrame()
 function_list = [nx.betweenness_centrality, nx.closeness_vitality, nx.local_efficiency]
 number_of_nodes_list = [10, 20, 50, 300, 600]
 
-for i in range(0, len(function_list)):
+for i in range(len(function_list)):
     currFun = function_list[i]
-    for j in range(0, len(number_of_nodes_list)):
+    for j in range(len(number_of_nodes_list)):
         num = number_of_nodes_list[j]
 
         # create original and parallel graphs
@@ -35,7 +35,7 @@ for i in range(0, len(function_list)):
         print("Finished " + str(currFun))
 
 # Code to create for row of heatmap specifically for tournaments
-for j in range(0, len(number_of_nodes_list)):
+for j in range(len(number_of_nodes_list)):
     num = number_of_nodes_list[j]
     G = nx.tournament.random_tournament(num)
     H = nx_parallel.ParallelDiGraph(G)

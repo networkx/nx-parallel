@@ -1,12 +1,11 @@
 import nx_parallel as nxp
 
-
 __all__ = [
     "default_should_run",
-    "should_skip_parallel",
     "should_run_if_large",
     "should_run_if_nodes_none",
     "should_run_if_sparse",
+    "should_skip_parallel",
 ]
 
 

@@ -3,24 +3,25 @@ Shortest path parallel algorithms for weighted graphs.
 """
 
 from joblib import Parallel, delayed
-import nx_parallel as nxp
 from networkx.algorithms.shortest_paths.weighted import (
-    single_source_dijkstra,
-    single_source_dijkstra_path_length,
-    single_source_dijkstra_path,
+    _bellman_ford,
+    _dijkstra,
+    _weight_function,
     single_source_bellman_ford_path,
     single_source_bellman_ford_path_length,
-    _weight_function,
-    _dijkstra,
-    _bellman_ford,
+    single_source_dijkstra,
+    single_source_dijkstra_path,
+    single_source_dijkstra_path_length,
 )
 
+import nx_parallel as nxp
+
 __all__ = [
-    "all_pairs_dijkstra",
-    "all_pairs_dijkstra_path_length",
-    "all_pairs_dijkstra_path",
-    "all_pairs_bellman_ford_path_length",
     "all_pairs_bellman_ford_path",
+    "all_pairs_bellman_ford_path_length",
+    "all_pairs_dijkstra",
+    "all_pairs_dijkstra_path",
+    "all_pairs_dijkstra_path_length",
     "johnson",
 ]
 
@@ -64,8 +65,7 @@ def all_pairs_dijkstra(G, cutoff=None, weight="weight", get_chunks="chunks"):
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -114,8 +114,7 @@ def all_pairs_dijkstra_path_length(
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -157,8 +156,7 @@ def all_pairs_dijkstra_path(G, cutoff=None, weight="weight", get_chunks="chunks"
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -200,8 +198,7 @@ def all_pairs_bellman_ford_path_length(G, weight="weight", get_chunks="chunks"):
     )
 
     for path_length_chunk in Parallel()(path_lengths_chunk_generator):
-        for path_length in path_length_chunk:
-            yield path_length
+        yield from path_length_chunk
 
 
 @nxp._configure_if_nx_active()
@@ -243,8 +240,7 @@ def all_pairs_bellman_ford_path(G, weight="weight", get_chunks="chunks"):
     )
 
     for path_chunk in Parallel()(paths_chunk_generator):
-        for path in path_chunk:
-            yield path
+        yield from path_chunk
 
 
 @nxp._configure_if_nx_active()

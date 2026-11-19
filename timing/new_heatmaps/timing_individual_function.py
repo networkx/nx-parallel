@@ -3,15 +3,18 @@ To generate heatmaps comparing the performance of nx-parallel and NetworkX imple
     python3 -m pip install -e '.[heatmap]'
 """
 
+import random
+import timeit
+import types
+
 import networkx as nx
-import nx_parallel as nxp
-from matplotlib import pyplot as plt, patches as mpatches
-import seaborn as sns
 import numpy as np
 import pandas as pd
-import timeit
-import random
-import types
+import seaborn as sns
+from matplotlib import patches as mpatches
+from matplotlib import pyplot as plt
+
+import nx_parallel as nxp
 
 seed = random.Random(42)
 tournament_funcs = ["is_reachable", "is_strongly_connected"]
