@@ -12,6 +12,8 @@ on:
 env:
   LABELS: ${{ join( github.event.pull_request.labels.*.name, ' ' ) }}
 
+permissions: {}
+
 jobs:
   check-type-label:
     name: core dev picked label & checked title
