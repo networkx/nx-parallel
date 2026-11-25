@@ -15,5 +15,8 @@ class EfficiencyMeasures(Benchmark):
     def setup(self, backend, num_nodes, edge_prob):
         self.G = get_cached_gnp_random_graph(num_nodes, edge_prob)
 
+    def time_global_efficiency(self, backend, num_nodes, edge_prob):
+        _ = nx.global_efficiency(self.G, backend=backend)
+
     def time_local_efficiency(self, backend, num_nodes, edge_prob):
         _ = nx.local_efficiency(self.G, backend=backend)
