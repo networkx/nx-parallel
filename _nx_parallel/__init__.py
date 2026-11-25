@@ -153,6 +153,13 @@ def get_info():
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
                 },
             },
+            "global_efficiency": {
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L11",
+                "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing the inverse shortest-path lengths from each source node in each chunk concurrently, then summing the chunk totals and dividing by ``n * (n - 1)``.",
+                "additional_parameters": {
+                    'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."
+                },
+            },
             "harmonic_centrality": {
                 "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/centrality/harmonic.py#L10",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and computing harmonic centrality for each chunk concurrently.",
@@ -182,7 +189,7 @@ def get_info():
                 },
             },
             "local_efficiency": {
-                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L11",
+                "url": "https://github.com/networkx/nx-parallel/blob/main/nx_parallel/algorithms/efficiency_measures.py#L59",
                 "additional_docs": "The parallel computation is implemented by dividing the nodes into chunks and then computing and adding global efficiencies of all node in all chunks, in parallel, and then adding all these sums and dividing by the total number of nodes at the end.",
                 "additional_parameters": {
                     'get_chunks : str, function (default = "chunks")': "A function that takes in a list of all the nodes as input and returns an iterable `node_chunks`. The default chunking is done by slicing the `nodes` into `n_jobs` number of chunks."

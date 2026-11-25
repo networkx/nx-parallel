@@ -39,6 +39,7 @@ ALGORITHMS = [
     "colliders",
     "v_structures",
     # Efficiency
+    "global_efficiency",
     "local_efficiency",
     # Shortest Paths : generic
     "all_pairs_all_shortest_paths",
